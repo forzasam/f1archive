@@ -283,11 +283,7 @@
                         <td>{{ result.constructor }}</td>
                         <td>{{ result.grid if result.grid else "Pit" }}</td>
                         <td>
-                            {% if result.time != "—" %}
-                                {{ result.time }}
-                            {% else %}
-                                {{ result.status }}
-                            {% endif %}
+                            {{ result.result_time }}
                         </td>
                         <td>{{ result.points }}</td>
                     </tr>

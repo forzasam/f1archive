@@ -23,188 +23,10 @@ const eventLookup = new Map(
     mapData.events.map((event) => [event.id, event])
 );
 
-const markerPositions = {
-    "pit-straight": [625, 492],
-    "turns-1-2": [365, 426],
-    "jones-straight": [210, 382],
-    "turn-3": [101, 365],
-    "turn-4": [137, 316],
-    "turn-5": [68, 252],
-    "lakeside-drive": [74, 116],
-    "turns-6-7": [154, 50],
-    "turn-8": [375, 142],
-    "turns-9-10": [631, 274],
-    "back-straight": [801, 247],
-    "turn-11": [945, 356],
-    "turn-12": [869, 455],
-    "turn-13": [768, 440],
-    "turn-14": [792, 477],
-    "pit-entry": [835, 468]
-};
-
-const generatedTrack = document.getElementById("generated-track-reference");
-
-const repositoryMap = svg?.dataset.generatedMap === "true";
-const repositoryReverse = svg?.dataset.reverseDirection === "true";
-let repositoryStartPct = 0;
-
-function authoredPercentage(rawPct) {
-    const value = Number(rawPct);
-    const directed = repositoryReverse ? 100 - value : value;
-    return (repositoryStartPct + directed + 100) % 100;
-}
-
-function pointAtPercentage(pct) {
-    const length = generatedTrack.getTotalLength();
-    return generatedTrack.getPointAtLength(
-        length * ((pct % 100 + 100) % 100) / 100
-    );
-}
-
-function pathSection(startPct, endPct) {
-    const totalLength = generatedTrack.getTotalLength();
-    let start = authoredPercentage(startPct);
-    let end = authoredPercentage(endPct);
-
-    if (!repositoryReverse) {
-        if (end <= start) end += 100;
-    } else {
-        /*
-         * authoredPercentage reverses the path, so sample backwards.
-         * Unwrap the endpoint to keep the requested section contiguous.
-         */
-        if (end >= start) end -= 100;
-    }
-
-    const span = Math.abs(end - start);
-    const samples = Math.max(8, Math.ceil(span * 2.4));
-    const points = [];
-
-    for (let index = 0; index <= samples; index += 1) {
-        const progress = index / samples;
-        const pct = start + (end - start) * progress;
-        points.push(pointAtPercentage(pct));
-    }
-
-    return points
-        .map((point, index) =>
-            `${index === 0 ? "M" : "L"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`
-        )
-        .join(" ");
-}
-
-function buildAuthoredSegmentPaths() {
-    if (!repositoryMap || !generatedTrack) return;
-
-    const underlay = document.getElementById("generated-track-underlay");
-    underlay.setAttribute("d", pathSection(0, 100));
-
-    document
-        .querySelectorAll("#segment-hotspots [data-segment]")
-        .forEach((path) => {
-            path.setAttribute(
-                "d",
-                pathSection(path.dataset.startPct, path.dataset.endPct)
-            );
-        });
-}
-
-function normalizeGeneratedMapToAustraliaCanvas() {
-    if (!repositoryMap || !generatedTrack) return;
-
-    const root = document.getElementById("generated-track-root");
-    if (!root) return;
-
-    /*
-     * Fit all generated circuits into the same visual area occupied by
-     * Australia's manually authored trace. Stroke widths therefore use
-     * precisely the same SVG units and scale consistently.
-     */
-    const box = generatedTrack.getBBox();
-    const target = {
-        x: 54,
-        y: 24,
-        width: 916,
-        height: 492,
-    };
-
-    const scale = Math.min(
-        target.width / Math.max(box.width, 1),
-        target.height / Math.max(box.height, 1)
-    );
-
-    const renderedWidth = box.width * scale;
-    const renderedHeight = box.height * scale;
-    const x =
-        target.x +
-        (target.width - renderedWidth) / 2 -
-        box.x * scale;
-    const y =
-        target.y +
-        (target.height - renderedHeight) / 2 -
-        box.y * scale;
-
-    root.setAttribute(
-        "transform",
-        `translate(${x} ${y}) scale(${scale})`
-    );
-
-    /*
-     * Counter-scale line widths so the final displayed weights exactly
-     * match Australia's 31 / 15 / 18 SVG-unit hierarchy.
-     */
-    root.style.setProperty("--generated-map-scale", scale);
-}
-
-function positionRepositoryStartFinish() {
-    if (!repositoryMap || !generatedTrack) return;
-
-    const group = document.getElementById("repository-start-finish");
-    const point = pointAtPercentage(authoredPercentage(0));
-    const before = pointAtPercentage(authoredPercentage(99.8));
-    const after = pointAtPercentage(authoredPercentage(0.2));
-
-    let tx = after.x - before.x;
-    let ty = after.y - before.y;
-    const magnitude = Math.hypot(tx, ty) || 1;
-    tx /= magnitude;
-    ty /= magnitude;
-
-    const nx = -ty;
-    const ny = tx;
-    const half = 18;
-
-    const line = group.querySelector(".start-line");
-    line.setAttribute("x1", point.x - nx * half);
-    line.setAttribute("y1", point.y - ny * half);
-    line.setAttribute("x2", point.x + nx * half);
-    line.setAttribute("y2", point.y + ny * half);
-
-    const label = group.querySelector(".map-label");
-    label.setAttribute("x", point.x - nx * 30);
-    label.setAttribute("y", point.y - ny * 30);
-    label.setAttribute("text-anchor", "middle");
-}
+const markerPositions = mapData.marker_positions || {};
 
 function markerPositionForSegment(segmentId) {
-    if (!generatedTrack) {
-        return markerPositions[segmentId] || null;
-    }
-
-    const segment = segmentLookup.get(segmentId);
-    if (!segment) return null;
-
-    const length = generatedTrack.getTotalLength();
-    const midpointRaw =
-        (Number(segment.start_pct) + Number(segment.end_pct)) / 2;
-    const midpointPct = repositoryMap
-        ? authoredPercentage(midpointRaw)
-        : midpointRaw;
-    const point = generatedTrack.getPointAtLength(
-        length * midpointPct / 100
-    );
-
-    return [point.x, point.y];
+    return markerPositions[segmentId] || null;
 }
 
 
@@ -241,7 +63,7 @@ function createMapMarkers() {
             "circle"
         );
 
-        const offset = generatedTrack ? 5 : 9;
+        const offset = 9;
         circle.setAttribute("cx", position[0] + index * offset);
         circle.setAttribute("cy", position[1] - index * offset);
         circle.setAttribute("r", "7");
@@ -559,11 +381,6 @@ timelineFilters.forEach((button) => {
 
 timelineReset.addEventListener("click", resetTimeline);
 
-if (repositoryMap) {
-    buildAuthoredSegmentPaths();
-    normalizeGeneratedMapToAustraliaCanvas();
-    positionRepositoryStartFinish();
-}
 createMapMarkers();
 renderTimeline();
 

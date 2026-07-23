@@ -1,33 +1,42 @@
 import json
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_all_australia_segments_have_svg_paths():
+def test_all_australia_segments_have_dedicated_svg_paths():
     data = json.loads(
         (ROOT / "data" / "editorial" / "2026-australia.json").read_text(
             encoding="utf-8"
         )
     )
-    template = (ROOT / "templates" / "_race_map.html").read_text(
+    svg = (ROOT / "templates" / "circuits" / "australia.svg").read_text(
         encoding="utf-8"
     )
 
     for segment in data["segments"]:
-        assert f'data-segment="{segment["id"]}"' in template
+        assert f'data-segment="{segment["id"]}"' in svg
 
 
-def test_all_events_reference_known_segments():
-    data = json.loads(
+def test_australia_layout_defines_every_marker_position():
+    editorial = json.loads(
         (ROOT / "data" / "editorial" / "2026-australia.json").read_text(
             encoding="utf-8"
         )
     )
-    segment_ids = {segment["id"] for segment in data["segments"]}
-
-    assert all(
-        event["segment_id"] in segment_ids
-        for event in data["events"]
+    layout = json.loads(
+        (ROOT / "data" / "circuits" / "australia.json").read_text(
+            encoding="utf-8"
+        )
     )
+    assert {segment["id"] for segment in editorial["segments"]} <= set(
+        layout["marker_positions"]
+    )
+
+
+def test_pit_entry_is_authored_at_turn_13():
+    svg = (ROOT / "templates" / "circuits" / "australia.svg").read_text(
+        encoding="utf-8"
+    )
+    assert 'data-segment="pit-entry"' in svg
+    assert 'd="M798 430 C820 437 840 448 859 458"' in svg

@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from datetime import datetime
 from hashlib import sha1
+import re
 from typing import Any
 
 from flask import abort
@@ -17,6 +18,63 @@ def safe_int(value: Any, default: int = 0) -> int:
         return int(value)
     except (TypeError, ValueError):
         return default
+
+
+
+
+def is_classified_result(position_text: Any, status: Any) -> bool:
+    """Return whether a result belongs in the official classification.
+
+    Jolpica normally uses a numeric ``positionText`` for classified cars, but
+    recent provisional result feeds have occasionally paired a retirement-like
+    position marker with a finishing status. Treat explicit finishing and
+    lapped statuses as classified as well, while leaving genuine retirements
+    untouched.
+    """
+    if str(position_text).strip().isdigit():
+        return True
+
+    normalised_status = str(status or "").strip()
+    if normalised_status.casefold() in {"finished", "lapped"}:
+        return True
+
+    return bool(
+        re.fullmatch(
+            r"\+?\d+\s+laps?",
+            normalised_status,
+            flags=re.IGNORECASE,
+        )
+    )
+
+
+def format_result_time(
+    time_value: Any,
+    status: Any,
+    lap_deficit: int = 0,
+) -> str:
+    """Choose an unambiguous final-race time/status label.
+
+    Same-lap finishers keep their time gap. Classified drivers behind by one
+    or more complete laps are shown as ``1L``, ``2L`` and so on, because the
+    API's residual time delta resets when the leader starts another lap.
+    """
+    normalised_status = str(status or "").strip()
+    status_laps = re.fullmatch(
+        r"\+?(\d+)\s+laps?",
+        normalised_status,
+        flags=re.IGNORECASE,
+    )
+    if status_laps:
+        return f"{int(status_laps.group(1))}L"
+
+    if normalised_status.casefold() == "lapped":
+        return f"{max(lap_deficit, 1)}L"
+
+    if lap_deficit > 0:
+        return f"{lap_deficit}L"
+
+    normalised_time = str(time_value or "").strip()
+    return normalised_time or normalised_status or "—"
 
 
 def format_date(value: str) -> str:
@@ -475,9 +533,10 @@ def get_race_page(season: int, round_number: int) -> dict[str, Any]:
             {
                 "position": result.get("positionText", "—"),
                 "position_number": safe_int(result.get("position"), 999),
-                "classified": str(
-                    result.get("positionText", "")
-                ).strip().isdigit(),
+                "classified": is_classified_result(
+                    result.get("positionText", ""),
+                    result.get("status", ""),
+                ),
                 "grid": safe_int(result.get("grid")),
                 "driver_code": (
                     driver.get("code")
@@ -491,6 +550,7 @@ def get_race_page(season: int, round_number: int) -> dict[str, Any]:
                 "laps": safe_int(result.get("laps")),
                 "status": result.get("status", "Unknown"),
                 "time": result.get("Time", {}).get("time", "—"),
+                "result_time": "—",
                 "fastest_lap_rank": safe_int(
                     fastest_lap.get("rank"), 999
                 ),
@@ -507,6 +567,15 @@ def get_race_page(season: int, round_number: int) -> dict[str, Any]:
         (entry for entry in entries if entry["fastest_lap_rank"] == 1),
         None,
     )
+
+    winner_laps = winner["laps"] if winner else 0
+    for entry in entries:
+        lap_deficit = max(winner_laps - entry["laps"], 0)
+        entry["result_time"] = format_result_time(
+            entry["time"],
+            entry["status"],
+            lap_deficit if entry["classified"] else 0,
+        )
 
     # Jolpica's status describes how a driver's race ended, but it is not a
     # reliable finisher test. Classified lapped cars use statuses such as

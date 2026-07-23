@@ -206,12 +206,5 @@
       "featured": true
     }
   ],
-  "note": "Prototype dataset with a faithful segmented trace of the official 2026 Albert Park circuit diagram. Featured events remain a curated subset.",
-  "geometry": {
-    "source": "Official Formula 1 2026 Melbourne circuit diagram",
-    "source_url": "https://www.formula1.com/en/racing/2026/australia",
-    "method": "Manually traced and segmented vector centreline",
-    "accuracy": "Faithful display trace; not survey-grade or an FIA CAD file"
-  },
-  "map_mode": "inline"
+  "note": "Prototype Australia editorial event dataset. Circuit geometry and marker coordinates are stored separately in the dedicated local Australia circuit package."
 }
