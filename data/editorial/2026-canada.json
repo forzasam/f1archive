@@ -1,0 +1,324 @@
+{
+  "map_mode": "inline_generated",
+  "race": {
+    "season": 2026,
+    "round": 5,
+    "slug": "canada",
+    "name": "Canadian Grand Prix",
+    "circuit": "Circuit Gilles Villeneuve",
+    "laps": 68,
+    "circuit_id": "villeneuve",
+    "layout_id": "montreal-6"
+  },
+  "source": {
+    "name": "Formula 1 race report",
+    "url": "https://www.formula1.com/en/latest/article/antonelli-wins-dramatic-canadian-grand-prix-as-russell-retires-amid-thrilling-mercedes-battle.MzvclJaqCidlYMUXonuDq"
+  },
+  "segments": [
+    {
+      "id": "pit-straight",
+      "name": "Pit Straight",
+      "kind": "straight",
+      "start_pct": 0,
+      "end_pct": 6
+    },
+    {
+      "id": "turn-1",
+      "name": "Turn 1",
+      "kind": "corner",
+      "start_pct": 6,
+      "end_pct": 10
+    },
+    {
+      "id": "turn-2",
+      "name": "Virage Senna / Turn 2",
+      "kind": "corner",
+      "start_pct": 10,
+      "end_pct": 15
+    },
+    {
+      "id": "straight-2-3",
+      "name": "Straight to Turn 3",
+      "kind": "straight",
+      "start_pct": 15,
+      "end_pct": 20
+    },
+    {
+      "id": "turn-3",
+      "name": "Turn 3",
+      "kind": "corner",
+      "start_pct": 20,
+      "end_pct": 23
+    },
+    {
+      "id": "turn-4",
+      "name": "Turn 4",
+      "kind": "corner",
+      "start_pct": 23,
+      "end_pct": 27
+    },
+    {
+      "id": "straight-4-5",
+      "name": "Straight to Turn 5",
+      "kind": "straight",
+      "start_pct": 27,
+      "end_pct": 32
+    },
+    {
+      "id": "turn-5",
+      "name": "Turn 5",
+      "kind": "corner",
+      "start_pct": 32,
+      "end_pct": 35
+    },
+    {
+      "id": "turn-6",
+      "name": "Turn 6",
+      "kind": "corner",
+      "start_pct": 35,
+      "end_pct": 39
+    },
+    {
+      "id": "turn-7",
+      "name": "Turn 7",
+      "kind": "corner",
+      "start_pct": 39,
+      "end_pct": 43
+    },
+    {
+      "id": "straight-7-8",
+      "name": "Straight to Turn 8",
+      "kind": "straight",
+      "start_pct": 43,
+      "end_pct": 49
+    },
+    {
+      "id": "turn-8",
+      "name": "Turn 8",
+      "kind": "corner",
+      "start_pct": 49,
+      "end_pct": 52
+    },
+    {
+      "id": "turn-9",
+      "name": "Turn 9",
+      "kind": "corner",
+      "start_pct": 52,
+      "end_pct": 56
+    },
+    {
+      "id": "straight-9-10",
+      "name": "Straight to Hairpin",
+      "kind": "straight",
+      "start_pct": 56,
+      "end_pct": 62
+    },
+    {
+      "id": "turn-10",
+      "name": "L'Épingle / Turn 10",
+      "kind": "corner",
+      "start_pct": 62,
+      "end_pct": 69
+    },
+    {
+      "id": "casino-straight",
+      "name": "Casino Straight",
+      "kind": "straight",
+      "start_pct": 69,
+      "end_pct": 86
+    },
+    {
+      "id": "turn-11",
+      "name": "Turn 11",
+      "kind": "corner",
+      "start_pct": 86,
+      "end_pct": 89
+    },
+    {
+      "id": "turn-12",
+      "name": "Turn 12",
+      "kind": "corner",
+      "start_pct": 89,
+      "end_pct": 92
+    },
+    {
+      "id": "straight-12-13",
+      "name": "Straight to Final Chicane",
+      "kind": "straight",
+      "start_pct": 92,
+      "end_pct": 95
+    },
+    {
+      "id": "turn-13",
+      "name": "Turn 13",
+      "kind": "corner",
+      "start_pct": 95,
+      "end_pct": 97.5
+    },
+    {
+      "id": "turn-14",
+      "name": "Turn 14 / Wall of Champions",
+      "kind": "corner",
+      "start_pct": 97.5,
+      "end_pct": 100
+    }
+  ],
+  "events": [
+    {
+      "id": "can-l1-rus",
+      "lap": "1",
+      "type": "lead_change",
+      "title": "Russell holds the lead",
+      "segment_id": "turn-1",
+      "description": "Russell converts pole into the early lead ahead of Antonelli.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Lead change"
+    },
+    {
+      "id": "can-l6-ant",
+      "lap": "6",
+      "type": "lead_change",
+      "title": "Antonelli takes first",
+      "segment_id": "turn-10",
+      "description": "Antonelli passes his team mate during an intense early Mercedes duel.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Lead change",
+      "attacker": "Kimi Antonelli",
+      "defender": "George Russell"
+    },
+    {
+      "id": "can-l11-rus",
+      "lap": "11",
+      "type": "lead_change",
+      "title": "Russell fights back",
+      "segment_id": "turn-10",
+      "description": "Russell retakes the lead as the Mercedes pair continue swapping positions.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Lead change",
+      "attacker": "George Russell",
+      "defender": "Kimi Antonelli"
+    },
+    {
+      "id": "can-l18-ant",
+      "lap": "18",
+      "type": "lead_change",
+      "title": "Antonelli returns to the front",
+      "segment_id": "turn-10",
+      "description": "Antonelli regains first place before the pit-stop phase.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Lead change",
+      "attacker": "Kimi Antonelli",
+      "defender": "George Russell"
+    },
+    {
+      "id": "can-l30-rus",
+      "lap": "30",
+      "type": "retirement",
+      "title": "Russell stops with power-unit failure",
+      "segment_id": "turn-7",
+      "description": "Russell's Mercedes loses power and stops on circuit.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Retirement",
+      "caused_safety_car": "VSC"
+    },
+    {
+      "id": "can-l30-vsc",
+      "lap": "30",
+      "type": "vsc",
+      "title": "Virtual Safety Car deployed",
+      "segment_id": "turn-7",
+      "description": "The VSC allows much of the field to make a reduced-cost pit stop.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Virtual Safety Car"
+    },
+    {
+      "id": "can-l64-ham",
+      "lap": "64",
+      "type": "overtake",
+      "title": "Hamilton takes second",
+      "segment_id": "turn-10",
+      "description": "Hamilton passes Verstappen in the closing laps to claim runner-up spot.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Overtake",
+      "attacker": "Lewis Hamilton",
+      "defender": "Max Verstappen"
+    },
+    {
+      "id": "can-l66-nor",
+      "lap": "66",
+      "type": "retirement",
+      "title": "Norris retires",
+      "segment_id": "pit-straight",
+      "description": "Norris stops after reporting a gearbox issue.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Retirement",
+      "caused_safety_car": false
+    }
+  ],
+  "turn_labels": [
+    {
+      "label": "1",
+      "pct": 8
+    },
+    {
+      "label": "2",
+      "pct": 12.5
+    },
+    {
+      "label": "3",
+      "pct": 21.5
+    },
+    {
+      "label": "4",
+      "pct": 25
+    },
+    {
+      "label": "5",
+      "pct": 33.5
+    },
+    {
+      "label": "6",
+      "pct": 37
+    },
+    {
+      "label": "7",
+      "pct": 41
+    },
+    {
+      "label": "8",
+      "pct": 50.5
+    },
+    {
+      "label": "9",
+      "pct": 54
+    },
+    {
+      "label": "10",
+      "pct": 65.5
+    },
+    {
+      "label": "11",
+      "pct": 87.5
+    },
+    {
+      "label": "12",
+      "pct": 90.5
+    },
+    {
+      "label": "13",
+      "pct": 96.2
+    },
+    {
+      "label": "14",
+      "pct": 98.7
+    }
+  ]
+}

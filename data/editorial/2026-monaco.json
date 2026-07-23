@@ -1,0 +1,334 @@
+{
+  "map_mode": "inline_generated",
+  "race": {
+    "season": 2026,
+    "round": 6,
+    "slug": "monaco",
+    "name": "Monaco Grand Prix",
+    "circuit": "Circuit de Monaco",
+    "laps": 78,
+    "circuit_id": "monaco",
+    "layout_id": "monaco-6"
+  },
+  "source": {
+    "name": "Formula 1 race report",
+    "url": "https://www.formula1.com/en/latest/article/antonelli-secures-brilliant-victory-in-chaotic-monaco-grand-prix-amid-multiple-shock-retirements.27e644586K83z0NZd6efsz"
+  },
+  "segments": [
+    {
+      "id": "pit-straight",
+      "name": "Pit Straight",
+      "kind": "straight",
+      "start_pct": 0,
+      "end_pct": 5
+    },
+    {
+      "id": "turn-1",
+      "name": "Sainte Dévote / Turn 1",
+      "kind": "corner",
+      "start_pct": 5,
+      "end_pct": 9
+    },
+    {
+      "id": "beau-rivage",
+      "name": "Beau Rivage",
+      "kind": "straight",
+      "start_pct": 9,
+      "end_pct": 17
+    },
+    {
+      "id": "turn-2",
+      "name": "Massenet / Turn 2",
+      "kind": "corner",
+      "start_pct": 17,
+      "end_pct": 21
+    },
+    {
+      "id": "turn-3",
+      "name": "Casino / Turn 3",
+      "kind": "corner",
+      "start_pct": 21,
+      "end_pct": 25
+    },
+    {
+      "id": "turn-4",
+      "name": "Mirabeau Haute / Turn 4",
+      "kind": "corner",
+      "start_pct": 25,
+      "end_pct": 29
+    },
+    {
+      "id": "turn-5",
+      "name": "Grand Hotel Hairpin / Turn 5",
+      "kind": "corner",
+      "start_pct": 29,
+      "end_pct": 34
+    },
+    {
+      "id": "turn-6",
+      "name": "Mirabeau Bas / Turn 6",
+      "kind": "corner",
+      "start_pct": 34,
+      "end_pct": 38
+    },
+    {
+      "id": "turn-7",
+      "name": "Portier 1 / Turn 7",
+      "kind": "corner",
+      "start_pct": 38,
+      "end_pct": 41
+    },
+    {
+      "id": "turn-8",
+      "name": "Portier 2 / Turn 8",
+      "kind": "corner",
+      "start_pct": 41,
+      "end_pct": 44
+    },
+    {
+      "id": "tunnel",
+      "name": "Tunnel",
+      "kind": "straight",
+      "start_pct": 44,
+      "end_pct": 58
+    },
+    {
+      "id": "turn-9",
+      "name": "Nouvelle Chicane Entry / Turn 9",
+      "kind": "corner",
+      "start_pct": 58,
+      "end_pct": 61
+    },
+    {
+      "id": "turn-10",
+      "name": "Turn 10",
+      "kind": "corner",
+      "start_pct": 61,
+      "end_pct": 64
+    },
+    {
+      "id": "turn-11",
+      "name": "Turn 11",
+      "kind": "corner",
+      "start_pct": 64,
+      "end_pct": 67
+    },
+    {
+      "id": "turn-12",
+      "name": "Tabac / Turn 12",
+      "kind": "corner",
+      "start_pct": 67,
+      "end_pct": 71
+    },
+    {
+      "id": "turn-13",
+      "name": "Swimming Pool 1 / Turn 13",
+      "kind": "corner",
+      "start_pct": 71,
+      "end_pct": 74
+    },
+    {
+      "id": "turn-14",
+      "name": "Swimming Pool 2 / Turn 14",
+      "kind": "corner",
+      "start_pct": 74,
+      "end_pct": 77
+    },
+    {
+      "id": "turn-15",
+      "name": "Turn 15",
+      "kind": "corner",
+      "start_pct": 77,
+      "end_pct": 80
+    },
+    {
+      "id": "turn-16",
+      "name": "Turn 16",
+      "kind": "corner",
+      "start_pct": 80,
+      "end_pct": 84
+    },
+    {
+      "id": "turn-17",
+      "name": "La Rascasse / Turn 17",
+      "kind": "corner",
+      "start_pct": 84,
+      "end_pct": 90
+    },
+    {
+      "id": "turn-18",
+      "name": "Turn 18",
+      "kind": "corner",
+      "start_pct": 90,
+      "end_pct": 94
+    },
+    {
+      "id": "turn-19",
+      "name": "Anthony Noghès / Turn 19",
+      "kind": "corner",
+      "start_pct": 94,
+      "end_pct": 100
+    }
+  ],
+  "events": [
+    {
+      "id": "mon-l1-ver",
+      "lap": "1",
+      "type": "retirement",
+      "title": "Verstappen retires after start issue",
+      "segment_id": "turn-1",
+      "description": "Anti-stall trouble leaves Verstappen unable to launch properly; he returns to the pits.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Retirement",
+      "caused_safety_car": false
+    },
+    {
+      "id": "mon-l1-ant",
+      "lap": "1",
+      "type": "lead_change",
+      "title": "Antonelli controls the start",
+      "segment_id": "turn-1",
+      "description": "Antonelli launches cleanly from pole and keeps the lead.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Lead change"
+    },
+    {
+      "id": "mon-l25-nor",
+      "lap": "25",
+      "type": "retirement",
+      "title": "Norris loses power",
+      "segment_id": "turn-19",
+      "description": "Norris retires with a power-related McLaren problem.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Retirement",
+      "caused_safety_car": false
+    },
+    {
+      "id": "mon-l58-stroll",
+      "lap": "58",
+      "type": "retirement",
+      "title": "Stroll crashes at the final corner",
+      "segment_id": "turn-19",
+      "description": "Stroll hits the wall at the final corner, triggering a Safety Car.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Retirement",
+      "caused_safety_car": true
+    },
+    {
+      "id": "mon-l58-sc",
+      "lap": "58",
+      "type": "safety_car",
+      "title": "Safety Car deployed",
+      "segment_id": "turn-19",
+      "description": "The field is neutralised while Stroll's Aston Martin is recovered.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Safety Car"
+    },
+    {
+      "id": "mon-l61-lec",
+      "lap": "61",
+      "type": "retirement",
+      "title": "Leclerc crashes at the same corner",
+      "segment_id": "turn-19",
+      "description": "Leclerc suffers an almost identical accident after the restart.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Retirement",
+      "caused_safety_car": "Red flag"
+    },
+    {
+      "id": "mon-l61-red",
+      "lap": "61",
+      "type": "incident",
+      "title": "Race red-flagged",
+      "segment_id": "turn-19",
+      "description": "The race is stopped so officials can inspect damage and track break-up at the final corner.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Incident"
+    }
+  ],
+  "turn_labels": [
+    {
+      "label": "1",
+      "pct": 7
+    },
+    {
+      "label": "2",
+      "pct": 19
+    },
+    {
+      "label": "3",
+      "pct": 23
+    },
+    {
+      "label": "4",
+      "pct": 27
+    },
+    {
+      "label": "5",
+      "pct": 31.5
+    },
+    {
+      "label": "6",
+      "pct": 36
+    },
+    {
+      "label": "7",
+      "pct": 39.5
+    },
+    {
+      "label": "8",
+      "pct": 42.5
+    },
+    {
+      "label": "9",
+      "pct": 59.5
+    },
+    {
+      "label": "10",
+      "pct": 62.5
+    },
+    {
+      "label": "11",
+      "pct": 65.5
+    },
+    {
+      "label": "12",
+      "pct": 69
+    },
+    {
+      "label": "13",
+      "pct": 72.5
+    },
+    {
+      "label": "14",
+      "pct": 75.5
+    },
+    {
+      "label": "15",
+      "pct": 78.5
+    },
+    {
+      "label": "16",
+      "pct": 82
+    },
+    {
+      "label": "17",
+      "pct": 87
+    },
+    {
+      "label": "18",
+      "pct": 92
+    },
+    {
+      "label": "19",
+      "pct": 97
+    }
+  ]
+}

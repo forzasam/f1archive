@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Data unavailable · F1 Archive{% endblock %}
+{% block content %}
+<section class="empty-state">
+    <p class="eyebrow">Temporary problem</p>
+    <h1>We could not load the archive data.</h1>
+    <p>{{ message }}</p>
+    <a class="button" href="{{ url_for('home.index') }}">Try again</a>
+</section>
+{% endblock %}

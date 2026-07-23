@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block title %}{{ race.name }} {{ race.season }} · F1 Archive{% endblock %}
+{% block content %}
+<a class="back-link"
+   href="{{ url_for('seasons.season_page', season=race.season) }}">
+    ← {{ race.season }} season
+</a>
+
+<section class="race-hero">
+    <div>
+        <p class="eyebrow">
+            Round {{ race.round }} · {{ race.formatted_date }}
+        </p>
+        <h1>{{ race.name }}</h1>
+        <p>
+            {{ race.circuit }} · {{ race.locality }}, {{ race.country }}
+        </p>
+    </div>
+    <span class="round-badge">R{{ race.round }}</span>
+</section>
+
+<section class="stat-grid">
+    <article class="stat-card">
+        <span>Winner</span>
+        <strong>{{ race.winner.driver_name if race.winner else "—" }}</strong>
+        <small>{{ race.winner.constructor if race.winner else "" }}</small>
+    </article>
+    <article class="stat-card">
+        <span>Pole position</span>
+        <strong>{{ race.pole.driver_name if race.pole else "—" }}</strong>
+        <small>{{ race.pole.constructor if race.pole else "" }}</small>
+    </article>
+    <article class="stat-card">
+        <span>Fastest lap</span>
+        <strong>{{ race.fastest.driver_name if race.fastest else "—" }}</strong>
+        <small>{{ race.fastest.fastest_lap_time if race.fastest else "" }}</small>
+    </article>
+    <article class="stat-card">
+        <span>Finishers</span>
+        <strong>{{ race.finisher_count }}/{{ race.starter_count }}</strong>
+        <small>{{ race.dnfs|length }} recorded DNFs</small>
+    </article>
+</section>
+
+<section class="race-championship">
+    <div class="section-heading championship-section-heading">
+        <div>
+            <p class="eyebrow">Championship progression</p>
+            <h2>Drivers' standings</h2>
+        </div>
+        <span>Before and after Round {{ race.round }}</span>
+    </div>
+
+    <div class="championship-comparison">
+        <article class="race-standings-panel">
+            <div class="race-standings-heading">
+                <div>
+                    <span class="standings-moment">Before the race</span>
+                    <h3>
+                        {% if race.championship.is_season_opener %}
+                            Pre-season
+                        {% else %}
+                            After Round {{ race.round - 1 }}
+                        {% endif %}
+                    </h3>
+                </div>
+                {% if race.championship.before %}
+                    <span>{{ race.championship.before|length }} drivers</span>
+                {% endif %}
+            </div>
+
+            {% if race.championship.before %}
+                <div class="race-standings-list">
+                    {% for entry in race.championship.before[:5] %}
+                        <div class="race-standing-row">
+                            <strong class="race-standing-position">
+                                {{ entry.position_text }}
+                            </strong>
+                            <i
+                                class="race-standing-colour"
+                                style="--team-colour: {{ entry.team_colour }}"
+                                aria-hidden="true"
+                            ></i>
+                            <div class="race-standing-driver">
+                                <strong>{{ entry.driver_name }}</strong>
+                                <small>{{ entry.constructor_name }}</small>
+                            </div>
+                            <strong class="race-standing-points">
+                                {{ "%g"|format(entry.points) }}
+                                <small>pts</small>
+                            </strong>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if race.championship.before|length > 5 %}
+                    <details class="race-full-standings">
+                        <summary>View full pre-race standings</summary>
+                        <div class="race-standings-list">
+                            {% for entry in race.championship.before[5:] %}
+                                <div class="race-standing-row">
+                                    <strong class="race-standing-position">
+                                        {{ entry.position_text }}
+                                    </strong>
+                                    <i
+                                        class="race-standing-colour"
+                                        style="--team-colour: {{ entry.team_colour }}"
+                                        aria-hidden="true"
+                                    ></i>
+                                    <div class="race-standing-driver">
+                                        <strong>{{ entry.driver_name }}</strong>
+                                        <small>{{ entry.constructor_name }}</small>
+                                    </div>
+                                    <strong class="race-standing-points">
+                                        {{ "%g"|format(entry.points) }}
+                                        <small>pts</small>
+                                    </strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </details>
+                {% endif %}
+            {% else %}
+                <div class="preseason-empty">
+                    <strong>No standings yet</strong>
+                    <p>
+                        This was the opening round, so every driver entered
+                        the weekend on zero championship points.
+                    </p>
+                </div>
+            {% endif %}
+        </article>
+
+        <article class="race-standings-panel race-standings-panel-after">
+            <div class="race-standings-heading">
+                <div>
+                    <span class="standings-moment">After the race</span>
+                    <h3>After Round {{ race.round }}</h3>
+                </div>
+                <span>{{ race.championship.after|length }} drivers</span>
+            </div>
+
+            <div class="race-standings-list">
+                {% for entry in race.championship.after[:5] %}
+                    <div class="race-standing-row">
+                        <strong class="race-standing-position">
+                            {{ entry.position_text }}
+                        </strong>
+                        <i
+                            class="race-standing-colour"
+                            style="--team-colour: {{ entry.team_colour }}"
+                            aria-hidden="true"
+                        ></i>
+                        <div class="race-standing-driver">
+                            <strong>{{ entry.driver_name }}</strong>
+                            <small>{{ entry.constructor_name }}</small>
+                        </div>
+                        <div class="standing-change">
+                            {% if entry.position_change is not none %}
+                                {% if entry.position_change > 0 %}
+                                    <span class="position-up">
+                                        ↑{{ entry.position_change }}
+                                    </span>
+                                {% elif entry.position_change < 0 %}
+                                    <span class="position-down">
+                                        ↓{{ entry.position_change|abs }}
+                                    </span>
+                                {% else %}
+                                    <span class="position-same">—</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="position-new">NEW</span>
+                            {% endif %}
+                        </div>
+                        <strong class="race-standing-points">
+                            {{ "%g"|format(entry.points) }}
+                            <small>
+                                +{{ "%g"|format(entry.points_gained) }}
+                            </small>
+                        </strong>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if race.championship.after|length > 5 %}
+                <details class="race-full-standings">
+                    <summary>View full post-race standings</summary>
+                    <div class="race-standings-list">
+                        {% for entry in race.championship.after[5:] %}
+                            <div class="race-standing-row">
+                                <strong class="race-standing-position">
+                                    {{ entry.position_text }}
+                                </strong>
+                                <i
+                                    class="race-standing-colour"
+                                    style="--team-colour: {{ entry.team_colour }}"
+                                    aria-hidden="true"
+                                ></i>
+                                <div class="race-standing-driver">
+                                    <strong>{{ entry.driver_name }}</strong>
+                                    <small>{{ entry.constructor_name }}</small>
+                                </div>
+                                <div class="standing-change">
+                                    {% if entry.position_change is not none %}
+                                        {% if entry.position_change > 0 %}
+                                            <span class="position-up">
+                                                ↑{{ entry.position_change }}
+                                            </span>
+                                        {% elif entry.position_change < 0 %}
+                                            <span class="position-down">
+                                                ↓{{ entry.position_change|abs }}
+                                            </span>
+                                        {% else %}
+                                            <span class="position-same">—</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="position-new">NEW</span>
+                                    {% endif %}
+                                </div>
+                                <strong class="race-standing-points">
+                                    {{ "%g"|format(entry.points) }}
+                                    <small>
+                                        +{{ "%g"|format(entry.points_gained) }}
+                                    </small>
+                                </strong>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </details>
+            {% endif %}
+        </article>
+    </div>
+</section>
+
+{% if race_map %}
+    {% include "_race_map.html" %}
+{% elif race.circuit_geometry %}
+    {% include "_static_circuit_map.html" %}
+{% else %}
+<section class="map-placeholder">
+    <div>
+        <p class="eyebrow">Circuit map</p>
+        <h2>Layout unavailable</h2>
+        <p>
+            This historic circuit or layout has not yet been matched to the
+            geometry archive.
+        </p>
+    </div>
+    <div class="track-sketch" aria-label="Circuit layout unavailable">
+        <span>Geometry mapping needed</span>
+    </div>
+</section>
+{% endif %}
+
+<div class="two-column">
+    <section>
+        <div class="section-heading">
+            <h2>Race classification</h2>
+            <span>{{ race.starter_count }} starters</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Driver</th>
+                        <th>Constructor</th>
+                        <th>Grid</th>
+                        <th>Status / time</th>
+                        <th>Pts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in race.results %}
+                    <tr>
+                        <td><strong>{{ result.position }}</strong></td>
+                        <td>
+                            <span class="driver-code">
+                                {{ result.driver_code }}
+                            </span>
+                            {{ result.driver_name }}
+                        </td>
+                        <td>{{ result.constructor }}</td>
+                        <td>{{ result.grid if result.grid else "Pit" }}</td>
+                        <td>
+                            {% if result.time != "—" %}
+                                {{ result.time }}
+                            {% else %}
+                                {{ result.status }}
+                            {% endif %}
+                        </td>
+                        <td>{{ result.points }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <aside class="sidebar">
+        <section class="insight-panel">
+            <p class="eyebrow">Biggest movers</p>
+            <h2>From grid to flag</h2>
+            {% for driver in race.biggest_gainers %}
+                <div class="insight-row">
+                    <div>
+                        <strong>{{ driver.driver_name }}</strong>
+                        <small>
+                            P{{ driver.grid }} → P{{ driver.position }}
+                        </small>
+                    </div>
+                    <span class="gain">+{{ driver.places_gained }}</span>
+                </div>
+            {% else %}
+                <p>No movement data available.</p>
+            {% endfor %}
+        </section>
+
+        <section class="insight-panel">
+            <p class="eyebrow">Retirements</p>
+            <h2>Non-finishers</h2>
+            {% for driver in race.dnfs %}
+                <div class="dnf-row">
+                    <strong>{{ driver.driver_name }}</strong>
+                    <small>{{ driver.status }}</small>
+                </div>
+            {% else %}
+                <p>Every starter was classified.</p>
+            {% endfor %}
+        </section>
+    </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% if race_map %}
+        <script src="{{ url_for('static', filename='race_map.js') }}"></script>
+    {% endif %}
+{% endblock %}

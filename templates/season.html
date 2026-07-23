@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}{{ season }} season · F1 Archive{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('home.index') }}">← All seasons</a>
+
+<section class="page-intro season-intro">
+    <p class="eyebrow">Formula 1 season</p>
+    <h1>{{ season }}</h1>
+    <p>{{ races|length }} championship rounds</p>
+</section>
+
+<section class="championship-overview" aria-label="{{ season }} championship standings">
+    <article class="standings-panel">
+        <div class="standings-heading">
+            <div>
+                <p class="eyebrow">World Drivers' Championship</p>
+                <h2>Driver standings</h2>
+            </div>
+            <span>{{ driver_standings|length }} classified</span>
+        </div>
+
+        <div class="standings-list standings-podium">
+            {% for entry in driver_standings[:3] %}
+                <div class="standing-row">
+                    <span class="standing-position">{{ entry.position_text }}</span>
+                    <span
+                        class="team-colour"
+                        style="--team-colour: {{ entry.team_colour }}"
+                        aria-hidden="true"
+                    ></span>
+                    <span class="standing-identity">
+                        <strong>{{ entry.driver_name }}</strong>
+                        <small>{{ entry.constructor_name }}</small>
+                    </span>
+                    <span class="standing-record">
+                        <strong>{{ entry.points }}</strong>
+                        <small>points · {{ entry.wins }} wins</small>
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if driver_standings|length > 3 %}
+            <details class="full-standings">
+                <summary>View full driver standings</summary>
+                <div class="standings-list">
+                    {% for entry in driver_standings[3:] %}
+                        <div class="standing-row">
+                            <span class="standing-position">{{ entry.position_text }}</span>
+                            <span
+                                class="team-colour"
+                                style="--team-colour: {{ entry.team_colour }}"
+                                aria-hidden="true"
+                            ></span>
+                            <span class="standing-identity">
+                                <strong>{{ entry.driver_name }}</strong>
+                                <small>{{ entry.constructor_name }}</small>
+                            </span>
+                            <span class="standing-record">
+                                <strong>{{ entry.points }}</strong>
+                                <small>points · {{ entry.wins }} wins</small>
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </details>
+        {% endif %}
+    </article>
+
+    <article class="standings-panel">
+        <div class="standings-heading">
+            <div>
+                <p class="eyebrow">World Constructors' Championship</p>
+                <h2>Team standings</h2>
+            </div>
+            <span>{{ constructor_standings|length }} classified</span>
+        </div>
+
+        {% if constructor_standings %}
+            <div class="standings-list standings-podium">
+                {% for entry in constructor_standings[:3] %}
+                    <div class="standing-row">
+                        <span class="standing-position">{{ entry.position_text }}</span>
+                        <span
+                            class="team-colour team-colour-wide"
+                            style="--team-colour: {{ entry.team_colour }}"
+                            aria-hidden="true"
+                        ></span>
+                        <span class="standing-identity">
+                            <strong>{{ entry.constructor_name }}</strong>
+                            <small>{{ entry.nationality }}</small>
+                        </span>
+                        <span class="standing-record">
+                            <strong>{{ entry.points }}</strong>
+                            <small>points · {{ entry.wins }} wins</small>
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if constructor_standings|length > 3 %}
+                <details class="full-standings">
+                    <summary>View full team standings</summary>
+                    <div class="standings-list">
+                        {% for entry in constructor_standings[3:] %}
+                            <div class="standing-row">
+                                <span class="standing-position">{{ entry.position_text }}</span>
+                                <span
+                                    class="team-colour team-colour-wide"
+                                    style="--team-colour: {{ entry.team_colour }}"
+                                    aria-hidden="true"
+                                ></span>
+                                <span class="standing-identity">
+                                    <strong>{{ entry.constructor_name }}</strong>
+                                    <small>{{ entry.nationality }}</small>
+                                </span>
+                                <span class="standing-record">
+                                    <strong>{{ entry.points }}</strong>
+                                    <small>points · {{ entry.wins }} wins</small>
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </details>
+            {% endif %}
+        {% else %}
+            <div class="standings-unavailable">
+                Constructor standings were not awarded in this season.
+            </div>
+        {% endif %}
+    </article>
+</section>
+
+<section>
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Championship calendar</p>
+            <h2>Race results</h2>
+        </div>
+        <span>{{ races|length }} rounds</span>
+    </div>
+
+    <div class="race-list">
+        {% for race in races %}
+            <a class="race-row"
+               href="{{ url_for('races.race_page', season=season, round_number=race.round) }}">
+                <span class="round-number">{{ "%02d"|format(race.round) }}</span>
+                <span class="race-main">
+                    <strong>{{ race.name }}</strong>
+                    <small>
+                        {{ race.circuit }} · {{ race.locality }}, {{ race.country }}
+                    </small>
+                </span>
+                <span class="race-date">{{ race.formatted_date }}</span>
+                <span class="arrow">→</span>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

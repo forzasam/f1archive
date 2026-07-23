@@ -1,0 +1,12 @@
+f1-circuits-svg
+Copyright © Jules Roy and contributors
+
+Source:
+https://github.com/julesr0y/f1-circuits-svg
+
+License:
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+This project references detailed white-outline SVG circuit layouts from
+the source repository. Attribution is displayed alongside each circuit
+map in the application.

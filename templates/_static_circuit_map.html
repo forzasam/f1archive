@@ -1,0 +1,39 @@
+<section class="race-map-section static-circuit-section">
+    <div class="race-map-intro">
+        <div>
+            <p class="eyebrow">Circuit map</p>
+            <h2>{{ race.circuit }}</h2>
+            <p>
+                The correct circuit geometry is now available for this
+                race. Named segments and race events will be layered onto
+                it as the editorial dataset is authored.
+            </p>
+        </div>
+        <span class="geometry-status">Geometry available</span>
+    </div>
+
+    <div class="static-circuit-stage">
+        <img
+            src="{{ race.circuit_geometry.svg_url }}"
+            alt="Vector layout of {{ race.circuit }}"
+            class="static-circuit-image"
+            loading="lazy"
+        >
+        <div class="static-circuit-overlay">
+            <span>Segment data not yet authored</span>
+        </div>
+    </div>
+
+    <p class="map-attribution static-map-attribution">
+        Layout:
+        <a
+            href="{{ race.circuit_geometry.source_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            {{ race.circuit_geometry.source_name }}
+        </a>
+        · {{ race.circuit_geometry.license }}
+        · Layout ID {{ race.circuit_geometry.layout_id }}
+    </p>
+</section>

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Choose a season · F1 Archive{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <p class="eyebrow">Explore Formula 1 history</p>
+    <h1>Every season has a story.</h1>
+    <p class="hero-copy">
+        Filter the archive by the people and teams you care about, then choose
+        a season to explore.
+    </p>
+</section>
+
+<section class="filter-panel" aria-labelledby="filter-title">
+    <div class="filter-heading">
+        <div>
+            <p class="eyebrow">Refine the archive</p>
+            <h2 id="filter-title">Filter seasons</h2>
+        </div>
+        {% if filters_active %}
+            <a class="clear-link" href="{{ url_for('home.index') }}">
+                Clear filters
+            </a>
+        {% endif %}
+    </div>
+
+
+<form method="get" action="{{ url_for('home.index') }}" class="filter-form">
+    <div class="autocomplete-field" data-filter-kind="driver">
+        <label for="driver-search">Filter by driver</label>
+        <input
+            type="search"
+            id="driver-search"
+            class="autocomplete-input"
+            value="{{ selected_driver_name }}"
+            placeholder="Type a first name or surname"
+            autocomplete="off"
+            aria-autocomplete="list"
+            aria-controls="driver-results"
+            aria-expanded="false"
+        >
+        <input type="hidden" name="driver" id="driver-filter" value="{{ selected_driver }}">
+        <div id="driver-results" class="autocomplete-results" role="listbox" hidden>
+            <div id="driver-results-list"></div>
+            <p id="driver-no-results" class="autocomplete-empty" hidden>No matching drivers</p>
+        </div>
+    </div>
+
+    <div class="autocomplete-field" data-filter-kind="constructor">
+        <label for="constructor-search">Filter by team</label>
+        <input
+            type="search"
+            id="constructor-search"
+            class="autocomplete-input"
+            value="{{ selected_constructor_name }}"
+            placeholder="Type a team name"
+            autocomplete="off"
+            aria-autocomplete="list"
+            aria-controls="constructor-results"
+            aria-expanded="false"
+        >
+        <input type="hidden" name="constructor" id="constructor-filter" value="{{ selected_constructor }}">
+        <div id="constructor-results" class="autocomplete-results" role="listbox" hidden>
+            <div id="constructor-results-list"></div>
+            <p id="constructor-no-results" class="autocomplete-empty" hidden>No matching teams</p>
+        </div>
+    </div>
+
+    <button type="submit">Apply filters</button>
+</form>
+
+<script id="driver-data" type="application/json">
+    [
+    {% for driver in drivers %}
+        {"id": {{ driver.driver_id | tojson }}, "name": {{ driver.name | tojson }}, "nationality": {{ driver.nationality | tojson }}}{% if not loop.last %},{% endif %}
+    {% endfor %}
+    ]
+</script>
+<script id="constructor-data" type="application/json">
+    [
+    {% for constructor in constructors %}
+        {"id": {{ constructor.constructor_id | tojson }}, "name": {{ constructor.name | tojson }}, "nationality": {{ constructor.nationality | tojson }}}{% if not loop.last %},{% endif %}
+    {% endfor %}
+    ]
+</script>
+
+    {% if filters_active %}
+        <p class="filter-summary">
+            Showing seasons
+            {% if selected_driver_name %}
+                featuring <strong>{{ selected_driver_name }}</strong>
+            {% endif %}
+            {% if selected_driver_name and selected_constructor_name %}
+                and
+            {% endif %}
+            {% if selected_constructor_name %}
+                featuring <strong>{{ selected_constructor_name }}</strong>
+            {% endif %}.
+            When both are selected, only seasons in which that driver
+            actually raced for that team are shown.
+        </p>
+    {% endif %}
+</section>
+
+<section>
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Archive</p>
+            <h2>Choose a season</h2>
+        </div>
+        <span>
+            {{ seasons|length }}
+            {% if seasons|length == 1 %}season{% else %}seasons{% endif %}
+        </span>
+    </div>
+
+    {% if seasons %}
+        <div class="season-grid">
+            {% for season in seasons %}
+                <a
+                    class="season-card{% if season.driver_result %} season-card-with-result{% endif %}"
+                    href="{{ url_for('seasons.season_page', season=season.year) }}"
+                >
+                    <div class="season-card-topline">
+                        <span>{{ season.year }}</span>
+                        {% if season.driver_result %}
+                            <strong class="wdc-position">
+                                P{{ season.driver_result.position_text }}
+                            </strong>
+                        {% endif %}
+                    </div>
+
+                    {% if season.driver_result %}
+                        <div class="season-driver-result">
+                            <small>Drivers' Championship</small>
+                            <span>
+                                {{ season.driver_result.points }} pts
+                                {% if season.driver_result.wins %}
+                                    · {{ season.driver_result.wins }}
+                                    {% if season.driver_result.wins == 1 %}win{% else %}wins{% endif %}
+                                {% endif %}
+                            </span>
+                            {% if season.driver_result.constructors %}
+                                <em>{{ season.driver_result.constructors | join(" / ") }}</em>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <small>View season →</small>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-results">
+            <h3>No driver–team seasons found.</h3>
+            <p>
+                The selected driver did not race for the selected team in a
+                Formula 1 World Championship season.
+            </p>
+            <a class="button secondary" href="{{ url_for('home.index') }}">
+                Reset filters
+            </a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='home_filters.js') }}"></script>
+{% endblock %}

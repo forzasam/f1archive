@@ -1,0 +1,364 @@
+{
+  "map_mode": "inline_generated",
+  "race": {
+    "season": 2026,
+    "round": 9,
+    "slug": "great-britain",
+    "name": "British Grand Prix",
+    "circuit": "Silverstone Circuit",
+    "laps": 52,
+    "circuit_id": "silverstone",
+    "layout_id": "silverstone-8"
+  },
+  "source": {
+    "name": "Formula 1 race report",
+    "url": "https://www.formula1.com/en/latest/article/leclerc-wins-dramatic-british-grand-prix-from-russell-and-hamilton-as-antonelli-suffers-issue.3bGl6laB38GIr1PfxJTNmY"
+  },
+  "segments": [
+    {
+      "id": "pit-straight",
+      "name": "Hamilton Straight",
+      "kind": "straight",
+      "start_pct": 0,
+      "end_pct": 6
+    },
+    {
+      "id": "turn-1",
+      "name": "Abbey / Turn 1",
+      "kind": "corner",
+      "start_pct": 6,
+      "end_pct": 10
+    },
+    {
+      "id": "turn-2",
+      "name": "Farm / Turn 2",
+      "kind": "corner",
+      "start_pct": 10,
+      "end_pct": 13
+    },
+    {
+      "id": "turn-3",
+      "name": "Village / Turn 3",
+      "kind": "corner",
+      "start_pct": 13,
+      "end_pct": 17
+    },
+    {
+      "id": "turn-4",
+      "name": "The Loop / Turn 4",
+      "kind": "corner",
+      "start_pct": 17,
+      "end_pct": 21
+    },
+    {
+      "id": "turn-5",
+      "name": "Aintree / Turn 5",
+      "kind": "corner",
+      "start_pct": 21,
+      "end_pct": 25
+    },
+    {
+      "id": "wellington-straight",
+      "name": "Wellington Straight",
+      "kind": "straight",
+      "start_pct": 25,
+      "end_pct": 34
+    },
+    {
+      "id": "turn-6",
+      "name": "Brooklands / Turn 6",
+      "kind": "corner",
+      "start_pct": 34,
+      "end_pct": 39
+    },
+    {
+      "id": "turn-7",
+      "name": "Luffield / Turn 7",
+      "kind": "corner",
+      "start_pct": 39,
+      "end_pct": 44
+    },
+    {
+      "id": "turn-8",
+      "name": "Woodcote / Turn 8",
+      "kind": "corner",
+      "start_pct": 44,
+      "end_pct": 48
+    },
+    {
+      "id": "national-pits-straight",
+      "name": "National Pits Straight",
+      "kind": "straight",
+      "start_pct": 48,
+      "end_pct": 52
+    },
+    {
+      "id": "turn-9",
+      "name": "Copse / Turn 9",
+      "kind": "corner",
+      "start_pct": 52,
+      "end_pct": 58
+    },
+    {
+      "id": "straight-9-10",
+      "name": "Straight to Maggotts",
+      "kind": "straight",
+      "start_pct": 58,
+      "end_pct": 62
+    },
+    {
+      "id": "turn-10",
+      "name": "Maggotts / Turn 10",
+      "kind": "corner",
+      "start_pct": 62,
+      "end_pct": 65
+    },
+    {
+      "id": "turn-11",
+      "name": "Turn 11",
+      "kind": "corner",
+      "start_pct": 65,
+      "end_pct": 68
+    },
+    {
+      "id": "turn-12",
+      "name": "Becketts / Turn 12",
+      "kind": "corner",
+      "start_pct": 68,
+      "end_pct": 71
+    },
+    {
+      "id": "turn-13",
+      "name": "Turn 13",
+      "kind": "corner",
+      "start_pct": 71,
+      "end_pct": 74
+    },
+    {
+      "id": "turn-14",
+      "name": "Chapel / Turn 14",
+      "kind": "corner",
+      "start_pct": 74,
+      "end_pct": 78
+    },
+    {
+      "id": "hangar-straight",
+      "name": "Hangar Straight",
+      "kind": "straight",
+      "start_pct": 78,
+      "end_pct": 87
+    },
+    {
+      "id": "turn-15",
+      "name": "Stowe / Turn 15",
+      "kind": "corner",
+      "start_pct": 87,
+      "end_pct": 91
+    },
+    {
+      "id": "turn-16",
+      "name": "Vale / Turn 16",
+      "kind": "corner",
+      "start_pct": 91,
+      "end_pct": 94
+    },
+    {
+      "id": "turn-17",
+      "name": "Club Entry / Turn 17",
+      "kind": "corner",
+      "start_pct": 94,
+      "end_pct": 97
+    },
+    {
+      "id": "turn-18",
+      "name": "Club Exit / Turn 18",
+      "kind": "corner",
+      "start_pct": 97,
+      "end_pct": 100
+    }
+  ],
+  "events": [
+    {
+      "id": "gbr-l1-lec",
+      "lap": "1",
+      "type": "lead_change",
+      "title": "Leclerc takes the lead",
+      "segment_id": "turn-1",
+      "description": "Leclerc launches past polesitter Antonelli at the start.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Lead change",
+      "attacker": "Charles Leclerc",
+      "defender": "Kimi Antonelli"
+    },
+    {
+      "id": "gbr-l1-ham",
+      "lap": "1",
+      "type": "overtake",
+      "title": "Hamilton moves into second",
+      "segment_id": "turn-1",
+      "description": "Hamilton also clears Antonelli on the opening lap.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Overtake",
+      "attacker": "Lewis Hamilton",
+      "defender": "Kimi Antonelli"
+    },
+    {
+      "id": "gbr-l1-pia",
+      "lap": "1",
+      "type": "incident",
+      "title": "Piastri pits with damage",
+      "segment_id": "turn-18",
+      "description": "Piastri suffers opening-lap damage and stops at the end of Lap 1.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Incident"
+    },
+    {
+      "id": "gbr-l20-ant",
+      "lap": "20",
+      "type": "overtake",
+      "title": "Antonelli passes Hamilton",
+      "segment_id": "turn-15",
+      "description": "Antonelli recovers second place before extending his stint.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Overtake",
+      "attacker": "Kimi Antonelli",
+      "defender": "Lewis Hamilton"
+    },
+    {
+      "id": "gbr-l36-ant",
+      "lap": "36",
+      "type": "lead_change",
+      "title": "Antonelli pits from the lead",
+      "segment_id": "turn-18",
+      "description": "Antonelli's delayed stop hands first place back to Leclerc.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Lead change",
+      "attacker": "Charles Leclerc",
+      "defender": "Kimi Antonelli"
+    },
+    {
+      "id": "gbr-l41-ant",
+      "lap": "41",
+      "type": "incident",
+      "title": "Antonelli suffers wheel-shield issue",
+      "segment_id": "turn-9",
+      "description": "A left-front wheel-shield failure forces two extra stops and drops Antonelli down the order.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Incident"
+    },
+    {
+      "id": "gbr-l48-ver",
+      "lap": "48",
+      "type": "retirement",
+      "title": "Verstappen crashes into gravel",
+      "segment_id": "turn-15",
+      "description": "Verstappen spins off into the gravel, ending his race and triggering a Safety Car.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Retirement",
+      "caused_safety_car": true
+    },
+    {
+      "id": "gbr-l48-sc",
+      "lap": "48",
+      "type": "safety_car",
+      "title": "Safety Car deployed",
+      "segment_id": "turn-15",
+      "description": "The race is neutralised and ultimately finishes behind the Safety Car.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Safety Car"
+    },
+    {
+      "id": "gbr-l49-rus",
+      "lap": "49",
+      "type": "strategy",
+      "title": "Russell stays out for second",
+      "segment_id": "turn-18",
+      "description": "Russell gains track position when rivals pit under the late Safety Car.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Strategy"
+    }
+  ],
+  "turn_labels": [
+    {
+      "label": "1",
+      "pct": 8
+    },
+    {
+      "label": "2",
+      "pct": 11.5
+    },
+    {
+      "label": "3",
+      "pct": 15
+    },
+    {
+      "label": "4",
+      "pct": 19
+    },
+    {
+      "label": "5",
+      "pct": 23
+    },
+    {
+      "label": "6",
+      "pct": 36.5
+    },
+    {
+      "label": "7",
+      "pct": 41.5
+    },
+    {
+      "label": "8",
+      "pct": 46
+    },
+    {
+      "label": "9",
+      "pct": 55
+    },
+    {
+      "label": "10",
+      "pct": 63.5
+    },
+    {
+      "label": "11",
+      "pct": 66.5
+    },
+    {
+      "label": "12",
+      "pct": 69.5
+    },
+    {
+      "label": "13",
+      "pct": 72.5
+    },
+    {
+      "label": "14",
+      "pct": 76
+    },
+    {
+      "label": "15",
+      "pct": 89
+    },
+    {
+      "label": "16",
+      "pct": 92.5
+    },
+    {
+      "label": "17",
+      "pct": 95.5
+    },
+    {
+      "label": "18",
+      "pct": 98.5
+    }
+  ]
+}

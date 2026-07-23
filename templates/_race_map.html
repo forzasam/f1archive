@@ -1,0 +1,309 @@
+
+<section class="race-map-section">
+    <div class="race-map-intro">
+        <div>
+            <p class="eyebrow">Experimental race map</p>
+            <h2>The race, corner by corner</h2>
+            <p>
+                Hover over a circuit segment to identify it. Select a segment
+                to inspect its featured overtakes, incidents and retirements.
+            </p>
+        </div>
+        <div class="race-map-legend">
+            <span><i class="map-dot overtake"></i> Overtake</span>
+            <span><i class="map-dot incident"></i> Incident</span>
+            <span><i class="map-dot retirement"></i> Retirement</span>
+        </div>
+    </div>
+
+    <div class="race-map-layout">
+        <div class="circuit-stage">
+            <div id="segment-tooltip" class="segment-tooltip" hidden></div>
+
+            {% if race_map.map_mode == "inline" %}
+                <svg
+                    id="albert-park-map"
+                    class="circuit-map"
+                    viewBox="0 0 1024 576"
+                    role="img"
+                    aria-label="Interactive segmented vector trace of Albert Park Circuit"
+                >
+                    <!--
+                        Faithful display trace of the official Formula 1 2026
+                        Melbourne circuit diagram. Each path is a semantic segment
+                        and together they form one continuous lap.
+                    -->
+                    <g class="track-underlay" aria-hidden="true">
+                        <path d="M790 492 L573 492 L432 493 C416 493 408 485 404 469 C400 455 393 447 381 445" />
+                        <path d="M381 445 C362 440 353 427 350 411 C346 394 337 385 321 382" />
+                        <path d="M321 382 C255 379 187 383 121 386" />
+                        <path d="M121 386 C102 386 91 377 94 363 C98 347 112 337 127 331" />
+                        <path d="M127 331 C142 325 147 313 134 300" />
+                        <path d="M134 300 C112 281 61 252 55 229 C51 207 58 179 62 158" />
+                        <path d="M62 158 C67 132 77 105 84 85 C89 70 94 63 105 62" />
+                        <path d="M105 62 C132 63 148 57 165 43 C184 28 202 23 220 25" />
+                        <path d="M220 25 C290 27 337 71 365 121 C393 171 414 225 456 262 C499 300 552 302 611 296" />
+                        <path d="M611 296 C623 295 629 285 636 270 C642 257 650 247 663 246" />
+                        <path d="M663 246 C724 238 770 237 812 250 C858 264 899 289 949 315" />
+                        <path d="M949 315 C966 326 966 338 958 353 L910 438" />
+                        <path d="M910 438 C900 456 884 462 866 456 L790 426" />
+                        <path d="M790 426 C774 420 761 428 761 443 C761 454 770 461 783 461" />
+                        <path d="M783 461 C796 461 800 467 798 479 C796 487 794 491 790 492" />
+                    </g>
+
+                    <g id="segment-hotspots" class="track-segments">
+                        <path data-segment="pit-straight"
+                            d="M790 492 L573 492 L432 493 C416 493 408 485 404 469 C400 455 393 447 381 445" />
+                        <path data-segment="turns-1-2"
+                            d="M381 445 C362 440 353 427 350 411 C346 394 337 385 321 382" />
+                        <path data-segment="jones-straight"
+                            d="M321 382 C255 379 187 383 121 386" />
+                        <path data-segment="turn-3"
+                            d="M121 386 C102 386 91 377 94 363 C98 347 112 337 127 331" />
+                        <path data-segment="turn-4"
+                            d="M127 331 C142 325 147 313 134 300" />
+                        <path data-segment="turn-5"
+                            d="M134 300 C112 281 61 252 55 229 C51 207 58 179 62 158" />
+                        <path data-segment="lakeside-drive"
+                            d="M62 158 C67 132 77 105 84 85 C89 70 94 63 105 62" />
+                        <path data-segment="turns-6-7"
+                            d="M105 62 C132 63 148 57 165 43 C184 28 202 23 220 25" />
+                        <path data-segment="turn-8"
+                            d="M220 25 C290 27 337 71 365 121 C393 171 414 225 456 262 C499 300 552 302 611 296" />
+                        <path data-segment="turns-9-10"
+                            d="M611 296 C623 295 629 285 636 270 C642 257 650 247 663 246" />
+                        <path data-segment="back-straight"
+                            d="M663 246 C724 238 770 237 812 250 C858 264 899 289 949 315" />
+                        <path data-segment="turn-11"
+                            d="M949 315 C966 326 966 338 958 353 L910 438" />
+                        <path data-segment="turn-12"
+                            d="M910 438 C900 456 884 462 866 456 L790 426" />
+                        <path data-segment="turn-13"
+                            d="M790 426 C774 420 761 428 761 443 C761 454 770 461 783 461" />
+                        <path data-segment="turn-14"
+                            d="M783 461 C796 461 800 467 798 479 C796 487 794 491 790 492" />
+                        <path data-segment="pit-entry"
+                            d="M804 472 C824 472 842 468 859 458" />
+                    </g>
+
+                    <g id="event-markers"></g>
+
+                    <g class="corner-number-labels" aria-hidden="true">
+                        <text x="376" y="470">1</text>
+                        <text x="405" y="430">2</text>
+                        <text x="78" y="392">3</text>
+                        <text x="146" y="333">4</text>
+                        <text x="33" y="304">5</text>
+                        <text x="84" y="54">6</text>
+                        <text x="156" y="88">7</text>
+                        <text x="218" y="13">8</text>
+                        <text x="621" y="320">9</text>
+                        <text x="642" y="231">10</text>
+                        <text x="976" y="327">11</text>
+                        <text x="884" y="420">12</text>
+                        <text x="757" y="407">13</text>
+                        <text x="789" y="519">14</text>
+                    </g>
+
+                    <line x1="573" y1="475" x2="573" y2="510" class="start-line" />
+                    <text x="545" y="533" class="map-label">START / FINISH</text>
+                    <text x="504" y="365" class="lake-label">ALBERT PARK LAKE</text>
+                </svg>
+
+            {% elif race_map.geometry %}
+                <svg
+                    id="race-circuit-map"
+                    class="circuit-map"
+                    viewBox="0 0 1024 576"
+                    role="img"
+                    aria-label="Interactive segmented vector trace of {{ race_map.race.circuit }}"
+                    data-generated-map="true"
+                    data-reverse-direction="{{ 'true' if race_map.geometry.reverse_direction else 'false' }}"
+                >
+                    <g id="generated-track-root">
+                        <path
+                            id="generated-track-reference"
+                            d="{{ race_map.geometry.path_d }}"
+                            fill="none"
+                            stroke="none"
+                            aria-hidden="true"
+                        />
+
+                        <g class="track-underlay" aria-hidden="true">
+                            <path id="generated-track-underlay" />
+                        </g>
+
+                        <g id="segment-hotspots" class="track-segments">
+                            {% for segment in race_map.segments %}
+                                <path
+                                    data-segment="{{ segment.id }}"
+                                    data-start-pct="{{ segment.start_pct }}"
+                                    data-end-pct="{{ segment.end_pct }}"
+                                />
+                            {% endfor %}
+                        </g>
+
+                        <g id="event-markers"></g>
+
+                        <g id="repository-start-finish" aria-hidden="true">
+                            <line class="start-line" />
+                            <text class="map-label">START / FINISH</text>
+                        </g>
+                    </g>
+                </svg>
+            {% else %}
+                <div class="generated-map-error">
+                    <strong>Circuit geometry unavailable</strong>
+                    <p>The editorial timeline remains available below.</p>
+                </div>
+            {% endif %}
+            <p class="map-attribution">
+                {% if race_map.map_mode == "inline" %}
+                    Vector trace based on Formula 1’s official 2026 Melbourne circuit diagram. Segmented for editorial interaction; not survey-grade geometry.
+                {% else %}
+                    Circuit geometry from f1-circuits-svg by Jules Roy (CC BY 4.0). Rebuilt as an inline semantic segment map using the Australia interaction architecture.
+                {% endif %}
+            </p>
+        </div>
+
+        <aside class="segment-panel">
+            <p class="eyebrow">Selected segment</p>
+            <h3 id="selected-segment-name">Choose a section</h3>
+            <p id="selected-segment-kind" class="segment-kind">
+                Hover or click anywhere along the circuit.
+            </p>
+            <div id="segment-events" class="segment-events" aria-live="polite">
+                <div class="segment-empty">
+                    Event details will appear here.
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <section class="race-timeline" aria-labelledby="race-timeline-title">
+        <div class="timeline-heading">
+            <div>
+                <p class="eyebrow">Race timeline</p>
+                <h3 id="race-timeline-title">Lap by lap</h3>
+                <p>
+                    Key moments are marked on the race-distance rail. Select a
+                    dot or event card to reveal where it happened.
+                </p>
+            </div>
+
+            <button
+                id="timeline-reset"
+                class="timeline-reset"
+                type="button"
+                hidden
+            >
+                Show all events
+            </button>
+        </div>
+
+
+        <div class="timeline-playback" aria-label="Race timeline playback">
+            <button
+                id="timeline-play"
+                class="timeline-play-button"
+                type="button"
+                aria-label="Play race timeline"
+            >
+                <span class="play-icon" aria-hidden="true">▶</span>
+                <span class="play-label">Play timeline</span>
+            </button>
+
+            <button
+                id="timeline-previous"
+                class="timeline-step-button"
+                type="button"
+                aria-label="Previous featured event"
+            >
+                ← Previous event
+            </button>
+
+            <div class="timeline-lap-readout" aria-live="polite">
+                <span>Current lap</span>
+                <strong id="timeline-current-lap">1</strong>
+            </div>
+
+            <button
+                id="timeline-next"
+                class="timeline-step-button"
+                type="button"
+                aria-label="Next featured event"
+            >
+                Next event →
+            </button>
+
+            <label class="timeline-speed">
+                <span>Playback speed</span>
+                <select id="timeline-speed">
+                    <option value="1">1×</option>
+                    <option value="2">2×</option>
+                    <option value="4">4×</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="timeline-scale">
+            <span>Lap 1</span>
+            <div class="timeline-rail-wrap">
+                <div id="timeline-rail" class="timeline-rail"></div>
+                <div class="timeline-ticks" aria-hidden="true">
+                    {% for lap in [1, 10, 20, 30, 40, 50, race_map.race.laps] %}
+                        <span
+                            style="left: {{ ((lap - 1) / (race_map.race.laps - 1) * 100) }}%"
+                        >
+                            {{ lap }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+            <span>Lap {{ race_map.race.laps }}</span>
+        </div>
+
+        <div class="timeline-filter-row">
+            <div class="timeline-filters" aria-label="Filter timeline events">
+                <button
+                    type="button"
+                    class="timeline-filter active"
+                    data-event-type="all"
+                >
+                    All
+                </button>
+                <button
+                    type="button"
+                    class="timeline-filter"
+                    data-event-type="overtake"
+                >
+                    Overtakes
+                </button>
+                <button
+                    type="button"
+                    class="timeline-filter"
+                    data-event-type="incident"
+                >
+                    Incidents
+                </button>
+                <button
+                    type="button"
+                    class="timeline-filter"
+                    data-event-type="retirement"
+                >
+                    Retirements
+                </button>
+            </div>
+
+            <p id="timeline-context" class="timeline-context">
+                Showing all featured race events
+            </p>
+        </div>
+
+        <div id="timeline-list" class="timeline-list" aria-live="polite"></div>
+    </section>
+
+    <script id="race-map-data" type="application/json">
+        {{ race_map | tojson }}
+    </script>
+</section>

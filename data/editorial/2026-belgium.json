@@ -1,0 +1,361 @@
+{
+  "map_mode": "inline_generated",
+  "race": {
+    "season": 2026,
+    "round": 10,
+    "slug": "belgium",
+    "name": "Belgian Grand Prix",
+    "circuit": "Circuit de Spa-Francorchamps",
+    "laps": 44,
+    "circuit_id": "spa",
+    "layout_id": "spa-francorchamps-4"
+  },
+  "source": {
+    "name": "Formula 1 race report",
+    "url": "https://www.formula1.com/en/latest/article/antonelli-beats-leclerc-to-belgian-grand-prix-win-to-extend-title-lead-as-russell-retires.MAqSJSgXvRP6dLbwiRbWI"
+  },
+  "segments": [
+    {
+      "id": "pit-straight",
+      "name": "Pit Straight",
+      "kind": "straight",
+      "start_pct": 0,
+      "end_pct": 5
+    },
+    {
+      "id": "turn-1",
+      "name": "La Source / Turn 1",
+      "kind": "corner",
+      "start_pct": 5,
+      "end_pct": 10
+    },
+    {
+      "id": "downhill-run",
+      "name": "Downhill Run",
+      "kind": "straight",
+      "start_pct": 10,
+      "end_pct": 14
+    },
+    {
+      "id": "turn-2",
+      "name": "Eau Rouge / Turn 2",
+      "kind": "corner",
+      "start_pct": 14,
+      "end_pct": 17
+    },
+    {
+      "id": "turn-3",
+      "name": "Raidillon / Turn 3",
+      "kind": "corner",
+      "start_pct": 17,
+      "end_pct": 20
+    },
+    {
+      "id": "turn-4",
+      "name": "Turn 4",
+      "kind": "corner",
+      "start_pct": 20,
+      "end_pct": 22
+    },
+    {
+      "id": "kemmel",
+      "name": "Kemmel Straight",
+      "kind": "straight",
+      "start_pct": 22,
+      "end_pct": 34
+    },
+    {
+      "id": "turn-5",
+      "name": "Les Combes / Turn 5",
+      "kind": "corner",
+      "start_pct": 34,
+      "end_pct": 37
+    },
+    {
+      "id": "turn-6",
+      "name": "Turn 6",
+      "kind": "corner",
+      "start_pct": 37,
+      "end_pct": 40
+    },
+    {
+      "id": "turn-7",
+      "name": "Malmedy / Turn 7",
+      "kind": "corner",
+      "start_pct": 40,
+      "end_pct": 43
+    },
+    {
+      "id": "turn-8",
+      "name": "Bruxelles / Turn 8",
+      "kind": "corner",
+      "start_pct": 43,
+      "end_pct": 47
+    },
+    {
+      "id": "turn-9",
+      "name": "No Name / Turn 9",
+      "kind": "corner",
+      "start_pct": 47,
+      "end_pct": 50
+    },
+    {
+      "id": "turn-10",
+      "name": "Pouhon Entry / Turn 10",
+      "kind": "corner",
+      "start_pct": 50,
+      "end_pct": 54
+    },
+    {
+      "id": "turn-11",
+      "name": "Pouhon Exit / Turn 11",
+      "kind": "corner",
+      "start_pct": 54,
+      "end_pct": 58
+    },
+    {
+      "id": "turn-12",
+      "name": "Fagnes Entry / Turn 12",
+      "kind": "corner",
+      "start_pct": 58,
+      "end_pct": 62
+    },
+    {
+      "id": "turn-13",
+      "name": "Fagnes Exit / Turn 13",
+      "kind": "corner",
+      "start_pct": 62,
+      "end_pct": 65
+    },
+    {
+      "id": "turn-14",
+      "name": "Campus / Turn 14",
+      "kind": "corner",
+      "start_pct": 65,
+      "end_pct": 68
+    },
+    {
+      "id": "turn-15",
+      "name": "Stavelot / Turn 15",
+      "kind": "corner",
+      "start_pct": 68,
+      "end_pct": 72
+    },
+    {
+      "id": "courbe-paul-frere",
+      "name": "Courbe Paul Frère",
+      "kind": "straight",
+      "start_pct": 72,
+      "end_pct": 76
+    },
+    {
+      "id": "turn-16",
+      "name": "Blanchimont 1 / Turn 16",
+      "kind": "corner",
+      "start_pct": 76,
+      "end_pct": 81
+    },
+    {
+      "id": "turn-17",
+      "name": "Blanchimont 2 / Turn 17",
+      "kind": "corner",
+      "start_pct": 81,
+      "end_pct": 86
+    },
+    {
+      "id": "straight-17-18",
+      "name": "Straight to Bus Stop",
+      "kind": "straight",
+      "start_pct": 86,
+      "end_pct": 91
+    },
+    {
+      "id": "turn-18",
+      "name": "Bus Stop Entry / Turn 18",
+      "kind": "corner",
+      "start_pct": 91,
+      "end_pct": 95
+    },
+    {
+      "id": "turn-19",
+      "name": "Bus Stop Exit / Turn 19",
+      "kind": "corner",
+      "start_pct": 95,
+      "end_pct": 100
+    }
+  ],
+  "events": [
+    {
+      "id": "bel-l1-ver",
+      "lap": "1",
+      "type": "lead_change",
+      "title": "Verstappen takes the lead",
+      "segment_id": "turn-3",
+      "description": "Verstappen storms past Antonelli on the opening lap at Eau Rouge.",
+      "featured": true,
+      "confidence": "confirmed",
+      "type_label": "Lead change",
+      "attacker": "Max Verstappen",
+      "defender": "Kimi Antonelli"
+    },
+    {
+      "id": "bel-l2-ant",
+      "lap": "2",
+      "type": "lead_change",
+      "title": "Antonelli retakes first",
+      "segment_id": "kemmel",
+      "description": "Antonelli quickly responds and returns to the lead.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Lead change",
+      "attacker": "Kimi Antonelli",
+      "defender": "Max Verstappen"
+    },
+    {
+      "id": "bel-l4-rus",
+      "lap": "4",
+      "type": "retirement",
+      "title": "Russell spun into the gravel",
+      "segment_id": "turn-5",
+      "description": "Contact with Hamilton sends Russell into the gravel and ends his race.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Retirement",
+      "caused_safety_car": true
+    },
+    {
+      "id": "bel-l4-sc",
+      "lap": "4",
+      "type": "safety_car",
+      "title": "Safety Car deployed",
+      "segment_id": "turn-5",
+      "description": "The field is neutralised following Russell's stranded Mercedes.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Safety Car"
+    },
+    {
+      "id": "bel-l7-restart",
+      "lap": "7",
+      "type": "incident",
+      "title": "Antonelli controls the restart",
+      "segment_id": "turn-1",
+      "description": "Antonelli resists pressure at the Safety Car restart and keeps the lead.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Incident"
+    },
+    {
+      "id": "bel-l18-pits",
+      "lap": "18",
+      "type": "lead_change",
+      "title": "Lead changes in pit cycle",
+      "segment_id": "turn-19",
+      "description": "The front-running order cycles through the stops before Antonelli reclaims the effective lead.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Lead change"
+    },
+    {
+      "id": "bel-l42-lec",
+      "lap": "42",
+      "type": "incident",
+      "title": "Leclerc mounts late challenge",
+      "segment_id": "turn-19",
+      "description": "Leclerc closes on Antonelli in the final laps but cannot get close enough to pass.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Incident"
+    },
+    {
+      "id": "bel-l43-stroll",
+      "lap": "43",
+      "type": "retirement",
+      "title": "Stroll retires with car issue",
+      "segment_id": "turn-19",
+      "description": "Stroll is one of three classified non-finishers after a late car problem.",
+      "featured": true,
+      "confidence": "approximate",
+      "type_label": "Retirement",
+      "caused_safety_car": false
+    }
+  ],
+  "turn_labels": [
+    {
+      "label": "1",
+      "pct": 7.5
+    },
+    {
+      "label": "2",
+      "pct": 15.5
+    },
+    {
+      "label": "3",
+      "pct": 18.5
+    },
+    {
+      "label": "4",
+      "pct": 21
+    },
+    {
+      "label": "5",
+      "pct": 35.5
+    },
+    {
+      "label": "6",
+      "pct": 38.5
+    },
+    {
+      "label": "7",
+      "pct": 41.5
+    },
+    {
+      "label": "8",
+      "pct": 45
+    },
+    {
+      "label": "9",
+      "pct": 48.5
+    },
+    {
+      "label": "10",
+      "pct": 52
+    },
+    {
+      "label": "11",
+      "pct": 56
+    },
+    {
+      "label": "12",
+      "pct": 60
+    },
+    {
+      "label": "13",
+      "pct": 63.5
+    },
+    {
+      "label": "14",
+      "pct": 66.5
+    },
+    {
+      "label": "15",
+      "pct": 70
+    },
+    {
+      "label": "16",
+      "pct": 78.5
+    },
+    {
+      "label": "17",
+      "pct": 83.5
+    },
+    {
+      "label": "18",
+      "pct": 93
+    },
+    {
+      "label": "19",
+      "pct": 97.5
+    }
+  ]
+}
