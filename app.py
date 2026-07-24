@@ -5,9 +5,12 @@ from routes.home import home_bp
 from routes.races import races_bp
 from routes.seasons import seasons_bp
 from services.errors import F1DataError
+from services.logging_config import configure_logging
 
 
 def create_app() -> Flask:
+    configure_logging()
+
     app = Flask(__name__)
     app.config.from_object(Config)
 
@@ -27,6 +30,8 @@ def create_app() -> Flask:
 
     @app.errorhandler(500)
     def internal_error(error):
+        app.logger.exception("Unhandled application error")
+
         return render_template(
             "error.html",
             code="500",
@@ -37,12 +42,14 @@ def create_app() -> Flask:
 
     @app.errorhandler(F1DataError)
     def handle_data_error(error: F1DataError):
+        app.logger.warning("F1 data unavailable: %s", error)
+
         return render_template(
             "error.html",
             code="503",
             title="Data Unavailable",
             heading="Safety Car",
-            message=str(error),
+            message="Formula 1 data is temporarily unavailable. Please try again shortly.",
         ), 503
 
     return app
