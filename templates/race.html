@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ race.name }} {{ race.season }} · F1 Archive{% endblock %}
+{% block meta_description %}Results, standings, circuit map and race context for the {{ race.name }} in the {{ race.season }} Formula One season.{% endblock %}
 {% block content %}
 <a class="back-link"
    href="{{ url_for('seasons.season_page', season=race.season) }}">

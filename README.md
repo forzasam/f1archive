@@ -376,3 +376,8 @@ button and opens the complete text in a scrollable overlay.
 Homepage driver, constructor and season filtering is generated from the local
 historical and live archive snapshots. Those interactions no longer call the
 Jolpica API directly.
+
+
+## Search appearance and legal pages
+
+The shared page template now supplies canonical URLs, page descriptions, Open Graph metadata, favicon links and basic WebSite structured data. The app also exposes `/robots.txt` and `/sitemap.xml`. Legal information is available at `/privacy` and `/disclaimer`, with a short independence notice in the global footer. Review the privacy wording whenever analytics, advertising, accounts or additional third-party services are introduced.

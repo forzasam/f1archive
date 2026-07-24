@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Independence and trade mark disclaimer · F1 Archive{% endblock %}
+{% block meta_description %}F1 Archive is an independent historical project and is not affiliated with Formula 1, the FIA or any Formula One team.{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('home.index') }}">← All seasons</a>
+<section class="legal-hero">
+    <p class="eyebrow">Legal</p>
+    <h1>Disclaimer</h1>
+    <p class="editorial-lede">The archive documents the sport independently; it is not an official Formula One service.</p>
+    <p class="legal-updated">Last updated: 24 July 2026</p>
+</section>
+<article class="legal-document">
+    <section><h2>Independent project</h2><p>F1 Archive is an unofficial, independently developed historical and editorial project. It is not affiliated with, authorised by, endorsed by, sponsored by, or otherwise connected to Formula 1, Formula One Management, Formula One Licensing, the Fédération Internationale de l’Automobile (FIA), or any competing team, constructor, driver or event organiser.</p></section>
+    <section><h2>Trade marks</h2><p>“Formula 1”, “Formula One”, “F1”, Grand Prix names, team names, driver names and related marks may be trade marks or other protected identifiers belonging to their respective owners. Their use on this site is descriptive: to identify the championship, people, teams and events discussed in the archive. No ownership or official status is claimed.</p></section>
+    <section><h2>Data and editorial content</h2><p>Results and statistics are presented for historical and informational purposes. Although care is taken, errors and omissions may occur. Editorial summaries and interpretations are the views of the project and should not be treated as official statements from any rights holder or participant.</p></section>
+    <section><h2>Corrections and rights concerns</h2><p>To report an error or raise a good-faith concern about content, attribution or intellectual property, email <a href="mailto:contact@f1archive.net">contact@f1archive.net</a>. Please identify the relevant page and explain the issue clearly.</p></section>
+    <section><h2>No professional advice</h2><p>Nothing on this website constitutes legal, financial or other professional advice.</p></section>
+</article>
+{% endblock %}

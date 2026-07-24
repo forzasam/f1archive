@@ -4,44 +4,60 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}F1 Archive{% endblock %}</title>
+    <title>{% block title %}F1 Archive · Formula One history told through data{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Explore every Formula One World Championship season from 1950 onwards through results, standings, maps, visualisations and editorial context.{% endblock %}">
+    <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+    <link rel="canonical" href="{% block canonical_url %}{{ request.base_url }}{% endblock %}">
 
-    <!-- Favicons -->
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="F1 Archive">
+    <meta property="og:title" content="{% block og_title %}{{ self.title() | striptags }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.meta_description() | striptags }}{% endblock %}">
+    <meta property="og:url" content="{{ request.base_url }}">
+    <meta property="og:image" content="{{ url_for('static', filename='android-chrome-512x512.png', _external=True) }}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ self.og_title() | striptags }}">
+    <meta name="twitter:description" content="{{ self.og_description() | striptags }}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='android-chrome-512x512.png', _external=True) }}">
+
+    <!-- Site icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <meta name="theme-color" content="#0b0c0e">
 
-    <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "F1 Archive",
+      "url": {{ url_for('home.index', _external=True) | tojson }},
+      "description": "Independent Formula One history archive combining data, visualisations and editorial context.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "F1 Archive"
+      }
+    }
+    </script>
+    {% block structured_data %}{% endblock %}
 </head>
 <body>
     <header class="site-header">
-        <a class="brand" href="{{ url_for('home.index') }}">
-            <span class="brand-mark">F1</span>
+        <a class="brand" href="{{ url_for('home.index') }}" aria-label="F1 Archive home">
+            <img class="brand-logo" src="{{ url_for('static', filename='f1arch_logo.png') }}" alt="" width="76" height="52">
             <span class="brand-copy">
-                <strong>Archive</strong>
-                <small>Independent Formula One archive</small>
+                <small>Formula One history, told through data</small>
             </span>
         </a>
 
         <nav class="site-nav" aria-label="Primary navigation">
-            <a
-                href="{{ url_for('home.index') }}"
-                {% if request.endpoint == 'home.index' or request.blueprint in ('seasons', 'races') %}aria-current="page"{% endif %}
-            >Seasons</a>
-            <a
-                href="{{ url_for('pages.about') }}"
-                {% if request.endpoint == 'pages.about' %}aria-current="page"{% endif %}
-            >About</a>
-            <a
-                href="{{ url_for('pages.contact') }}"
-                {% if request.endpoint == 'pages.contact' %}aria-current="page"{% endif %}
-            >Contact</a>
-            {# Future public links can be added here when ready:
-               <a href="...">GitHub</a>
-               <a href="...">Discord</a>
-            #}
+            <a href="{{ url_for('home.index') }}" {% if request.endpoint == 'home.index' or request.blueprint in ('seasons', 'races') %}aria-current="page"{% endif %}>Seasons</a>
+            <a href="{{ url_for('pages.about') }}" {% if request.endpoint == 'pages.about' %}aria-current="page"{% endif %}>About</a>
+            <a href="{{ url_for('pages.contact') }}" {% if request.endpoint == 'pages.contact' %}aria-current="page"{% endif %}>Contact</a>
         </nav>
     </header>
 
@@ -49,12 +65,19 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <span>Historical results supplied by Jolpica-F1.</span>
-        <span class="footer-links">
-            <a href="{{ url_for('pages.about') }}">About</a>
-            <a href="{{ url_for('pages.contact') }}">Contact</a>
-        </span>
+    <footer class="site-footer">
+        <div class="footer-main">
+            <span>Historical results supplied by Jolpica-F1.</span>
+            <span class="footer-links">
+                <a href="{{ url_for('pages.about') }}">About</a>
+                <a href="{{ url_for('pages.contact') }}">Contact</a>
+                <a href="{{ url_for('pages.privacy') }}">Privacy</a>
+                <a href="{{ url_for('pages.disclaimer') }}">Disclaimer</a>
+            </span>
+        </div>
+        <p class="footer-disclaimer">
+            F1 Archive is an independent project and is not affiliated with, endorsed by, or connected to Formula 1, the FIA, or any Formula One team. Formula 1 and F1 are trade marks of their respective owners.
+        </p>
     </footer>
 
     {% block scripts %}{% endblock %}

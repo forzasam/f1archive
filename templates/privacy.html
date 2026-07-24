@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Privacy policy · F1 Archive{% endblock %}
+{% block meta_description %}How F1 Archive handles website visits, server logs and messages sent to its contact addresses.{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('home.index') }}">← All seasons</a>
+<section class="legal-hero">
+    <p class="eyebrow">Legal</p>
+    <h1>Privacy policy</h1>
+    <p class="editorial-lede">A plain-language explanation of the limited information this site may process.</p>
+    <p class="legal-updated">Last updated: 24 July 2026</p>
+</section>
+<article class="legal-document">
+    <section><h2>Overview</h2><p>F1 Archive is an independently maintained informational website. It does not require user accounts and, at the date shown above, does not use advertising trackers or analytics cookies.</p></section>
+    <section><h2>Information collected automatically</h2><p>Like most hosted websites, the hosting provider may create technical server logs when pages are requested. These can include an IP address, browser or device information, the requested page, the referring page, and the date and time of the request. These records are used for security, reliability and fault diagnosis.</p></section>
+    <section><h2>Messages sent by email</h2><p>When you email a support or contact address, the information you choose to provide—including your email address and the contents of your message—is used to respond, investigate reports and improve the project. Messages may be retained where reasonably necessary to preserve context, track a correction or deal with misuse.</p></section>
+    <section><h2>Cookies and local storage</h2><p>The core archive does not currently set non-essential tracking cookies. Ordinary browser features or the hosting platform may still use strictly necessary technical storage. This policy will be updated before any analytics or other non-essential tracking is introduced.</p></section>
+    <section><h2>Third-party services and links</h2><p>The site is hosted by Render and uses historical motorsport data sourced through Jolpica-F1. External links and email services have their own privacy practices, which are outside the control of F1 Archive.</p></section>
+    <section><h2>Your questions and requests</h2><p>For questions about information you have supplied directly, or to request deletion of an email conversation where appropriate, contact <a href="mailto:contact@f1archive.net">contact@f1archive.net</a>.</p></section>
+    <section><h2>Changes to this policy</h2><p>This page may be revised as the site develops. The date at the top will be changed whenever a material update is made.</p></section>
+</article>
+{% endblock %}
