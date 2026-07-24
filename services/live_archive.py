@@ -358,6 +358,11 @@ def refresh_live_archive(
             "scheduled_round_count": len(schedule_rows),
         })
         write_json_atomic(metadata_path(season), metadata)
+        # The homepage filter index is built from these local snapshots.
+        # Rebuild it after a successful refresh so current-season entrants,
+        # teams and standings are immediately reflected without API calls.
+        from services.archive_index import clear_archive_index_cache
+        clear_archive_index_cache()
         logger.info(
             "Live archive refreshed for %s (%s completed rounds)",
             season,

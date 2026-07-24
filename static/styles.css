@@ -2643,3 +2643,206 @@ footer {
         gap: 12px;
     }
 }
+
+/* Season editorial story */
+.season-hero {
+    display: grid;
+    grid-template-columns: minmax(280px, .72fr) minmax(420px, 1.28fr);
+    gap: clamp(32px, 6vw, 88px);
+    align-items: end;
+    padding: 36px 0 48px;
+}
+
+.season-hero .season-intro {
+    padding: 0;
+}
+
+.season-story-card {
+    position: relative;
+    overflow: hidden;
+    padding: 26px 28px 24px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, .035), transparent 58%), var(--panel);
+}
+
+.season-story-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--accent);
+}
+
+.season-story-card h2 {
+    max-width: 720px;
+    margin: 7px 0 15px;
+    font-size: clamp(1.45rem, 2.3vw, 2rem);
+    line-height: 1.12;
+}
+
+.season-story-preview {
+    position: relative;
+    max-height: 8.3rem;
+    overflow: hidden;
+}
+
+.season-story-preview::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 3.2rem;
+    background: linear-gradient(transparent, var(--panel));
+    pointer-events: none;
+}
+
+.season-story-preview p,
+.story-modal-copy p {
+    color: var(--muted);
+    line-height: 1.72;
+}
+
+.season-story-preview p {
+    margin: 0 0 12px;
+}
+
+.season-story-read-more {
+    position: relative;
+    z-index: 1;
+    margin-top: 11px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: .83rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.season-story-read-more span {
+    display: inline-block;
+    margin-left: 5px;
+    color: var(--accent);
+    transition: transform .15s ease;
+}
+
+.season-story-read-more:hover span {
+    transform: translateX(3px);
+}
+
+.story-modal[hidden] { display: none; }
+
+.story-modal {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.story-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: 0;
+    background: rgba(3, 5, 8, .78);
+    backdrop-filter: blur(8px);
+    cursor: default;
+}
+
+.story-modal-panel {
+    position: relative;
+    width: min(780px, 100%);
+    max-height: min(78vh, 760px);
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel);
+    box-shadow: 0 28px 90px rgba(0, 0, 0, .55);
+}
+
+.story-modal-heading {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px 30px 22px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(18, 21, 27, .96);
+    backdrop-filter: blur(10px);
+}
+
+.story-modal-heading h2 {
+    margin: 7px 0 0;
+    font-size: clamp(1.6rem, 4vw, 2.45rem);
+    line-height: 1.12;
+}
+
+.story-modal-close {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.65rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.story-modal-close:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.story-modal-copy {
+    padding: 8px 30px 30px;
+}
+
+.story-modal-copy p {
+    margin: 22px 0 0;
+    font-size: 1.02rem;
+}
+
+body.story-modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 850px) {
+    .season-hero {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+}
+
+@media (max-width: 600px) {
+    .season-hero {
+        padding-top: 24px;
+        gap: 28px;
+    }
+
+    .season-story-card {
+        padding: 22px 22px 20px;
+    }
+
+    .story-modal {
+        align-items: end;
+        padding: 12px;
+    }
+
+    .story-modal-panel {
+        max-height: 88vh;
+        border-radius: 18px;
+    }
+
+    .story-modal-heading,
+    .story-modal-copy {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+}

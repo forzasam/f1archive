@@ -10,6 +10,8 @@ from flask import abort
 
 from models.archive import ConstructorOption, DriverOption
 from services.jolpica import get_json
+from services.archive_index import get_archive_index
+from services.season_story import get_season_story
 from services.circuit_service import get_current_circuit_geometry
 from services.live_archive import (
     current_season as live_current_season,
@@ -94,104 +96,35 @@ def format_date(value: str) -> str:
 
 
 def get_all_seasons() -> list[int]:
-    payload = get_json("seasons.json?limit=100")
-    rows = payload["MRData"]["SeasonTable"].get("Seasons", [])
-    return sorted(
-        (safe_int(row["season"]) for row in rows),
-        reverse=True,
-    )
+    return list(get_archive_index().seasons)
 
 
 def get_driver_options() -> list[DriverOption]:
-    # Jolpica paginates large collections. Request every page rather than
-    # assuming one oversized limit will be honoured.
-    rows: list[dict[str, Any]] = []
-    limit = 100
-    offset = 0
-
-    while True:
-        payload = get_json(f"drivers.json?limit={limit}&offset={offset}")
-        mr_data = payload["MRData"]
-        page = mr_data["DriverTable"].get("Drivers", [])
-        rows.extend(page)
-
-        total = safe_int(mr_data.get("total"), len(rows))
-        offset += len(page)
-        if not page or offset >= total:
-            break
-
-    drivers = [
-        DriverOption(
-            driver_id=row["driverId"],
-            name=f'{row["givenName"]} {row["familyName"]}',
-            nationality=row.get("nationality", ""),
-        )
-        for row in rows
-    ]
-    return sorted(drivers, key=lambda driver: driver.name)
+    return list(get_archive_index().drivers)
 
 
 def get_constructor_options() -> list[ConstructorOption]:
-    payload = get_json("constructors.json?limit=1000")
-    rows = payload["MRData"]["ConstructorTable"].get("Constructors", [])
-
-    constructors = [
-        ConstructorOption(
-            constructor_id=row["constructorId"],
-            name=row["name"],
-            nationality=row.get("nationality", ""),
-        )
-        for row in rows
-    ]
-    return sorted(constructors, key=lambda constructor: constructor.name)
-
+    return list(get_archive_index().constructors)
 
 
 def get_constructor_options_for_driver(driver_id: str) -> list[ConstructorOption]:
-    payload = get_json(f"drivers/{driver_id}/constructors.json?limit=200")
-    rows = payload["MRData"]["ConstructorTable"].get("Constructors", [])
-    return sorted(
-        (
-            ConstructorOption(
-                constructor_id=row["constructorId"],
-                name=row["name"],
-                nationality=row.get("nationality", ""),
-            )
-            for row in rows
-        ),
-        key=lambda constructor: constructor.name,
-    )
+    index = get_archive_index()
+    constructor_ids = index.driver_constructors.get(driver_id, frozenset())
+    return [
+        constructor
+        for constructor in index.constructors
+        if constructor.constructor_id in constructor_ids
+    ]
 
 
 def get_driver_options_for_constructor(constructor_id: str) -> list[DriverOption]:
-    rows: list[dict[str, Any]] = []
-    limit = 100
-    offset = 0
-
-    while True:
-        payload = get_json(
-            f"constructors/{constructor_id}/drivers.json?limit={limit}&offset={offset}"
-        )
-        mr_data = payload["MRData"]
-        page = mr_data["DriverTable"].get("Drivers", [])
-        rows.extend(page)
-
-        total = safe_int(mr_data.get("total"), len(rows))
-        offset += len(page)
-        if not page or offset >= total:
-            break
-
-    return sorted(
-        (
-            DriverOption(
-                driver_id=row["driverId"],
-                name=f'{row["givenName"]} {row["familyName"]}',
-                nationality=row.get("nationality", ""),
-            )
-            for row in rows
-        ),
-        key=lambda driver: driver.name,
-    )
+    index = get_archive_index()
+    driver_ids = index.constructor_drivers.get(constructor_id, frozenset())
+    return [
+        driver
+        for driver in index.drivers
+        if driver.driver_id in driver_ids
+    ]
 
 
 TEAM_COLOURS = {
@@ -303,60 +236,40 @@ def get_driver_positions_by_season(
     driver_id: str,
     seasons: list[int],
 ) -> dict[int, dict[str, Any]]:
+    index = get_archive_index()
     positions: dict[int, dict[str, Any]] = {}
-
     for season in seasons:
-        payload = get_json(
-            f"{season}/drivers/{driver_id}/driverstandings.json?limit=10"
-        )
-        rows = _get_standings_list(payload).get("DriverStandings", [])
-        if not rows:
+        result = index.driver_results.get((driver_id, season))
+        if result is None:
             continue
-
-        row = rows[0]
-        constructors = row.get("Constructors", [])
-        constructor_names = [item.get("name", "") for item in constructors]
         positions[season] = {
-            "position": safe_int(row.get("position"), 999),
-            "position_text": row.get("positionText", "—"),
-            "points": row.get("points", "0"),
-            "wins": safe_int(row.get("wins")),
-            "constructors": constructor_names,
+            "position": result.position,
+            "position_text": result.position_text,
+            "points": result.points,
+            "wins": result.wins,
+            "constructors": list(result.constructors),
         }
-
     return positions
+
 
 def get_filtered_seasons(
     selected_driver: str = "",
     selected_constructor: str = "",
 ) -> list[int]:
-    """
-    Return seasons matching the selected archive relationship.
-
-    When both filters are supplied, they must be applied in the same Jolpica
-    query. Intersecting the driver's career seasons with the constructor's
-    seasons would only prove that both competed during the same year; it would
-    not prove that the driver raced for that constructor.
-    """
+    """Return locally archived seasons matching the selected relationship."""
+    index = get_archive_index()
     if selected_driver and selected_constructor:
-        path = (
-            f"drivers/{selected_driver}/constructors/"
-            f"{selected_constructor}/seasons.json?limit=100"
+        seasons = index.relationship_seasons.get(
+            (selected_driver, selected_constructor),
+            frozenset(),
         )
     elif selected_driver:
-        path = f"drivers/{selected_driver}/seasons.json?limit=100"
+        seasons = index.driver_seasons.get(selected_driver, frozenset())
     elif selected_constructor:
-        path = f"constructors/{selected_constructor}/seasons.json?limit=100"
+        seasons = index.constructor_seasons.get(selected_constructor, frozenset())
     else:
-        return get_all_seasons()
-
-    payload = get_json(path)
-    rows = payload["MRData"]["SeasonTable"].get("Seasons", [])
-
-    return sorted(
-        {safe_int(row["season"]) for row in rows},
-        reverse=True,
-    )
+        seasons = index.seasons
+    return sorted(seasons, reverse=True)
 
 
 def build_homepage_data(
@@ -444,6 +357,7 @@ def get_season_page(season: int) -> dict[str, Any]:
         "driver_standings": get_season_driver_standings(season),
         "constructor_standings": get_season_constructor_standings(season),
         "position_progression": get_driver_championship_position_progression(season),
+        "season_story": get_season_story(season),
         "live_archive": _format_live_archive_status(live_metadata),
     }
 

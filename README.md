@@ -351,3 +351,28 @@ seasons/2026/
 rounds, consecutive failures and the most recent error. Writes are atomic and
 protected by a refresh lock. A failed refresh does not overwrite the previous
 working snapshot.
+
+## Season stories
+
+Season-page editorial copy lives in `data/editorial/seasons/<year>.json`.
+Each file uses this structure:
+
+```json
+{
+  "kicker": "The season in context",
+  "title": "A short, distinctive headline",
+  "paragraphs": [
+    "First paragraph.",
+    "Second paragraph.",
+    "Further paragraphs appear in the expanded story panel."
+  ]
+}
+```
+
+The first two paragraphs form the compact season-page preview. If the file has
+more than two paragraphs, the page automatically adds a **Read the full story**
+button and opens the complete text in a scrollable overlay.
+
+Homepage driver, constructor and season filtering is generated from the local
+historical and live archive snapshots. Those interactions no longer call the
+Jolpica API directly.
