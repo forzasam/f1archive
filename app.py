@@ -2,10 +2,12 @@ from flask import Flask, render_template
 
 from config import Config
 from routes.home import home_bp
+from routes.pages import pages_bp
 from routes.races import races_bp
 from routes.seasons import seasons_bp
 from services.errors import F1DataError
 from services.logging_config import configure_logging
+from services.live_archive import start_live_archive_scheduler
 
 
 def create_app() -> Flask:
@@ -15,8 +17,11 @@ def create_app() -> Flask:
     app.config.from_object(Config)
 
     app.register_blueprint(home_bp)
+    app.register_blueprint(pages_bp)
     app.register_blueprint(seasons_bp)
     app.register_blueprint(races_bp)
+
+    start_live_archive_scheduler(app)
 
     @app.errorhandler(404)
     def page_not_found(error):

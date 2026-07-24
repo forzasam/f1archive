@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "season": 1980,
+  "source": "Jolpica-F1",
+  "source_base_url": "https://api.jolpi.ca/ergast/f1",
+  "licence": "CC BY-NC-SA 4.0",
+  "started_at": "2026-07-24T16:39:13+00:00",
+  "completed_at": "2026-07-24T16:39:50+00:00",
+  "race_count": 14,
+  "rounds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "datasets": {
+    "schedule": true,
+    "driver_standings": true,
+    "constructor_standings": true,
+    "race_results": 14,
+    "round_driver_standings": 14
+  }
+}

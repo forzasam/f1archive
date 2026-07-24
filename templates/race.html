@@ -15,6 +15,17 @@
         <p>
             {{ race.circuit }} · {{ race.locality }}, {{ race.country }}
         </p>
+        {% if race.live_archive and race.live_archive.last_updated_formatted %}
+            <p class="season-last-updated">
+                <span class="last-updated-label">Updated:</span>
+                {{ race.live_archive.last_updated_formatted }}
+                {% if race.live_archive.status != 'healthy' %}
+                    <span class="last-updated-note">
+                        (displaying the most recent successful snapshot)
+                    </span>
+                {% endif %}
+            </p>
+        {% endif %}
     </div>
     <span class="round-badge">R{{ race.round }}</span>
 </section>

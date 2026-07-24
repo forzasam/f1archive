@@ -11,6 +11,16 @@ from flask import abort
 from models.archive import ConstructorOption, DriverOption
 from services.jolpica import get_json
 from services.circuit_service import get_current_circuit_geometry
+from services.live_archive import (
+    current_season as live_current_season,
+    get_live_archive_metadata,
+    live_season_root,
+)
+from services.local_archive import (
+    has_complete_season_archive,
+    read_archive_json,
+    season_archive_root,
+)
 
 
 def safe_int(value: Any, default: int = 0) -> int:
@@ -265,6 +275,9 @@ def get_season_driver_standings(season: int) -> list[dict[str, Any]]:
 
 
 def get_season_constructor_standings(season: int) -> list[dict[str, Any]]:
+    if season < 1958:
+        return []
+
     payload = get_json(f"{season}/constructorstandings.json?limit=100")
     rows = _get_standings_list(payload).get("ConstructorStandings", [])
 
@@ -419,11 +432,19 @@ def get_season_page(season: int) -> dict[str, Any]:
             }
         )
 
+    live_metadata = (
+        get_live_archive_metadata(season)
+        if season == live_current_season()
+        else None
+    )
+
     return {
         "season": season,
         "races": races,
         "driver_standings": get_season_driver_standings(season),
         "constructor_standings": get_season_constructor_standings(season),
+        "position_progression": get_driver_championship_position_progression(season),
+        "live_archive": _format_live_archive_status(live_metadata),
     }
 
 
@@ -622,8 +643,167 @@ def get_race_page(season: int, round_number: int) -> dict[str, Any]:
         "starter_count": len(entries),
         "finisher_count": len(finishers),
         "constructor_count": len(constructor_counts),
+        "live_archive": _format_live_archive_status(
+            get_live_archive_metadata(season)
+            if season == live_current_season()
+            else None
+        ),
         "championship": get_race_championship_progression(
             season,
             round_number,
         ),
     }
+
+
+def get_driver_championship_position_progression(
+    season: int,
+) -> dict[str, Any] | None:
+    """Build the round-by-round championship-position chart from local data.
+
+    Completed seasons intentionally use only the committed archive. The live
+    season is left for the later refresh/cache implementation.
+    """
+    if has_complete_season_archive(season):
+        season_root = season_archive_root(season)
+    elif season == live_current_season():
+        season_root = live_season_root(season)
+        if not (season_root / "schedule.json").is_file():
+            return None
+    else:
+        return None
+    schedule_payload = read_archive_json(season_root / "schedule.json")
+    schedule_rows = (
+        schedule_payload.get("MRData", {})
+        .get("RaceTable", {})
+        .get("Races", [])
+    )
+
+    rounds: list[dict[str, Any]] = []
+    drivers: dict[str, dict[str, Any]] = {}
+
+    for race in schedule_rows:
+        round_number = safe_int(race.get("round"))
+        if round_number <= 0:
+            continue
+
+        standings_path = (
+            season_root
+            / "races"
+            / f"{round_number:02d}"
+            / "driver_standings.json"
+        )
+        if not standings_path.is_file():
+            continue
+        payload = read_archive_json(standings_path)
+        standings_list = _get_standings_list(payload)
+        rows = standings_list.get("DriverStandings", [])
+
+        round_entry = {
+            "round": round_number,
+            "race_name": race.get("raceName", f"Round {round_number}"),
+            "short_name": _short_race_name(
+                race.get("raceName", f"R{round_number}")
+            ),
+        }
+        rounds.append(round_entry)
+
+        for row in rows:
+            driver = row.get("Driver", {})
+            driver_id = driver.get("driverId", "")
+            if not driver_id:
+                continue
+
+            constructors = row.get("Constructors", [])
+            constructor = constructors[-1] if constructors else {}
+            entry = drivers.setdefault(
+                driver_id,
+                {
+                    "driver_id": driver_id,
+                    "driver_name": (
+                        f"{driver.get('givenName', '')} "
+                        f"{driver.get('familyName', '')}"
+                    ).strip(),
+                    "driver_code": (
+                        driver.get("code")
+                        or driver.get("familyName", "")[:3].upper()
+                    ),
+                    "constructor_name": constructor.get("name", "Independent"),
+                    "team_colour": get_team_colour(
+                        constructor.get("constructorId", "")
+                    ),
+                    "positions": {},
+                    "points": {},
+                    "final_position": 999,
+                },
+            )
+            entry["positions"][str(round_number)] = safe_int(
+                row.get("position"),
+                999,
+            )
+            entry["points"][str(round_number)] = float(row.get("points", 0))
+
+    final_path = season_root / "driver_standings.json"
+    final_payload = read_archive_json(final_path) if final_path.is_file() else {}
+    final_rows = _get_standings_list(final_payload).get("DriverStandings", [])
+    for row in final_rows:
+        driver_id = row.get("Driver", {}).get("driverId", "")
+        if driver_id in drivers:
+            drivers[driver_id]["final_position"] = safe_int(
+                row.get("position"),
+                999,
+            )
+
+    ordered_drivers = sorted(
+        drivers.values(),
+        key=lambda item: (item["final_position"], item["driver_name"]),
+    )
+
+    return {
+        "season": season,
+        "rounds": rounds,
+        "drivers": ordered_drivers,
+        "max_position": max(
+            (
+                position
+                for driver in ordered_drivers
+                for position in driver["positions"].values()
+                if position < 999
+            ),
+            default=0,
+        ),
+        "default_driver_ids": [
+            driver["driver_id"] for driver in ordered_drivers
+        ],
+    }
+
+
+def _format_live_archive_status(metadata: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not metadata:
+        return None
+
+    value = metadata.get("last_successful_update")
+    formatted = None
+    if value:
+        try:
+            parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+            formatted = parsed.astimezone().strftime("%d %B %Y at %H:%M %Z")
+        except ValueError:
+            formatted = str(value)
+
+    return {
+        "status": metadata.get("status", "unknown"),
+        "last_updated": value,
+        "last_updated_formatted": formatted,
+        "completed_round_count": safe_int(metadata.get("completed_round_count")),
+        "scheduled_round_count": safe_int(metadata.get("scheduled_round_count")),
+        "consecutive_failures": safe_int(metadata.get("consecutive_failures")),
+    }
+
+
+def _short_race_name(race_name: str) -> str:
+    name = str(race_name).strip()
+    for suffix in (" Grand Prix", " GP"):
+        if name.endswith(suffix):
+            name = name[: -len(suffix)]
+            break
+    return name

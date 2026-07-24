@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}About · F1 Archive{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('home.index') }}">← All seasons</a>
+
+<section class="editorial-hero">
+    <p class="eyebrow">About the archive</p>
+    <h1>Formula One history,<br>made easier to explore.</h1>
+    <p class="editorial-lede">
+        F1 Archive is an independent project dedicated to preserving and
+        presenting the history of Formula One in a modern, accessible way.
+    </p>
+</section>
+
+<div class="editorial-layout">
+    <article class="editorial-body">
+        <section>
+            <h2>More than a results database</h2>
+            <p>
+                The archive combines championship data with custom
+                visualisations and editorial features to help tell the story of
+                each season, rather than simply listing statistics.
+            </p>
+            <p>
+                Championship progression charts show how the order changed from
+                race to race, while circuit maps and race pages provide context
+                around individual Grands Prix. The aim is to make it easy to
+                explore an entire championship, revisit a particular weekend,
+                or discover a season you may never have followed live.
+            </p>
+        </section>
+
+        <section>
+            <h2>Built as a lasting archive</h2>
+            <p>
+                Every completed Formula One World Championship season from 1950
+                onwards is stored locally. This keeps the historical archive
+                fast, reliable and largely independent of third-party services.
+            </p>
+            <p>
+                The current season is maintained separately through a live
+                archive that is refreshed regularly, while preserving the most
+                recent successful snapshot if its data source is temporarily
+                unavailable.
+            </p>
+        </section>
+
+        <section>
+            <h2>About the person behind it</h2>
+            <p>
+                F1 Archive is developed and maintained independently by Sam, a
+                physics graduate from the University of Warwick and a lifelong
+                Formula One fan.
+            </p>
+            <p>
+                The project brings together an interest in software development,
+                data visualisation and the history of the sport. It began as a
+                personal challenge to build the kind of Formula One archive that
+                did not already exist: one focused not only on what happened, but
+                on showing how a season unfolded.
+            </p>
+            <p>
+                New visualisations, editorial features and historical content
+                will continue to be added as the archive grows.
+            </p>
+        </section>
+    </article>
+
+    <aside class="editorial-aside">
+        <div class="editorial-note">
+            <p class="eyebrow">The project</p>
+            <strong>Independent, evolving and built by one Formula One fan.</strong>
+            <p>
+                Feedback and corrections genuinely help shape what is built next.
+            </p>
+            <a class="text-link" href="{{ url_for('pages.contact') }}">Get in touch →</a>
+        </div>
+    </aside>
+</div>
+{% endblock %}

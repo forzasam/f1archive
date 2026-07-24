@@ -7,6 +7,17 @@
     <p class="eyebrow">Formula 1 season</p>
     <h1>{{ season }}</h1>
     <p>{{ races|length }} championship rounds</p>
+    {% if live_archive and live_archive.last_updated_formatted %}
+        <p class="season-last-updated">
+            <span class="last-updated-label">Updated:</span>
+            {{ live_archive.last_updated_formatted }}
+            {% if live_archive.status != 'healthy' %}
+                <span class="last-updated-note">
+                    (displaying the most recent successful snapshot)
+                </span>
+            {% endif %}
+        </p>
+    {% endif %}
 </section>
 
 <section class="championship-overview" aria-label="{{ season }} championship standings">
@@ -131,6 +142,71 @@
     </article>
 </section>
 
+{% if position_progression %}
+<section class="championship-progression-section" aria-labelledby="position-progression-title">
+    <div class="section-heading progression-heading">
+        <div>
+            <p class="eyebrow">Season story</p>
+            <h2 id="position-progression-title">Championship progression</h2>
+        </div>
+        <div class="progression-heading-actions">
+            <span>Position after each round</span>
+            <button
+                class="progression-collapse"
+                type="button"
+                aria-expanded="true"
+                aria-controls="position-progression-panel"
+                data-progression-collapse
+            >
+                Minimise
+            </button>
+        </div>
+    </div>
+
+    <div
+        class="progression-panel"
+        id="position-progression-panel"
+        data-position-progression
+    >
+        <div class="progression-copy">
+            <p>
+                Follow how the Drivers' Championship order changed throughout
+                {{ season }}. First place is shown at the top.
+            </p>
+            <button class="progression-reset" type="button" data-progression-reset>
+                Show all drivers
+            </button>
+        </div>
+
+        <div class="progression-chart-wrap">
+            <svg
+                class="progression-chart"
+                role="img"
+                aria-labelledby="position-progression-title progression-description"
+                data-progression-chart
+            ></svg>
+            <p id="progression-description" class="visually-hidden">
+                Line graph showing each selected driver's championship position
+                after every race in the {{ season }} season.
+            </p>
+            <div class="progression-tooltip" data-progression-tooltip hidden></div>
+        </div>
+
+        <div class="progression-legend" aria-label="Choose drivers to display" data-progression-legend></div>
+
+        <noscript>
+            <p class="standings-unavailable">
+                Enable JavaScript to view the championship progression graph.
+            </p>
+        </noscript>
+    </div>
+
+    <script type="application/json" id="position-progression-data">
+        {{ position_progression|tojson }}
+    </script>
+</section>
+{% endif %}
+
 <section>
     <div class="section-heading">
         <div>
@@ -157,4 +233,10 @@
         {% endfor %}
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+    {% if position_progression %}
+        <script src="{{ url_for('static', filename='championship_progression.js') }}" defer></script>
+    {% endif %}
 {% endblock %}

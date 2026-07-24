@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "season": 1994,
+  "source": "Jolpica-F1",
+  "source_base_url": "https://api.jolpi.ca/ergast/f1",
+  "licence": "CC BY-NC-SA 4.0",
+  "started_at": "2026-07-24T15:46:57+00:00",
+  "completed_at": "2026-07-24T15:47:40+00:00",
+  "race_count": 16,
+  "rounds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "datasets": {
+    "schedule": true,
+    "driver_standings": true,
+    "constructor_standings": true,
+    "race_results": 16,
+    "round_driver_standings": 16
+  }
+}

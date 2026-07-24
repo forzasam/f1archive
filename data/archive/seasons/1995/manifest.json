@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "season": 1995,
+  "source": "Jolpica-F1",
+  "source_base_url": "https://api.jolpi.ca/ergast/f1",
+  "licence": "CC BY-NC-SA 4.0",
+  "started_at": "2026-07-24T15:17:44+00:00",
+  "completed_at": "2026-07-24T15:18:29+00:00",
+  "race_count": 17,
+  "rounds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ],
+  "datasets": {
+    "schedule": true,
+    "driver_standings": true,
+    "constructor_standings": true,
+    "race_results": 17,
+    "round_driver_standings": 17
+  }
+}

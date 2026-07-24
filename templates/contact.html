@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Contact · F1 Archive{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('home.index') }}">← All seasons</a>
+
+<section class="editorial-hero contact-hero">
+    <p class="eyebrow">Contact</p>
+    <h1>Help make the archive better.</h1>
+    <p class="editorial-lede">
+        Found an error, have an idea for a feature, or want to discuss a
+        collaboration? There are two ways to get in touch.
+    </p>
+</section>
+
+<section class="contact-grid" aria-label="Contact options">
+    <article class="contact-card">
+        <p class="eyebrow">Support</p>
+        <h2>Bug reports and suggestions</h2>
+        <p>
+            Use the support address for technical problems, incorrect data,
+            feature requests, usability feedback, or anything else that could
+            improve the site.
+        </p>
+        <a class="contact-address" href="mailto:support@f1archive.net">
+            support@f1archive.net
+        </a>
+        <div class="contact-guidance">
+            <strong>For a useful bug report, please include:</strong>
+            <ul>
+                <li>what you were trying to do</li>
+                <li>what happened instead</li>
+                <li>the relevant page, season or race</li>
+                <li>screenshots or error messages, where available</li>
+            </ul>
+        </div>
+    </article>
+
+    <article class="contact-card">
+        <p class="eyebrow">General enquiries</p>
+        <h2>Collaborations and contributions</h2>
+        <p>
+            Use the general contact address for collaborations, media enquiries,
+            historical contributions, data corrections requiring more context,
+            or any other conversation about the project.
+        </p>
+        <a class="contact-address" href="mailto:contact@f1archive.net">
+            contact@f1archive.net
+        </a>
+        <div class="contact-guidance">
+            <strong>Suitable for:</strong>
+            <ul>
+                <li>collaboration proposals</li>
+                <li>editorial or historical contributions</li>
+                <li>media and project enquiries</li>
+                <li>anything not covered by support</li>
+            </ul>
+        </div>
+    </article>
+</section>
+
+<section class="contact-closing">
+    <p>
+        F1 Archive is maintained independently, so responses may not always be
+        immediate. Every genuine message is appreciated and will be read.
+    </p>
+</section>
+{% endblock %}

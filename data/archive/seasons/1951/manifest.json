@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "season": 1951,
+  "source": "Jolpica-F1",
+  "source_base_url": "https://api.jolpi.ca/ergast/f1",
+  "licence": "CC BY-NC-SA 4.0",
+  "started_at": "2026-07-24T17:57:51+00:00",
+  "completed_at": "2026-07-24T17:58:12+00:00",
+  "race_count": 8,
+  "rounds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "datasets": {
+    "schedule": true,
+    "driver_standings": true,
+    "constructor_standings": false,
+    "race_results": 8,
+    "round_driver_standings": 8
+  }
+}

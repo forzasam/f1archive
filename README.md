@@ -296,3 +296,58 @@ trap placement.
 
 Australia remains the visual reference implementation. Its pit-entry
 annotation is corrected to Turn 13.
+
+## Persistent live archive
+
+The current season is served from a disk-backed live archive rather than from
+Jolpica during every page request. Historical seasons continue to use
+`data/archive/seasons/<year>`.
+
+By default, current-season files are written to:
+
+```text
+data/live/seasons/<current-year>/
+```
+
+In production, set `LIVE_ARCHIVE_ROOT` to the mount path of the web service's
+persistent disk. A typical configuration is:
+
+```text
+LIVE_ARCHIVE_ROOT=/var/data/f1-live
+LIVE_ARCHIVE_TTL_SECONDS=3600
+LIVE_ARCHIVE_CHECK_INTERVAL_SECONDS=300
+LIVE_ARCHIVE_BACKGROUND_REFRESH=true
+```
+
+The web process checks every five minutes and refreshes once the successful
+snapshot is at least one hour old. The first request after a cold start also
+performs the same stale check, so the site does not rely solely on the
+background thread. A disk lock prevents duplicate refreshes across Gunicorn
+workers.
+
+Render cron jobs cannot access a web service's persistent disk, so do not use a
+separate Render Cron Job for this file-backed cache. The standalone command is
+still useful locally or from a shell attached to the same filesystem:
+
+```bash
+python scripts/update_live_archive.py
+```
+
+The live season directory mirrors the historical archive shape:
+
+```text
+seasons/2026/
+├── schedule.json
+├── driver_standings.json
+├── constructor_standings.json
+├── metadata.json
+└── races/
+    └── 01/
+        ├── results.json
+        └── driver_standings.json
+```
+
+`metadata.json` records the last attempt, last successful update, completed
+rounds, consecutive failures and the most recent error. Writes are atomic and
+protected by a refresh lock. A failed refresh does not overwrite the previous
+working snapshot.

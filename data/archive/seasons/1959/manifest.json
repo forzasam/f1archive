@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "season": 1959,
+  "source": "Jolpica-F1",
+  "source_base_url": "https://api.jolpi.ca/ergast/f1",
+  "licence": "CC BY-NC-SA 4.0",
+  "started_at": "2026-07-24T17:52:11+00:00",
+  "completed_at": "2026-07-24T17:52:35+00:00",
+  "race_count": 9,
+  "rounds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "datasets": {
+    "schedule": true,
+    "driver_standings": true,
+    "constructor_standings": true,
+    "race_results": 9,
+    "round_driver_standings": 9
+  }
+}

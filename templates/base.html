@@ -19,11 +19,29 @@
     <header class="site-header">
         <a class="brand" href="{{ url_for('home.index') }}">
             <span class="brand-mark">F1</span>
-            <span>Archive</span>
+            <span class="brand-copy">
+                <strong>Archive</strong>
+                <small>Independent Formula One archive</small>
+            </span>
         </a>
 
-        <nav>
-            <a href="{{ url_for('home.index') }}">Seasons</a>
+        <nav class="site-nav" aria-label="Primary navigation">
+            <a
+                href="{{ url_for('home.index') }}"
+                {% if request.endpoint == 'home.index' or request.blueprint in ('seasons', 'races') %}aria-current="page"{% endif %}
+            >Seasons</a>
+            <a
+                href="{{ url_for('pages.about') }}"
+                {% if request.endpoint == 'pages.about' %}aria-current="page"{% endif %}
+            >About</a>
+            <a
+                href="{{ url_for('pages.contact') }}"
+                {% if request.endpoint == 'pages.contact' %}aria-current="page"{% endif %}
+            >Contact</a>
+            {# Future public links can be added here when ready:
+               <a href="...">GitHub</a>
+               <a href="...">Discord</a>
+            #}
         </nav>
     </header>
 
@@ -32,8 +50,11 @@
     </main>
 
     <footer>
-        Historical results supplied by Jolpica-F1. Editorial events and circuit
-        maps will be added separately.
+        <span>Historical results supplied by Jolpica-F1.</span>
+        <span class="footer-links">
+            <a href="{{ url_for('pages.about') }}">About</a>
+            <a href="{{ url_for('pages.contact') }}">Contact</a>
+        </span>
     </footer>
 
     {% block scripts %}{% endblock %}
