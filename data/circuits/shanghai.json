@@ -1,0 +1,45 @@
+{
+  "svg_template": "circuits/shanghai.svg",
+  "attribution": "Local manually segmented Shanghai vector trace, based on the supplied Jules Roy circuit SVG and checked against Formula 1 circuit diagrams; not survey-grade geometry.",
+  "marker_positions": {
+    "pit-straight": [
+      124,
+      244
+    ],
+    "turns-1-4": [
+      174,
+      91
+    ],
+    "turns-5-6": [
+      328,
+      70
+    ],
+    "turns-7-8": [
+      272,
+      202
+    ],
+    "turns-9-10": [
+      256,
+      280
+    ],
+    "turns-11-13": [
+      432,
+      232
+    ],
+    "back-straight": [
+      260,
+      352
+    ],
+    "turns-14-16": [
+      91,
+      405
+    ],
+    "pit-entry": [
+      136,
+      360
+    ]
+  },
+  "circuit_ids": [
+    "shanghai"
+  ]
+}

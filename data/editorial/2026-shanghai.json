@@ -1,0 +1,56 @@
+{
+  "race": {
+    "season": 2026,
+    "round": 2,
+    "slug": "shanghai",
+    "laps": 56
+  },
+  "segments": [
+    {
+      "id": "pit-straight",
+      "name": "Pit Straight",
+      "kind": "straight"
+    },
+    {
+      "id": "turns-1-4",
+      "name": "Turns 1–4",
+      "kind": "corner"
+    },
+    {
+      "id": "turns-5-6",
+      "name": "Turns 5–6",
+      "kind": "corner"
+    },
+    {
+      "id": "turns-7-8",
+      "name": "Turns 7–8",
+      "kind": "corner"
+    },
+    {
+      "id": "turns-9-10",
+      "name": "Turns 9–10",
+      "kind": "corner"
+    },
+    {
+      "id": "turns-11-13",
+      "name": "Turns 11–13",
+      "kind": "corner"
+    },
+    {
+      "id": "back-straight",
+      "name": "Back Straight",
+      "kind": "straight"
+    },
+    {
+      "id": "turns-14-16",
+      "name": "Turns 14–16",
+      "kind": "corner"
+    },
+    {
+      "id": "pit-entry",
+      "name": "Pit Entry",
+      "kind": "straight"
+    }
+  ],
+  "events": []
+}
