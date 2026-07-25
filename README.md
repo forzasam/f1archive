@@ -399,3 +399,15 @@ The live season schedule is stored locally in `data/live/seasons/<year>/schedule
 - rounds absent from the schedule still return a genuine 404.
 
 No empty result files are created for future rounds. The schedule remains the source of truth for planned events, while `races/<round>/results.json` continues to mean that a completed classification is available.
+
+## Archive Challenge: Who drove this season?
+
+The footer links to `/archive-challenge`, a locally powered identification game built from the committed season archive.
+
+- **Endless mode** selects progressively harder campaigns as the streak grows.
+- **Daily mode** gives every visitor the same deterministic challenge for the calendar day.
+- A correct driver-and-season answer is worth up to four points; every revealed hint removes one available point.
+- Modern seasons from 2000 onward form the full pool. Earlier seasons are limited to race winners and top-three championship finishers.
+- Challenge answers are verified server-side with signed question tokens. No external API request is needed during play.
+
+The challenge pool is cached in-process and rebuilt when the application restarts. If the committed archive changes while the process remains running, call `build_challenge_pool.cache_clear()` before rebuilding it.

@@ -53,6 +53,7 @@ def sitemap():
     urls = [
         (url_for("home.index", _external=True), "weekly", "1.0"),
         (url_for("pages.about", _external=True), "monthly", "0.6"),
+        (url_for("challenge.challenge_page", _external=True), "weekly", "0.6"),
         (url_for("pages.contact", _external=True), "yearly", "0.4"),
         (url_for("pages.privacy", _external=True), "yearly", "0.3"),
         (url_for("pages.disclaimer", _external=True), "yearly", "0.3"),

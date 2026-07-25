@@ -30,6 +30,33 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
+    <style>
+        .footer-challenge-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .42rem;
+            color: inherit;
+            font-weight: inherit;
+        }
+
+        .footer-challenge-icon {
+            opacity: .72;
+            transform: translateY(0);
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        .footer-challenge-link:hover .footer-challenge-icon {
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .footer-challenge-icon {
+                transition: none;
+            }
+        }
+    </style>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -69,6 +96,10 @@
         <div class="footer-main">
             <span>Historical results supplied by Jolpica-F1.</span>
             <span class="footer-links">
+                <a class="footer-challenge-link" href="{{ url_for('challenge.challenge_page') }}">
+                    <span class="footer-challenge-icon" aria-hidden="true">🏆</span>
+                    <span>Archive Challenge</span>
+                </a>
                 <a href="{{ url_for('pages.about') }}">About</a>
                 <a href="{{ url_for('pages.contact') }}">Contact</a>
                 <a href="{{ url_for('pages.privacy') }}">Privacy</a>

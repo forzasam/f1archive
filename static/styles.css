@@ -3344,3 +3344,243 @@ body.story-modal-open {
         animation-duration: 1ms;
     }
 }
+
+/* Archive Challenge: Who drove this season? */
+.challenge-hero { max-width: 880px; padding: 58px 0 42px; }
+.challenge-hero h1 { margin: 10px 0 20px; font-size: clamp(3rem, 8vw, 6rem); line-height: .94; letter-spacing: -.06em; }
+.challenge-hero > p:not(.eyebrow) { max-width: 760px; color: var(--muted); font-size: 1.12rem; line-height: 1.65; }
+.challenge-shell { display: grid; gap: 18px; }
+.challenge-mode-tabs { display: inline-flex; width: fit-content; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); }
+.challenge-mode { border: 0; border-radius: 999px; padding: 9px 15px; background: transparent; color: var(--muted); cursor: pointer; }
+.challenge-mode.active { background: var(--accent); color: white; font-weight: 800; }
+.challenge-status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.challenge-stat { padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.challenge-stat span { display: block; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 800; }
+.challenge-stat strong { display: block; margin-top: 6px; font-size: 1.45rem; }
+.challenge-chart-card, .challenge-guess-panel, .challenge-hints, .challenge-reveal { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); }
+.challenge-chart-heading { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; padding: 21px 22px; border-bottom: 1px solid var(--line); }
+.challenge-chart-heading h2 { margin: 6px 0 0; font-size: 1.35rem; }
+.challenge-chart-key { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; color: var(--muted); font-size: .72rem; }
+.challenge-chart-key span { display: flex; align-items: center; gap: 7px; }
+.challenge-chart-key i { width: 22px; border-top: 3px solid var(--text); }
+.challenge-chart-key i.dashed { border-top-style: dashed; opacity: .6; }
+.challenge-chart-wrap { position: relative; overflow-x: auto; padding: 12px; }
+.challenge-chart { display: block; width: 100%; min-width: 720px; }
+.challenge-loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); background: rgba(19,21,26,.86); }
+.challenge-grid line, .challenge-axis line { stroke: rgba(255,255,255,.075); stroke-width: 1; }
+.challenge-grid text, .challenge-axis text { fill: var(--muted); font-size: 11px; }
+.challenge-standing-line, .challenge-finish-line { fill: none; stroke: #f5f5f5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.challenge-standing-line { stroke-width: 3.5; }
+.challenge-finish-line { stroke-width: 2; stroke-dasharray: 6 6; opacity: .52; }
+.challenge-standing-point { fill: #f5f5f5; stroke: var(--panel); stroke-width: 2; }
+.challenge-finish-point { fill: var(--panel); stroke: #f5f5f5; stroke-width: 2; opacity: .78; }
+.challenge-finish-point.is-win { stroke: #f6c453; stroke-width: 3; }
+.challenge-play-area { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr); gap: 18px; }
+.challenge-guess-panel, .challenge-hints { padding: 24px; }
+.challenge-guess-panel h2, .challenge-hints h2 { margin: 6px 0 20px; }
+.challenge-form-grid { display: grid; grid-template-columns: 1.5fr .7fr; gap: 12px; }
+.challenge-form-grid label { display: grid; gap: 8px; color: var(--muted); font-size: .8rem; font-weight: 750; }
+.challenge-form-grid input { width: 100%; min-height: 48px; border: 1px solid var(--line); border-radius: 10px; padding: 0 13px; background: var(--panel-soft); color: var(--text); font: inherit; }
+.challenge-form-grid input:focus { border-color: var(--accent); outline: 3px solid rgba(255,59,48,.12); }
+.challenge-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.challenge-submit { margin: 0; }
+.challenge-hint-button { min-height: 46px; border: 1px solid var(--line); border-radius: 10px; padding: 0 16px; background: transparent; color: var(--text); cursor: pointer; }
+.challenge-hint-button span { margin-left: 6px; color: var(--muted); font-size: .72rem; }
+.challenge-hint-button:disabled, .challenge-submit:disabled { opacity: .45; cursor: not-allowed; }
+.challenge-feedback { min-height: 1.4em; margin: 14px 0 0; color: var(--muted); }
+.challenge-hints ol { margin: 0; padding-left: 22px; color: var(--muted); line-height: 1.65; }
+.challenge-hints li + li { margin-top: 9px; }
+.challenge-hint-placeholder { list-style: none; margin-left: -22px; }
+.challenge-reveal { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 24px; border-color: rgba(255,59,48,.35); }
+.challenge-reveal[hidden] { display: none; }
+.challenge-reveal h2 { margin: 6px 0 8px; font-size: clamp(1.6rem, 3vw, 2.3rem); }
+.challenge-reveal p:not(.eyebrow) { margin: 0; color: var(--muted); line-height: 1.55; }
+.challenge-reveal-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.challenge-reveal-actions .primary-link, .challenge-reveal-actions .button { margin: 0; }
+.footer-challenge-link { color: inherit; font-weight: inherit; }
+.footer-challenge-link:hover { color: var(--text); }
+@media (max-width: 780px) { .challenge-status-grid { grid-template-columns: 1fr 1fr; } .challenge-play-area { grid-template-columns: 1fr; } .challenge-reveal { align-items: flex-start; flex-direction: column; } .challenge-reveal-actions { justify-content: flex-start; } }
+@media (max-width: 560px) { .challenge-chart-heading { flex-direction: column; } .challenge-chart-key { justify-content: flex-start; } .challenge-form-grid { grid-template-columns: 1fr; } .challenge-status-grid { grid-template-columns: 1fr 1fr; } }
+
+
+/* Archive Challenge graph interactions */
+.challenge-interactive-series {
+    cursor: pointer;
+    transition:
+        opacity 180ms ease,
+        stroke-width 180ms ease,
+        filter 180ms ease,
+        r 180ms ease;
+}
+
+.challenge-standing-line.is-highlighted {
+    stroke-width: 5;
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, .28));
+}
+
+.challenge-finish-line.is-highlighted {
+    stroke-width: 3.5;
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, .24));
+}
+
+.challenge-standing-point.is-highlighted,
+.challenge-finish-point.is-highlighted {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, .35));
+}
+
+.challenge-standing-point.is-highlighted {
+    r: 5.5;
+}
+
+.challenge-finish-point.is-highlighted {
+    r: 6.5;
+}
+
+.challenge-interactive-series.is-muted {
+    opacity: .14;
+}
+
+.challenge-interactive-series.is-pinned {
+    opacity: 1;
+}
+
+.challenge-exact-position {
+    fill: var(--text);
+    font-size: 10px;
+    font-weight: 900;
+    paint-order: stroke;
+    stroke: var(--panel);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.challenge-exact-position-finish {
+    fill: #c9cdd5;
+}
+
+.challenge-standing-line:focus,
+.challenge-finish-line:focus {
+    outline: none;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, .42));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .challenge-interactive-series {
+        transition: none;
+    }
+}
+
+
+/* Archive Challenge point tooltip */
+.challenge-dot-tooltip {
+    position: absolute;
+    z-index: 12;
+    display: grid;
+    gap: 4px;
+    min-width: 180px;
+    max-width: 260px;
+    padding: 10px 12px;
+    border: 1px solid #3a3f49;
+    border-radius: 10px;
+    background: rgba(10, 11, 14, .97);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .36);
+    color: var(--text);
+    pointer-events: none;
+}
+
+.challenge-dot-tooltip[hidden] {
+    display: none !important;
+}
+
+.challenge-dot-tooltip strong {
+    font-size: .82rem;
+}
+
+.challenge-dot-tooltip span {
+    color: var(--muted);
+    font-size: .72rem;
+}
+
+.challenge-dot-tooltip .challenge-tooltip-status.is-dnf {
+    color: #fc8181;
+    font-weight: 800;
+}
+
+
+/* Championship progression race-outcome labels */
+.progression-finish-label.is-dnf,
+.progression-finish-label.is-dsq,
+.progression-finish-label.is-dns,
+.progression-finish-label.is-dnq,
+.progression-finish-label.is-wd,
+.progression-finish-label.is-nc {
+    fill: #fc8181;
+}
+
+.progression-point.is-dnf,
+.progression-point.is-dsq,
+.progression-point.is-dns,
+.progression-point.is-dnq,
+.progression-point.is-wd,
+.progression-point.is-nc {
+    stroke: #fc8181;
+    stroke-width: 3;
+}
+
+.progression-tooltip-result.is-dnf,
+.progression-tooltip-result.is-dsq,
+.progression-tooltip-result.is-dns,
+.progression-tooltip-result.is-dnq,
+.progression-tooltip-result.is-wd,
+.progression-tooltip-result.is-nc {
+    color: #fc8181;
+    font-weight: 800;
+}
+
+
+/* Archive Challenge: full-season DNP markers */
+.challenge-chart-key i.dnp {
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid #7f8794;
+    border-radius: 2px;
+    background: transparent;
+    opacity: .82;
+}
+
+.challenge-dnp-grid-line {
+    stroke: rgba(157, 163, 174, .22) !important;
+    stroke-dasharray: 4 5;
+}
+
+.challenge-dnp-axis-label {
+    fill: #7f8794 !important;
+    font-weight: 850;
+}
+
+.challenge-dnp-point {
+    fill: var(--panel);
+    stroke: #8d95a3;
+    stroke-width: 2;
+    cursor: pointer;
+    vector-effect: non-scaling-stroke;
+}
+
+.challenge-dnp-point.is-highlighted {
+    stroke: #d1d5dc;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 5px rgba(209, 213, 220, .28));
+}
+
+.challenge-exact-position.is-dnp {
+    fill: #9da3ae;
+}
+
+.challenge-dot-tooltip .challenge-tooltip-status.is-dnp {
+    color: #b7bdc8;
+    font-weight: 800;
+}

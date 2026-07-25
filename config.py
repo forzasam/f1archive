@@ -9,6 +9,7 @@ def _env_bool(name: str, default: bool) -> bool:
 
 
 class Config:
+    SECRET_KEY = os.environ.get("SECRET_KEY", "f1-archive-local-development-key")
     JOLPICA_API_BASE = os.environ.get(
         "JOLPICA_API_BASE",
         "https://api.jolpi.ca/ergast/f1",

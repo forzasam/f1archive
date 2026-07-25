@@ -2,6 +2,7 @@ from flask import Flask, render_template
 
 from config import Config
 from routes.home import home_bp
+from routes.challenge import challenge_bp
 from routes.pages import pages_bp
 from routes.races import races_bp
 from routes.seasons import seasons_bp
@@ -17,6 +18,7 @@ def create_app() -> Flask:
     app.config.from_object(Config)
 
     app.register_blueprint(home_bp)
+    app.register_blueprint(challenge_bp)
     app.register_blueprint(pages_bp)
     app.register_blueprint(seasons_bp)
     app.register_blueprint(races_bp)

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Who drove this season? · F1 Archive{% endblock %}
+{% block meta_description %}Identify a Formula One driver and season from an anonymous championship progression line in the F1 Archive challenge.{% endblock %}
+{% block content %}
+<section class="challenge-hero">
+    <p class="eyebrow">Archive Challenge</p>
+    <h1>Who drove this season?</h1>
+    <p>
+        Follow the anonymous campaign below. Use the race results and championship
+        position to identify both the driver and the season.
+    </p>
+</section>
+
+<section class="challenge-shell" data-archive-challenge data-daily-key="{{ daily_key }}">
+    <div class="challenge-mode-tabs" role="tablist" aria-label="Challenge mode">
+        <button type="button" class="challenge-mode active" data-mode="endless" role="tab" aria-selected="true">Endless</button>
+        <button type="button" class="challenge-mode" data-mode="daily" role="tab" aria-selected="false">Daily challenge</button>
+    </div>
+
+    <div class="challenge-status-grid">
+        <div class="challenge-stat"><span>Streak</span><strong data-streak>0</strong></div>
+        <div class="challenge-stat"><span>Total score</span><strong data-score>0</strong></div>
+        <div class="challenge-stat"><span>Points available</span><strong data-points>5</strong></div>
+        <div class="challenge-stat"><span>Best streak</span><strong data-best-streak>0</strong></div>
+    </div>
+
+    <article class="challenge-chart-card">
+        <div class="challenge-chart-heading">
+            <div>
+                <p class="eyebrow" data-round-kicker>Mystery campaign</p>
+                <h2 data-round-title>Loading the archive…</h2>
+            </div>
+            <div class="challenge-chart-key" aria-label="Chart key">
+                <span><i class="solid"></i>Championship position</span>
+                <span><i class="dashed"></i>Race finish</span>
+                <span><i class="dnp"></i>DNP</span>
+            </div>
+        </div>
+        <div class="challenge-chart-wrap">
+            <svg class="challenge-chart" data-challenge-chart role="img" aria-label="Anonymous Formula One season progression"></svg>
+            <div class="challenge-loading" data-loading>Opening the archive…</div>
+        </div>
+    </article>
+
+    <div class="challenge-play-area">
+        <section class="challenge-guess-panel" aria-labelledby="challenge-guess-title">
+            <p class="eyebrow">Make your guess</p>
+            <h2 id="challenge-guess-title">Name the driver and year</h2>
+            <div class="challenge-form-grid">
+                <label>
+                    Driver
+                    <input type="text" list="challenge-driver-options" autocomplete="off" placeholder="e.g. Lewis Hamilton" data-driver-guess>
+                </label>
+                <label>
+                    Season
+                    <input type="number" min="1950" max="2025" placeholder="e.g. 2012" data-season-guess>
+                </label>
+            </div>
+            <datalist id="challenge-driver-options">
+                {% for driver in driver_options %}<option value="{{ driver }}"></option>{% endfor %}
+            </datalist>
+            <div class="challenge-actions">
+                <button type="button" class="button challenge-submit" data-submit-guess>Submit guess</button>
+                <button type="button" class="challenge-hint-button" data-use-hint>Reveal a hint <span data-hint-cost>−1 point</span></button>
+            </div>
+            <p class="challenge-feedback" data-feedback aria-live="polite"></p>
+        </section>
+
+        <aside class="challenge-hints" aria-labelledby="challenge-hints-title">
+            <p class="eyebrow">Clues</p>
+            <h2 id="challenge-hints-title">Hints revealed</h2>
+            <ol data-hint-list>
+                <li class="challenge-hint-placeholder">No hints used yet.</li>
+            </ol>
+        </aside>
+    </div>
+
+    <section class="challenge-reveal" data-reveal hidden aria-live="polite">
+        <div>
+            <p class="eyebrow" data-reveal-kicker>Correct</p>
+            <h2 data-answer-title></h2>
+            <p data-answer-summary></p>
+        </div>
+        <div class="challenge-reveal-actions">
+            <a class="primary-link" data-view-season href="#">View this season</a>
+            <button type="button" class="button" data-next-question>Next challenge</button>
+            <button type="button" class="button" data-new-run hidden>Start a new streak</button>
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='archive_challenge.js') }}" defer></script>
+{% endblock %}

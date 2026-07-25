@@ -60,6 +60,94 @@ def is_classified_result(position_text: Any, status: Any) -> bool:
     )
 
 
+def championship_finish_outcome(result: dict[str, Any]) -> dict[str, Any]:
+    """Return the compact outcome used by championship progression charts.
+
+    A numeric classification alone does not imply that the driver reached the
+    finish. Historical and modern classified retirements can retain a numeric
+    finishing position, so the race status and ``positionText`` must also be
+    considered.
+    """
+    position = safe_int(result.get("position"), 999)
+    position_text = str(result.get("positionText", "") or "").strip()
+    status = str(result.get("status", "") or "").strip()
+    status_lower = status.casefold()
+    position_lower = position_text.casefold()
+
+    special_codes = {
+        "dsq": "DSQ",
+        "d": "DSQ",
+        "dns": "DNS",
+        "dnq": "DNQ",
+        "wd": "WD",
+        "nc": "NC",
+    }
+    if position_lower in special_codes:
+        label = special_codes[position_lower]
+        return {
+            "position": position,
+            "label": label,
+            "kind": label.casefold(),
+            "status": status or label,
+            "position_text": position_text,
+        }
+
+    if any(token in status_lower for token in ("disqualified", "excluded")):
+        return {
+            "position": position,
+            "label": "DSQ",
+            "kind": "dsq",
+            "status": status or "Disqualified",
+            "position_text": position_text,
+        }
+    if "did not start" in status_lower:
+        return {
+            "position": position,
+            "label": "DNS",
+            "kind": "dns",
+            "status": status or "Did not start",
+            "position_text": position_text,
+        }
+    if "did not qualify" in status_lower:
+        return {
+            "position": position,
+            "label": "DNQ",
+            "kind": "dnq",
+            "status": status or "Did not qualify",
+            "position_text": position_text,
+        }
+    if "withdrew" in status_lower:
+        return {
+            "position": position,
+            "label": "WD",
+            "kind": "wd",
+            "status": status or "Withdrew",
+            "position_text": position_text,
+        }
+
+    completed = (
+        status_lower in {"finished", "lapped"}
+        or bool(re.fullmatch(r"\+?\d+\s+laps?", status, re.IGNORECASE))
+    )
+    explicit_retirement = position_lower in {"r", "ret"}
+    if explicit_retirement or (status and not completed):
+        return {
+            "position": position,
+            "label": "DNF",
+            "kind": "dnf",
+            "status": status or "Retired",
+            "position_text": position_text,
+        }
+
+    return {
+        "position": position,
+        "label": f"P{position}" if position < 999 else "—",
+        "kind": "finish",
+        "status": status or "Finished",
+        "position_text": position_text,
+    }
+
+
 def format_result_time(
     time_value: Any,
     status: Any,
@@ -744,6 +832,7 @@ def get_driver_championship_position_progression(
                     "positions": {},
                     "points": {},
                     "finishes": {},
+                    "finish_outcomes": {},
                     "final_position": 999,
                 },
             )
@@ -770,10 +859,13 @@ def get_driver_championship_position_progression(
             for result in results_rows:
                 result_driver_id = result.get("Driver", {}).get("driverId", "")
                 if result_driver_id in drivers:
-                    drivers[result_driver_id]["finishes"][str(round_number)] = safe_int(
-                        result.get("position"),
-                        999,
-                    )
+                    outcome = championship_finish_outcome(result)
+                    drivers[result_driver_id]["finishes"][str(round_number)] = outcome[
+                        "position"
+                    ]
+                    drivers[result_driver_id]["finish_outcomes"][
+                        str(round_number)
+                    ] = outcome
 
     final_path = season_root / "driver_standings.json"
     final_payload = read_archive_json(final_path) if final_path.is_file() else {}

@@ -176,11 +176,19 @@
         driver,
         round,
         position,
-        points
+        points,
+        finishOutcome = null
     ) => showTooltip(event, `
         <strong>${driver.driver_name}</strong>
         <span>${round.race_name}</span>
         <span>${ordinal(position)} in championship · ${points} pts</span>
+        ${finishOutcome ? `
+            <span class="progression-tooltip-result${
+                finishOutcome.kind !== "finish"
+                    ? ` is-${finishOutcome.kind}`
+                    : ""
+            }">${finishOutcome.label} · ${finishOutcome.status}</span>
+        ` : ""}
         <span class="progression-tooltip-hint">
             Click to pin · Shift-click for teammates
         </span>
@@ -571,6 +579,7 @@
                     round,
                     points: driver.points[String(round.round)] ?? 0,
                     finish: driver.finishes?.[String(round.round)],
+                    finishOutcome: driver.finish_outcomes?.[String(round.round)],
                     index,
                     transient: false
                 });
@@ -674,7 +683,12 @@
                     replayRunning &&
                     point.transient
                 );
-                const isWinner = point.finish === 1;
+                const isWinner = (
+                    point.finish === 1 &&
+                    point.finishOutcome?.kind === "finish"
+                );
+                const exceptionalFinish = point.finishOutcome &&
+                    point.finishOutcome.kind !== "finish";
                 const winnerCelebration = (
                     replayWinnerDriverId === driver.driver_id &&
                     point.index === replayCurrentIndex
@@ -688,6 +702,9 @@
                     class: (
                         `progression-point` +
                         (isWinner ? " is-win" : "") +
+                        (exceptionalFinish
+                            ? ` is-${point.finishOutcome.kind}`
+                            : "") +
                         (faded ? " is-faded" : "") +
                         (isMovingTip ? " is-moving-tip" : "") +
                         (
@@ -714,7 +731,8 @@
                         driver,
                         point.round,
                         point.position,
-                        point.points
+                        point.points,
+                        point.finishOutcome
                     );
                 });
                 circle.addEventListener(
@@ -724,7 +742,8 @@
                         driver,
                         point.round,
                         point.position,
-                        point.points
+                        point.points,
+                        point.finishOutcome
                     )
                 );
                 circle.addEventListener("pointerleave", () => {
@@ -755,17 +774,22 @@
                     pinnedDriverId === driver.driver_id &&
                     !point.transient
                 ) {
-                    const finish = (
-                        point.finish &&
-                        point.finish < 999
-                    )
-                        ? `P${point.finish}`
-                        : "—";
+                    const finish = point.finishOutcome?.label || (
+                        point.finish && point.finish < 999
+                            ? `P${point.finish}`
+                            : "—"
+                    );
+                    const outcomeKind = point.finishOutcome?.kind || "finish";
 
                     const text = createSvg("text", {
                         x: point.x,
                         y: point.y - 11,
-                        class: "progression-finish-label",
+                        class: (
+                            "progression-finish-label" +
+                            (outcomeKind !== "finish"
+                                ? ` is-${outcomeKind}`
+                                : "")
+                        ),
                         "text-anchor": "middle"
                     });
                     text.textContent = finish;
