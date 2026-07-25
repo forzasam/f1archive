@@ -736,12 +736,14 @@ def get_driver_championship_position_progression(
                         driver.get("code")
                         or driver.get("familyName", "")[:3].upper()
                     ),
+                    "constructor_id": constructor.get("constructorId", ""),
                     "constructor_name": constructor.get("name", "Independent"),
                     "team_colour": get_team_colour(
                         constructor.get("constructorId", "")
                     ),
                     "positions": {},
                     "points": {},
+                    "finishes": {},
                     "final_position": 999,
                 },
             )
@@ -750,6 +752,28 @@ def get_driver_championship_position_progression(
                 999,
             )
             entry["points"][str(round_number)] = float(row.get("points", 0))
+
+        results_path = (
+            season_root
+            / "races"
+            / f"{round_number:02d}"
+            / "results.json"
+        )
+        if results_path.is_file():
+            results_payload = read_archive_json(results_path)
+            result_races = (
+                results_payload.get("MRData", {})
+                .get("RaceTable", {})
+                .get("Races", [])
+            )
+            results_rows = result_races[0].get("Results", []) if result_races else []
+            for result in results_rows:
+                result_driver_id = result.get("Driver", {}).get("driverId", "")
+                if result_driver_id in drivers:
+                    drivers[result_driver_id]["finishes"][str(round_number)] = safe_int(
+                        result.get("position"),
+                        999,
+                    )
 
     final_path = season_root / "driver_standings.json"
     final_payload = read_archive_json(final_path) if final_path.is_file() else {}
@@ -783,6 +807,7 @@ def get_driver_championship_position_progression(
         "default_driver_ids": [
             driver["driver_id"] for driver in ordered_drivers
         ],
+        "is_complete": has_complete_season_archive(season),
     }
 
 

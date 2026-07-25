@@ -213,9 +213,16 @@
                 Follow how the Drivers' Championship order changed throughout
                 {{ season }}. First place is shown at the top.
             </p>
-            <button class="progression-reset" type="button" data-progression-reset>
-                Show all drivers
-            </button>
+            <div class="progression-copy-actions">
+                {% if position_progression.is_complete %}
+                    <button class="progression-replay" type="button" data-progression-replay>
+                        Relive the championship
+                    </button>
+                {% endif %}
+                <button class="progression-reset" type="button" data-progression-reset>
+                    Show all drivers
+                </button>
+            </div>
         </div>
 
         <div class="progression-chart-wrap">

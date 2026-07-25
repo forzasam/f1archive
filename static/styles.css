@@ -3212,3 +3212,135 @@ body.story-modal-open {
         font-size: 1.8rem;
     }
 }
+
+/* Enhanced championship progression interactions */
+.progression-copy-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.progression-replay { border:1px solid rgba(255,59,48,.5); border-radius:999px; padding:9px 13px; background:rgba(255,59,48,.1); color:var(--text); cursor:pointer; }
+.progression-replay:hover { border-color:#ff3b30; background:rgba(255,59,48,.16); }
+.progression-line { cursor:pointer; transition:opacity .22s ease, stroke-width .22s ease, filter .22s ease; }
+.progression-line.is-focused { stroke-width:5; opacity:1; filter:drop-shadow(0 0 4px currentColor); }
+.progression-line.is-faded, .progression-point.is-faded, .progression-end-label.is-faded { opacity:.16; }
+.progression-point { transition:opacity .22s ease, r .18s ease; }
+.progression-point.is-win { stroke:#f6c453; stroke-width:3; }
+.progression-finish-label { fill:var(--text); font-size:10px; font-weight:900; paint-order:stroke; stroke:var(--panel); stroke-width:4px; pointer-events:none; }
+.progression-end-label { font-size:11px; font-weight:900; cursor:pointer; paint-order:stroke; stroke:var(--panel); stroke-width:4px; transition:opacity .22s ease; }
+.progression-leader-marker { fill:#f6c453; font-size:12px; }
+.progression-round-hit { fill:transparent; pointer-events:all; }
+.progression-tooltip b { color:var(--text); }
+.progression-tooltip-hint { margin-top:3px; font-size:.66rem !important; opacity:.75; }
+.progression-driver-toggle.is-pinned { background:var(--panel-soft); color:var(--text); box-shadow:inset 3px 0 0 var(--driver-colour); }
+@media (max-width:650px) { .progression-copy-actions { width:100%; } .progression-copy-actions button { flex:1 1 auto; } }
+
+/* Continuous "Relive the championship" replay animation */
+.progression-replay.is-playing {
+    border-color: #ff3b30;
+    background: #ff3b30;
+    color: #fff;
+}
+
+.progression-chart.is-replaying {
+    cursor: default;
+}
+
+.progression-chart.is-replaying .progression-line,
+.progression-chart.is-replaying .progression-point,
+.progression-chart.is-replaying .progression-end-label {
+    pointer-events: none;
+}
+
+.progression-point.is-moving-tip {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, .38));
+}
+
+.progression-point.is-replay-winner {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: progression-winner-dot 480ms cubic-bezier(.2, .8, .25, 1);
+}
+
+.progression-winner-ring {
+    fill: none;
+    stroke: #f6c453;
+    stroke-width: 3;
+    opacity: 0;
+    pointer-events: none;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: progression-winner-ring 480ms ease-out forwards;
+    filter: drop-shadow(0 0 5px rgba(246, 196, 83, .55));
+}
+
+@keyframes progression-winner-dot {
+    0% {
+        transform: scale(1);
+        filter: none;
+    }
+    42% {
+        transform: scale(1.42);
+        filter: drop-shadow(0 0 7px rgba(246, 196, 83, .8));
+    }
+    100% {
+        transform: scale(1);
+        filter: none;
+    }
+}
+
+@keyframes progression-winner-ring {
+    0% {
+        opacity: .95;
+        transform: scale(.72);
+    }
+    72% {
+        opacity: .5;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2.15);
+    }
+}
+
+.progression-round-axis {
+    transition: stroke .18s ease, opacity .18s ease;
+}
+
+.progression-round-axis.is-upcoming {
+    opacity: .18;
+}
+
+.progression-round-axis.is-current {
+    stroke: rgba(255, 59, 48, .68);
+    stroke-width: 1.5;
+}
+
+.progression-round-axis.is-complete {
+    opacity: .58;
+}
+
+.progression-round-label {
+    transition: fill .18s ease, opacity .18s ease;
+}
+
+.progression-round-label.is-upcoming {
+    opacity: .23;
+}
+
+.progression-round-label.is-complete {
+    opacity: .66;
+}
+
+.progression-round-label.is-current {
+    fill: #ff5a52;
+    opacity: 1;
+    font-weight: 900;
+}
+
+.progression-end-label.is-replay-label {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .progression-point.is-replay-winner,
+    .progression-winner-ring {
+        animation-duration: 1ms;
+    }
+}
