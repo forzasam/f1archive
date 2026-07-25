@@ -777,6 +777,7 @@ def get_driver_championship_position_progression(
 
     rounds: list[dict[str, Any]] = []
     drivers: dict[str, dict[str, Any]] = {}
+    result_driver_ids_by_round: dict[int, set[str]] = {}
 
     for race in schedule_rows:
         round_number = safe_int(race.get("round"))
@@ -855,7 +856,17 @@ def get_driver_championship_position_progression(
                 .get("RaceTable", {})
                 .get("Races", [])
             )
-            results_rows = result_races[0].get("Results", []) if result_races else []
+            results_rows = (
+                result_races[0].get("Results", [])
+                if result_races
+                else []
+            )
+            if results_rows:
+                result_driver_ids_by_round[round_number] = {
+                    result.get("Driver", {}).get("driverId", "")
+                    for result in results_rows
+                    if result.get("Driver", {}).get("driverId", "")
+                }
             for result in results_rows:
                 result_driver_id = result.get("Driver", {}).get("driverId", "")
                 if result_driver_id in drivers:
@@ -866,6 +877,22 @@ def get_driver_championship_position_progression(
                     drivers[result_driver_id]["finish_outcomes"][
                         str(round_number)
                     ] = outcome
+
+    # A completed result file with no entry for a championship driver means
+    # that driver did not participate in that Grand Prix. Keep this distinct
+    # from DNS/DNQ/WD, which Jolpica includes as explicit result rows.
+    for driver_id, driver in drivers.items():
+        for round_number, result_driver_ids in result_driver_ids_by_round.items():
+            key = str(round_number)
+            if driver_id in result_driver_ids or key in driver["finish_outcomes"]:
+                continue
+            driver["finish_outcomes"][key] = {
+                "position": None,
+                "label": "DNP",
+                "kind": "dnp",
+                "status": "Did not participate",
+                "position_text": "DNP",
+            }
 
     final_path = season_root / "driver_standings.json"
     final_payload = read_archive_json(final_path) if final_path.is_file() else {}

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}F1 Archive · Formula One history told through data{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}Explore every Formula One World Championship season from 1950 onwards through results, standings, maps, visualisations and editorial context.{% endblock %}">
+    <title>{% block title %}F1 Archive | Every season has a story{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Every season has a story. Discover the data, the drama and the defining moments of Formula One history.{% endblock %}">
     <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
     <link rel="canonical" href="{% block canonical_url %}{{ request.base_url }}{% endblock %}">
 
@@ -23,7 +23,7 @@
     <!-- Site icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
     <meta name="theme-color" content="#0b0c0e">
@@ -63,7 +63,7 @@
       "@type": "WebSite",
       "name": "F1 Archive",
       "url": {{ url_for('home.index', _external=True) | tojson }},
-      "description": "Independent Formula One history archive combining data, visualisations and editorial context.",
+      "description": "Every season has a story. Discover the data, the drama and the defining moments of Formula One history.",
       "publisher": {
         "@type": "Organization",
         "name": "F1 Archive"

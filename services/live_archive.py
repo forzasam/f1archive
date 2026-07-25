@@ -105,7 +105,7 @@ def live_archive_is_stale(season: int, ttl_seconds: int) -> bool:
         return True
     # Schema 2 introduced reconciliation against Jolpica's latest completed
     # round. Force older snapshots to refresh immediately after deployment.
-    if int(metadata.get("schema_version", 0) or 0) < 2:
+    if int(metadata.get("schema_version", 0) or 0) < 3:
         return True
     updated_at = _parse_iso_datetime(metadata.get("last_successful_update"))
     if updated_at is None:
@@ -116,7 +116,7 @@ def live_archive_is_stale(season: int, ttl_seconds: int) -> bool:
 def _base_metadata(season: int) -> dict[str, Any]:
     existing = get_live_archive_metadata(season) or {}
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "season": season,
         "source": "Jolpica-F1",
         "source_base_url": existing.get("source_base_url", DEFAULT_API_BASE),
@@ -245,6 +245,49 @@ def _completed_races(payload: dict[str, Any], season: int) -> list[dict[str, Any
     return [race for race in races if isinstance(race, dict) and race.get("Results")]
 
 
+def _cached_results_need_refresh(
+    payload: dict[str, Any] | None,
+    season: int,
+    round_number: int,
+) -> bool:
+    """Return True when a stored round is missing, malformed or truncated.
+
+    Older live snapshots were sometimes carved out of a paginated, season-wide
+    results response. When a race straddled the page boundary, that produced a
+    valid-looking file containing only the first few classified drivers. A true
+    round endpoint reports a total matching the number of results in that race.
+    """
+    if not payload:
+        return True
+
+    try:
+        races = _completed_races(payload, season)
+    except F1DataError:
+        return True
+
+    if len(races) != 1:
+        return True
+
+    race = races[0]
+    if int(race.get("round", -1)) != round_number:
+        return True
+
+    results = race.get("Results", [])
+    if not isinstance(results, list) or not results:
+        return True
+
+    mr_data = payload.get("MRData", {})
+    try:
+        reported_total = int(mr_data.get("total", len(results)))
+    except (TypeError, ValueError):
+        reported_total = len(results)
+
+    # Direct /season/round/results responses describe only that race. If the
+    # total is larger than the stored result list, this is a legacy aggregate
+    # fragment or another incomplete payload and must be replaced.
+    return reported_total != len(results)
+
+
 def _acquire_refresh_lock(season: int, stale_after_seconds: int = 900) -> Path | None:
     lock_path = live_season_root(season) / ".refresh.lock"
     lock_path.parent.mkdir(parents=True, exist_ok=True)
@@ -357,7 +400,15 @@ def refresh_live_archive(
             results_path = round_root / "results.json"
             standings_path = round_root / "driver_standings.json"
 
-            should_refresh_results = round_number == latest_round or not results_path.is_file()
+            cached_results = _read_json_if_present(results_path)
+            should_refresh_results = (
+                round_number == latest_round
+                or _cached_results_need_refresh(
+                    cached_results,
+                    season,
+                    round_number,
+                )
+            )
             if should_refresh_results:
                 if round_number in latest_by_round:
                     payload = _individual_results_payload(

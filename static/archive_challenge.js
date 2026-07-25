@@ -523,6 +523,15 @@
                 );
                 if (!isDnp && !Number.isInteger(round[key])) return;
 
+                const podiumClass = (
+                    !isDnp &&
+                    Number.isInteger(round[key]) &&
+                    round[key] >= 1 &&
+                    round[key] <= 3
+                )
+                    ? ` is-podium-${round[key]}`
+                    : "";
+
                 const exact = createSvg("text", {
                     x: x(index),
                     y: isDnp
@@ -531,7 +540,8 @@
                     class: (
                         "challenge-exact-position " +
                         `challenge-exact-position-${key}` +
-                        (isDnp ? " is-dnp" : "")
+                        (isDnp ? " is-dnp" : "") +
+                        podiumClass
                     ),
                     "text-anchor": "middle",
                     "data-challenge-series": key,

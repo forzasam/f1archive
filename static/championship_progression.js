@@ -181,7 +181,9 @@
     ) => showTooltip(event, `
         <strong>${driver.driver_name}</strong>
         <span>${round.race_name}</span>
-        <span>${ordinal(position)} in championship · ${points} pts</span>
+        <span>${Number.isFinite(Number(position))
+            ? `${ordinal(position)} in championship · ${points} pts`
+            : `${points} pts`}</span>
         ${finishOutcome ? `
             <span class="progression-tooltip-result${
                 finishOutcome.kind !== "finish"
@@ -382,10 +384,10 @@
         const containerWidth = svg.parentElement.clientWidth || 900;
         const width = Math.max(760, containerWidth);
         const height = Math.max(
-            520,
-            Math.min(700, model.max_position * 25 + 150)
+            554,
+            Math.min(734, model.max_position * 25 + 184)
         );
-        const margin = { top: 42, right: 88, bottom: 92, left: 54 };
+        const margin = { top: 42, right: 88, bottom: 126, left: 54 };
         const plotWidth = width - margin.left - margin.right;
         const plotHeight = height - margin.top - margin.bottom;
         const rounds = model.rounds || [];
@@ -427,6 +429,7 @@
                     : (position - 1) * plotHeight / (maxPosition - 1)
             )
         );
+        const dnpY = height - margin.bottom + 24;
 
         const grid = createSvg("g", { class: "progression-grid" });
         const tickStep = maxPosition > 15 ? 2 : 1;
@@ -449,6 +452,23 @@
             label.textContent = position;
             grid.append(label);
         }
+
+        grid.append(createSvg("line", {
+            x1: margin.left,
+            y1: dnpY,
+            x2: width - margin.right,
+            y2: dnpY,
+            class: "progression-dnp-grid-line"
+        }));
+
+        const dnpAxisLabel = createSvg("text", {
+            x: margin.left - 14,
+            y: dnpY + 4,
+            "text-anchor": "end",
+            class: "progression-dnp-axis-label"
+        });
+        dnpAxisLabel.textContent = "DNP";
+        grid.append(dnpAxisLabel);
 
         svg.append(grid);
 
@@ -475,7 +495,7 @@
                 x1: columnX,
                 y1: margin.top,
                 x2: columnX,
-                y2: height - margin.bottom,
+                y2: dnpY,
                 class: `progression-round-axis${axisState}`
             });
             axis.append(axisLine);
@@ -486,10 +506,10 @@
             ) {
                 const label = createSvg("text", {
                     x: columnX,
-                    y: height - margin.bottom + 20,
+                    y: dnpY + 32,
                     transform: (
                         `rotate(-38 ${columnX} ` +
-                        `${height - margin.bottom + 20})`
+                        `${dnpY + 32})`
                     ),
                     "text-anchor": "end",
                     class: `progression-round-label${axisState}`
@@ -511,7 +531,7 @@
                     20,
                     plotWidth / Math.max(1, rounds.length)
                 ),
-                height: plotHeight,
+                height: dnpY - margin.top,
                 class: "progression-round-hit"
             });
 
@@ -532,6 +552,18 @@
         const activeDrivers = model.drivers.filter(
             (driver) => selected.has(driver.driver_id)
         );
+
+        const dnpOffset = (driver, round) => {
+            const absentDrivers = activeDrivers.filter((candidate) => (
+                candidate.finish_outcomes?.[String(round.round)]?.kind === "dnp"
+            ));
+            const index = absentDrivers.findIndex(
+                (candidate) => candidate.driver_id === driver.driver_id
+            );
+            if (index < 0 || absentDrivers.length <= 1) return 0;
+            const spacing = 8;
+            return (index - (absentDrivers.length - 1) / 2) * spacing;
+        };
 
         const previousLeader = { id: null };
         rounds.forEach((round, index) => {
@@ -688,7 +720,7 @@
                     point.finishOutcome?.kind === "finish"
                 );
                 const exceptionalFinish = point.finishOutcome &&
-                    point.finishOutcome.kind !== "finish";
+                    !["finish", "dnp"].includes(point.finishOutcome.kind);
                 const winnerCelebration = (
                     replayWinnerDriverId === driver.driver_id &&
                     point.index === replayCurrentIndex
@@ -772,7 +804,8 @@
 
                 if (
                     pinnedDriverId === driver.driver_id &&
-                    !point.transient
+                    !point.transient &&
+                    point.finishOutcome?.kind !== "dnp"
                 ) {
                     const finish = point.finishOutcome?.label || (
                         point.finish && point.finish < 999
@@ -780,6 +813,14 @@
                             : "—"
                     );
                     const outcomeKind = point.finishOutcome?.kind || "finish";
+                    const podiumClass = (
+                        outcomeKind === "finish" &&
+                        Number.isInteger(point.finish) &&
+                        point.finish >= 1 &&
+                        point.finish <= 3
+                    )
+                        ? ` is-podium-${point.finish}`
+                        : "";
 
                     const text = createSvg("text", {
                         x: point.x,
@@ -788,11 +829,91 @@
                             "progression-finish-label" +
                             (outcomeKind !== "finish"
                                 ? ` is-${outcomeKind}`
-                                : "")
+                                : "") +
+                            podiumClass
                         ),
                         "text-anchor": "middle"
                     });
                     text.textContent = finish;
+                    svg.append(text);
+                }
+            });
+
+            rounds.forEach((round, index) => {
+                if (index > visibleEnd) return;
+                const outcome = driver.finish_outcomes?.[String(round.round)];
+                if (outcome?.kind !== "dnp") return;
+
+                const markerX = x(index) + dnpOffset(driver, round);
+                const marker = createSvg("rect", {
+                    x: markerX - 4.5,
+                    y: dnpY - 4.5,
+                    width: 9,
+                    height: 9,
+                    rx: 2,
+                    fill: "var(--panel)",
+                    stroke: driver.team_colour,
+                    class: (
+                        "progression-dnp-point" +
+                        (focused && hasFocus() ? " is-focused" : "") +
+                        (faded ? " is-faded" : "")
+                    ),
+                    "data-driver-id": driver.driver_id,
+                    tabindex: replayRunning ? -1 : 0,
+                    role: "button",
+                    "aria-label": (
+                        `${driver.driver_name}, ${round.race_name}, ` +
+                        "did not participate"
+                    )
+                });
+
+                marker.addEventListener("pointerenter", (event) => {
+                    if (replayRunning) return;
+                    hoveredDriverId = driver.driver_id;
+                    applyHoverFocus();
+                    const championshipPosition =
+                        driver.positions[String(round.round)];
+                    driverTooltip(
+                        event,
+                        driver,
+                        round,
+                        championshipPosition,
+                        driver.points[String(round.round)] ?? 0,
+                        outcome
+                    );
+                });
+                marker.addEventListener("pointermove", (event) => {
+                    const championshipPosition =
+                        driver.positions[String(round.round)];
+                    driverTooltip(
+                        event,
+                        driver,
+                        round,
+                        championshipPosition,
+                        driver.points[String(round.round)] ?? 0,
+                        outcome
+                    );
+                });
+                marker.addEventListener("pointerleave", () => {
+                    if (replayRunning) return;
+                    hoveredDriverId = null;
+                    hideTooltip();
+                    applyHoverFocus();
+                });
+                marker.addEventListener(
+                    "click",
+                    (event) => setPinned(driver, event.shiftKey)
+                );
+                svg.append(marker);
+
+                if (pinnedDriverId === driver.driver_id) {
+                    const text = createSvg("text", {
+                        x: markerX,
+                        y: dnpY - 10,
+                        class: "progression-finish-label is-dnp",
+                        "text-anchor": "middle"
+                    });
+                    text.textContent = "DNP";
                     svg.append(text);
                 }
             });

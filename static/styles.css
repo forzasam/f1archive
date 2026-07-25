@@ -3584,3 +3584,75 @@ body.story-modal-open {
     color: #b7bdc8;
     font-weight: 800;
 }
+
+/* Podium position colours across season cards and progression labels */
+.wdc-position.is-podium-1 {
+    border-color: rgba(246, 196, 83, .68);
+    background: rgba(246, 196, 83, .12);
+    color: #f6c453;
+}
+
+.wdc-position.is-podium-2 {
+    border-color: rgba(199, 204, 212, .62);
+    background: rgba(199, 204, 212, .10);
+    color: #c7ccd4;
+}
+
+.wdc-position.is-podium-3 {
+    border-color: rgba(205, 127, 50, .68);
+    background: rgba(205, 127, 50, .12);
+    color: #cd7f32;
+}
+
+.progression-finish-label.is-podium-1,
+.challenge-exact-position.is-podium-1 {
+    fill: #f6c453;
+}
+
+.progression-finish-label.is-podium-2,
+.challenge-exact-position.is-podium-2 {
+    fill: #c7ccd4;
+}
+
+.progression-finish-label.is-podium-3,
+.challenge-exact-position.is-podium-3 {
+    fill: #cd7f32;
+}
+
+
+/* Main championship progression: did not participate */
+.progression-dnp-grid-line {
+    stroke: rgba(157, 163, 174, .22) !important;
+    stroke-dasharray: 4 5;
+}
+
+.progression-dnp-axis-label {
+    fill: #7f8794 !important;
+    font-weight: 850;
+}
+
+.progression-dnp-point {
+    stroke-width: 2;
+    cursor: pointer;
+    vector-effect: non-scaling-stroke;
+    transition: opacity .22s ease, stroke-width .18s ease, filter .18s ease;
+}
+
+.progression-dnp-point.is-focused,
+.progression-dnp-point:hover,
+.progression-dnp-point:focus {
+    stroke-width: 3;
+    filter: drop-shadow(0 0 5px rgba(209, 213, 220, .32));
+    outline: none;
+}
+
+.progression-dnp-point.is-faded {
+    opacity: .16;
+}
+
+.progression-finish-label.is-dnp,
+.progression-tooltip-result.is-dnp {
+    fill: #aeb4bf;
+    color: #aeb4bf;
+    font-weight: 800;
+}

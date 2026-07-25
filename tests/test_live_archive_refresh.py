@@ -90,7 +90,7 @@ def test_refresh_backfills_rounds_missing_from_local_cache(monkeypatch, tmp_path
 
     metadata = live_archive.refresh_live_archive(season)
 
-    assert metadata["schema_version"] == 2
+    assert metadata["schema_version"] == 3
     assert metadata["status"] == "healthy"
     assert metadata["completed_rounds"] == [1, 2, 3, 4]
     assert metadata["latest_completed_round"] == 4
@@ -120,3 +120,72 @@ def test_old_metadata_schema_forces_immediate_refresh(monkeypatch, tmp_path: Pat
     )
 
     assert live_archive.live_archive_is_stale(season, ttl_seconds=3600) is True
+
+
+def test_refresh_replaces_truncated_cached_round(monkeypatch, tmp_path: Path):
+    season = 2026
+    monkeypatch.setenv("LIVE_ARCHIVE_ROOT", str(tmp_path))
+    monkeypatch.setattr(live_archive, "current_season", lambda: season)
+
+    season_root = tmp_path / "seasons" / str(season)
+    round_root = season_root / "races" / "01"
+
+    truncated = race_payload(season, 1)
+    truncated["MRData"]["total"] = "20"
+    truncated["MRData"]["RaceTable"]["Races"][0]["Results"] = [
+        {"position": str(position)}
+        for position in range(1, 13)
+    ]
+    live_archive.write_json_atomic(round_root / "results.json", truncated)
+    live_archive.write_json_atomic(
+        round_root / "driver_standings.json",
+        standings_payload(season, 1),
+    )
+
+    complete = race_payload(season, 1)
+    complete["MRData"]["total"] = "20"
+    complete["MRData"]["RaceTable"]["Races"][0]["Results"] = [
+        {"position": str(position)}
+        for position in range(1, 21)
+    ]
+
+    responses = {
+        f"{season}.json?limit=100": schedule_payload(season, 2),
+        "current/last/results.json": complete,
+        f"{season}/1/driverstandings.json?limit=100": standings_payload(season, 1),
+        f"{season}/1/constructorstandings.json?limit=100": standings_payload(season, 1),
+    }
+    requested: list[str] = []
+
+    class FakeClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def get_json(self, path: str) -> dict:
+            requested.append(path)
+            return responses[path]
+
+        def close(self) -> None:
+            pass
+
+    monkeypatch.setattr(live_archive, "LiveArchiveClient", FakeClient)
+
+    live_archive.refresh_live_archive(season)
+
+    stored = json.loads(
+        (round_root / "results.json").read_text(encoding="utf-8")
+    )
+    results = stored["MRData"]["RaceTable"]["Races"][0]["Results"]
+    assert len(results) == 20
+
+
+def test_legacy_aggregate_fragment_is_considered_incomplete():
+    season = 2026
+    payload = race_payload(season, 5)
+    payload["MRData"]["total"] = "220"
+    payload["MRData"]["RaceTable"]["Races"][0]["Results"] = [
+        {"position": str(position)}
+        for position in range(1, 13)
+    ]
+
+    assert live_archive._cached_results_need_refresh(payload, season, 5) is True

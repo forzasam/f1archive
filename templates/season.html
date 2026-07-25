@@ -211,7 +211,8 @@
         <div class="progression-copy">
             <p>
                 Follow how the Drivers' Championship order changed throughout
-                {{ season }}. First place is shown at the top.
+                {{ season }}. First place is shown at the top; DNP marks a
+                Grand Prix the driver did not participate in.
             </p>
             <div class="progression-copy-actions">
                 {% if position_progression.is_complete %}
@@ -234,7 +235,8 @@
             ></svg>
             <p id="progression-description" class="visually-hidden">
                 Line graph showing each selected driver's championship position
-                after every race in the {{ season }} season.
+                after every race in the {{ season }} season, with DNP markers for
+                Grands Prix they did not participate in.
             </p>
             <div class="progression-tooltip" data-progression-tooltip hidden></div>
         </div>

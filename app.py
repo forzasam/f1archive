@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 
 from config import Config
 from routes.home import home_bp
@@ -24,6 +24,14 @@ def create_app() -> Flask:
     app.register_blueprint(races_bp)
 
     start_live_archive_scheduler(app)
+
+    @app.route("/favicon.ico")
+    def favicon():
+        return send_from_directory(
+            app.static_folder,
+            "favicon.ico",
+            mimetype="image/vnd.microsoft.icon",
+        )
 
     @app.errorhandler(404)
     def page_not_found(error):

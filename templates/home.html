@@ -125,7 +125,9 @@
                     <div class="season-card-topline">
                         <span>{{ season.year }}</span>
                         {% if season.driver_result %}
-                            <strong class="wdc-position">
+                            <strong
+                                class="wdc-position{% if season.driver_result.position_text|string in ('1', '2', '3') %} is-podium-{{ season.driver_result.position_text }}{% endif %}"
+                            >
                                 P{{ season.driver_result.position_text }}
                             </strong>
                         {% endif %}
