@@ -28,7 +28,7 @@
             <h2 id="season-story-title">{{ season_story.title }}</h2>
             <div class="season-story-preview">
                 {% for paragraph in season_story.preview_paragraphs %}
-                    <p>{{ paragraph }}</p>
+                    <p>{{ paragraph | safe }}</p>
                 {% endfor %}
             </div>
             {% if season_story.has_more %}
@@ -53,7 +53,7 @@
             </div>
             <div class="story-modal-copy">
                 {% for paragraph in season_story.paragraphs %}
-                    <p>{{ paragraph }}</p>
+                    <p>{{ paragraph | safe }}</p>
                 {% endfor %}
             </div>
         </article>

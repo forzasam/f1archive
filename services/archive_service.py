@@ -452,13 +452,15 @@ def build_homepage_data(
         if selected_driver
         else {}
     )
-    season_cards = [
-        {
+    season_cards = []
+    for season in seasons:
+        story = get_season_story(season)
+        season_cards.append({
             "year": season,
             "driver_result": driver_positions.get(season),
-        }
-        for season in seasons
-    ]
+            "has_story": story is not None,
+            "story_title": story.get("title", "") if story else "",
+        })
 
     return {
         "seasons": season_cards,

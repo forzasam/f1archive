@@ -119,11 +119,28 @@
         <div class="season-grid">
             {% for season in seasons %}
                 <a
-                    class="season-card{% if season.driver_result %} season-card-with-result{% endif %}"
+                    class="season-card{% if season.driver_result %} season-card-with-result{% endif %}{% if season.has_story %} season-card-has-story{% endif %}"
                     href="{{ url_for('seasons.season_page', season=season.year) }}"
+                    {% if season.has_story %}
+                        aria-label="{{ season.year }} season — Season story: {{ season.story_title }}"
+                    {% else %}
+                        aria-label="{{ season.year }} season"
+                    {% endif %}
                 >
                     <div class="season-card-topline">
-                        <span>{{ season.year }}</span>
+                        <span
+                            class="season-story-marker{% if season.has_story %} has-story{% endif %}"
+                            aria-hidden="true"
+                        >
+                            <span class="season-story-diamond"></span>
+                            {% if season.has_story %}
+                                <span class="season-story-tooltip">
+                                    <small>Season story</small>
+                                    <strong>{{ season.story_title }}</strong>
+                                </span>
+                            {% endif %}
+                        </span>
+                        <span class="season-card-year">{{ season.year }}</span>
                         {% if season.driver_result %}
                             <strong
                                 class="wdc-position{% if season.driver_result.position_text|string in ('1', '2', '3') %} is-podium-{{ season.driver_result.position_text }}{% endif %}"
