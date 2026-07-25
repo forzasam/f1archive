@@ -3857,3 +3857,45 @@ body.story-modal-open {
         font-size: .65rem;
     }
 }
+
+
+/* Footer Discord link */
+.footer-discord-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .42rem;
+    color: inherit;
+}
+
+.footer-discord-icon {
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+    opacity: .72;
+    transform: translateY(0);
+    transition:
+        color .18s ease,
+        opacity .18s ease,
+        transform .18s ease;
+}
+
+.footer-discord-link:hover {
+    color: #5865f2;
+}
+
+.footer-discord-link:hover .footer-discord-icon {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.footer-discord-link:focus-visible {
+    outline: 2px solid rgba(88, 101, 242, .55);
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .footer-discord-icon {
+        transition: none;
+    }
+}
