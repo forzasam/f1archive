@@ -1,6 +1,38 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <script>
+        const analyticsConsent = localStorage.getItem('f1archive-analytics-consent');
+
+        function loadGoogleAnalytics() {
+            if (window.f1ArchiveAnalyticsLoaded) {
+                return;
+            }
+
+            window.f1ArchiveAnalyticsLoaded = true;
+            window.dataLayer = window.dataLayer || [];
+
+            window.gtag = function () {
+                window.dataLayer.push(arguments);
+            };
+
+            window.gtag('js', new Date());
+            window.gtag('config', 'G-ZBW6V6FY36', {
+                anonymize_ip: true
+            });
+
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-ZBW6V6FY36';
+
+            document.head.appendChild(script);
+        }
+
+        if (analyticsConsent === 'accepted') {
+            loadGoogleAnalytics();
+        }
+    </script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -127,6 +159,79 @@
             F1 Archive is an independent project and is not affiliated with, endorsed by, or connected to Formula 1, the FIA, or any Formula One team. Formula 1 and F1 are trade marks of their respective owners.
         </p>
     </footer>
+
+    <div
+        class="cookie-banner"
+        id="cookie-banner"
+        role="dialog"
+        aria-live="polite"
+        aria-label="Cookie preferences"
+        hidden
+    >
+        <div class="cookie-banner__content">
+            <div>
+                <strong>Help improve F1 Archive</strong>
+                <p>
+                    F1 Archive uses optional analytics cookies to understand how
+                    visitors use the site and improve the archive. You can accept
+                    or reject analytics cookies.
+                    <a href="{{ url_for('pages.privacy') }}">Privacy policy</a>
+                </p>
+            </div>
+
+            <div class="cookie-banner__actions">
+                <button
+                    class="cookie-button cookie-button--secondary"
+                    id="reject-analytics"
+                    type="button"
+                >
+                    Reject analytics
+                </button>
+
+                <button
+                    class="cookie-button cookie-button--primary"
+                    id="accept-analytics"
+                    type="button"
+                >
+                    Accept analytics
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const banner = document.getElementById('cookie-banner');
+            const acceptButton = document.getElementById('accept-analytics');
+            const rejectButton = document.getElementById('reject-analytics');
+            const existingChoice = localStorage.getItem(
+                'f1archive-analytics-consent'
+            );
+
+            if (!existingChoice) {
+                banner.hidden = false;
+            }
+
+            acceptButton.addEventListener('click', function () {
+                localStorage.setItem(
+                    'f1archive-analytics-consent',
+                    'accepted'
+                );
+
+                banner.hidden = true;
+                loadGoogleAnalytics();
+            });
+
+            rejectButton.addEventListener('click', function () {
+                localStorage.setItem(
+                    'f1archive-analytics-consent',
+                    'rejected'
+                );
+
+                banner.hidden = true;
+            });
+        });
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>
