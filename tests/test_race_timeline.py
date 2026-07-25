@@ -43,3 +43,15 @@ def test_timeline_interface_is_present():
     assert 'id="timeline-rail"' in template
     assert 'id="timeline-list"' in template
     assert "selectEvent(event.id)" in script
+
+
+def test_editorial_story_playback_interface_is_present():
+    template = (ROOT / "templates" / "_race_map.html").read_text(encoding="utf-8")
+    script = (ROOT / "static" / "race_map.js").read_text(encoding="utf-8")
+
+    assert 'id="story-event-overlay"' in template
+    assert 'id="story-continue"' in template
+    assert "function playStoryFrames(event)" in script
+    assert "storyPausedAtEvent" in script
+    assert "event.frames" in script
+    assert "editorial reconstructions" in template

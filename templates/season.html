@@ -267,7 +267,12 @@
                         {{ race.circuit }} · {{ race.locality }}, {{ race.country }}
                     </small>
                 </span>
-                <span class="race-date">{{ race.formatted_date }}</span>
+                <span class="race-date">
+                    {{ race.formatted_date }}
+                    {% if race.is_upcoming %}
+                        <small class="race-status">Upcoming</small>
+                    {% endif %}
+                </span>
                 <span class="arrow">→</span>
             </a>
         {% endfor %}

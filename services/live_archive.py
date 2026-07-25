@@ -103,6 +103,10 @@ def live_archive_is_stale(season: int, ttl_seconds: int) -> bool:
     metadata = get_live_archive_metadata(season)
     if metadata is None:
         return True
+    # Schema 2 introduced reconciliation against Jolpica's latest completed
+    # round. Force older snapshots to refresh immediately after deployment.
+    if int(metadata.get("schema_version", 0) or 0) < 2:
+        return True
     updated_at = _parse_iso_datetime(metadata.get("last_successful_update"))
     if updated_at is None:
         return True
@@ -112,7 +116,7 @@ def live_archive_is_stale(season: int, ttl_seconds: int) -> bool:
 def _base_metadata(season: int) -> dict[str, Any]:
     existing = get_live_archive_metadata(season) or {}
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "season": season,
         "source": "Jolpica-F1",
         "source_base_url": existing.get("source_base_url", DEFAULT_API_BASE),
@@ -124,6 +128,7 @@ def _base_metadata(season: int) -> dict[str, Any]:
         "completed_rounds": list(existing.get("completed_rounds", [])),
         "completed_round_count": int(existing.get("completed_round_count", 0) or 0),
         "scheduled_round_count": int(existing.get("scheduled_round_count", 0) or 0),
+        "latest_completed_round": existing.get("latest_completed_round"),
     }
 
 
@@ -287,42 +292,98 @@ def refresh_live_archive(
         schedule = client.get_json(f"{season}.json?limit=100")
         schedule_rows = _validate_schedule(schedule, season)
 
-        driver_standings = client.get_json(f"{season}/driverstandings.json?limit=100")
-        _validate_standings(driver_standings, season)
-
-        constructor_standings = client.get_json(
-            f"{season}/constructorstandings.json?limit=100"
+        # Use Jolpica's latest completed race as the source of truth for how
+        # far the season has progressed. The season-wide results endpoint can
+        # occasionally lag behind otherwise-current round endpoints, which
+        # previously allowed the cache to report itself as healthy while
+        # several completed races were missing.
+        latest_results = client.get_json("current/last/results.json")
+        latest_completed = _completed_races(latest_results, season)
+        latest_round = (
+            max(int(race["round"]) for race in latest_completed)
+            if latest_completed
+            else None
         )
-        _validate_standings(constructor_standings, season)
 
-        # One season-wide results request is cheaper and more reliable than
-        # polling every scheduled round independently.
-        all_results = client.get_json(f"{season}/results.json?limit=2000")
-        completed_races = _completed_races(all_results, season)
-        completed_rounds = sorted({int(race["round"]) for race in completed_races})
+        scheduled_rounds = sorted({
+            int(race["round"])
+            for race in schedule_rows
+            if isinstance(race, dict) and str(race.get("round", "")).isdigit()
+        })
+        completed_rounds = (
+            [round_number for round_number in scheduled_rounds if round_number <= latest_round]
+            if latest_round is not None
+            else []
+        )
 
-        # Fetch the round-by-round standings required by both race pages and
-        # the championship progression graph. Existing rounds remain usable
-        # until their replacement has been validated and atomically written.
-        round_standings: dict[int, dict[str, Any]] = {}
-        latest_round = completed_rounds[-1] if completed_rounds else None
-        rounds_to_refresh = [
-            round_number
-            for round_number in completed_rounds
-            if round_number == latest_round
-            or not (
-                season_root
-                / "races"
-                / f"{round_number:02d}"
-                / "driver_standings.json"
-            ).is_file()
-        ]
-        for round_number in rounds_to_refresh:
-            payload = client.get_json(
-                f"{season}/{round_number}/driverstandings.json?limit=100"
+        # Pin the season standings to the same latest completed round rather
+        # than trusting another aggregate endpoint that may be cached at an
+        # older round. Before the first race, the ordinary season endpoints
+        # are still used so an empty but valid snapshot can be stored.
+        if latest_round is not None:
+            driver_standings = client.get_json(
+                f"{season}/{latest_round}/driverstandings.json?limit=100"
             )
-            _validate_standings(payload, season, round_number)
-            round_standings[round_number] = payload
+            _validate_standings(driver_standings, season, latest_round)
+            constructor_standings = client.get_json(
+                f"{season}/{latest_round}/constructorstandings.json?limit=100"
+            )
+            _validate_standings(constructor_standings, season, latest_round)
+        else:
+            driver_standings = client.get_json(
+                f"{season}/driverstandings.json?limit=100"
+            )
+            _validate_standings(driver_standings, season)
+            constructor_standings = client.get_json(
+                f"{season}/constructorstandings.json?limit=100"
+            )
+            _validate_standings(constructor_standings, season)
+
+        # Reconcile every completed round against the local cache. Existing
+        # historical rounds are reused, while missing rounds and the latest
+        # round are fetched individually. Refreshing the latest round allows
+        # corrected or initially incomplete classifications to replace the
+        # cached copy on the next hourly update.
+        race_payloads: dict[int, dict[str, Any]] = {}
+        round_standings: dict[int, dict[str, Any]] = {}
+        latest_by_round = {
+            int(race["round"]): race
+            for race in latest_completed
+            if str(race.get("round", "")).isdigit()
+        }
+
+        for round_number in completed_rounds:
+            round_root = season_root / "races" / f"{round_number:02d}"
+            results_path = round_root / "results.json"
+            standings_path = round_root / "driver_standings.json"
+
+            should_refresh_results = round_number == latest_round or not results_path.is_file()
+            if should_refresh_results:
+                if round_number in latest_by_round:
+                    payload = _individual_results_payload(
+                        latest_results,
+                        season,
+                        latest_by_round[round_number],
+                    )
+                else:
+                    payload = client.get_json(
+                        f"{season}/{round_number}/results.json?limit=100"
+                    )
+                races = _completed_races(payload, season)
+                if len(races) != 1 or int(races[0].get("round", -1)) != round_number:
+                    raise F1DataError(
+                        f"Completed round {round_number} did not return a valid result"
+                    )
+                race_payloads[round_number] = payload
+
+            if round_number == latest_round:
+                round_standings[round_number] = driver_standings
+            elif not standings_path.is_file():
+                payload = client.get_json(
+                    f"{season}/{round_number}/driverstandings.json?limit=100"
+                )
+                _validate_standings(payload, season, round_number)
+                round_standings[round_number] = payload
 
         write_json_atomic(season_root / "schedule.json", schedule)
         write_json_atomic(season_root / "driver_standings.json", driver_standings)
@@ -331,17 +392,13 @@ def refresh_live_archive(
             constructor_standings,
         )
 
-        races_by_round = {int(race["round"]): race for race in completed_races}
         for round_number in completed_rounds:
             round_root = season_root / "races" / f"{round_number:02d}"
-            write_json_atomic(
-                round_root / "results.json",
-                _individual_results_payload(
-                    all_results,
-                    season,
-                    races_by_round[round_number],
-                ),
-            )
+            if round_number in race_payloads:
+                write_json_atomic(
+                    round_root / "results.json",
+                    race_payloads[round_number],
+                )
             if round_number in round_standings:
                 write_json_atomic(
                     round_root / "driver_standings.json",
@@ -356,6 +413,7 @@ def refresh_live_archive(
             "completed_rounds": completed_rounds,
             "completed_round_count": len(completed_rounds),
             "scheduled_round_count": len(schedule_rows),
+            "latest_completed_round": latest_round,
         })
         write_json_atomic(metadata_path(season), metadata)
         # The homepage filter index is built from these local snapshots.

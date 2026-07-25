@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ race.name }} {{ race.season }} · F1 Archive{% endblock %}
+{% block meta_description %}The {{ race.name }} is scheduled for {{ race.scheduled_display }}. Return after the race weekend for results, standings and archive coverage.{% endblock %}
+
+{% block content %}
+<section class="upcoming-race-shell">
+    <a class="back-link" href="{{ url_for('seasons.season_page', season=race.season) }}">
+        ← Back to the {{ race.season }} season
+    </a>
+
+    <article class="upcoming-race-card">
+        <div class="upcoming-race-mark" aria-hidden="true">
+            <span>{{ "%02d"|format(race.round) }}</span>
+        </div>
+
+        <div class="upcoming-race-copy">
+            <p class="eyebrow">Round {{ race.round }} · Upcoming</p>
+            <h1>{{ race.name }}</h1>
+            <p class="upcoming-race-location">
+                {{ race.circuit }} · {{ race.locality }}, {{ race.country }}
+            </p>
+
+            {% if race.is_future %}
+                <h2>This race has not taken place yet.</h2>
+                <p>
+                    The {{ race.name }} is scheduled for
+                    <time datetime="{{ race.scheduled_iso }}">{{ race.scheduled_display }}</time>.
+                    Please check back after the race weekend for the full results,
+                    championship standings and archive coverage. Until then, enjoy the race!
+                </p>
+            {% else %}
+                <h2>Results are on their way.</h2>
+                <p>
+                    The scheduled start was
+                    <time datetime="{{ race.scheduled_iso }}">{{ race.scheduled_display }}</time>.
+                    The local archive has not received the completed classification yet,
+                    so please check back shortly.
+                </p>
+            {% endif %}
+
+            {% if race.live_archive and race.live_archive.last_updated_formatted %}
+                <p class="season-last-updated upcoming-last-updated">
+                    <span class="last-updated-label">Archive checked:</span>
+                    {{ race.live_archive.last_updated_formatted }}
+                </p>
+            {% endif %}
+
+            <a class="primary-link" href="{{ url_for('seasons.season_page', season=race.season) }}">
+                View the {{ race.season }} season
+            </a>
+        </div>
+    </article>
+</section>
+{% endblock %}

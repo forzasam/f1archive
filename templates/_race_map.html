@@ -28,6 +28,21 @@
                     <p>The editorial timeline remains available below.</p>
                 </div>
             {% endif %}
+            <div id="story-event-overlay" class="story-event-overlay" hidden aria-live="polite">
+                <div class="story-event-card">
+                    <div class="story-event-topline">
+                        <span id="story-event-lap">Pre-race</span>
+                        <span id="story-event-category">Race story</span>
+                    </div>
+                    <h3 id="story-event-title"></h3>
+                    <p id="story-event-body"></p>
+                    <p id="story-frame-caption" class="story-frame-caption" hidden></p>
+                    <button id="story-continue" class="story-continue" type="button">
+                        Continue story →
+                    </button>
+                </div>
+            </div>
+
             <p class="map-attribution">
                 {{ race_map.attribution }}
             </p>
@@ -53,8 +68,9 @@
                 <p class="eyebrow">Race timeline</p>
                 <h3 id="race-timeline-title">Lap by lap</h3>
                 <p>
-                    Key moments are marked on the race-distance rail. Select a
-                    dot or event card to reveal where it happened.
+                    Press play to follow the race lap by lap. At each authored
+                    moment, playback pauses while the map reconstructs what
+                    happened and the story card explains why it mattered.
                 </p>
             </div>
 
@@ -77,7 +93,7 @@
                 aria-label="Play race timeline"
             >
                 <span class="play-icon" aria-hidden="true">▶</span>
-                <span class="play-label">Play timeline</span>
+                <span class="play-label">Begin story</span>
             </button>
 
             <button
@@ -90,8 +106,8 @@
             </button>
 
             <div class="timeline-lap-readout" aria-live="polite">
-                <span>Current lap</span>
-                <strong id="timeline-current-lap">1</strong>
+                <span id="timeline-phase-label">Current lap</span>
+                <strong id="timeline-current-lap">0</strong>
             </div>
 
             <button
@@ -169,6 +185,11 @@
 
         <div id="timeline-list" class="timeline-list" aria-live="polite"></div>
     </section>
+
+    <p class="editorial-reconstruction-note">
+        Track positions are editorial reconstructions intended to illustrate
+        the events described, rather than exact telemetry.
+    </p>
 
     <script id="race-map-data" type="application/json">
         {{ race_map | tojson }}

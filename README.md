@@ -348,9 +348,16 @@ seasons/2026/
 ```
 
 `metadata.json` records the last attempt, last successful update, completed
-rounds, consecutive failures and the most recent error. Writes are atomic and
-protected by a refresh lock. A failed refresh does not overwrite the previous
-working snapshot.
+rounds, the latest completed round reported by Jolpica, consecutive failures
+and the most recent error. Writes are atomic and protected by a refresh lock.
+A failed refresh does not overwrite the previous working snapshot.
+
+The refresher reconciles the local cache against
+`current/last/results.json`, then downloads any completed rounds missing from
+local storage through their individual round endpoints. The latest round is
+refreshed on every successful cycle, and the season standings are requested
+for that exact round. This avoids treating a temporarily lagging season-wide
+aggregate response as a complete and healthy snapshot.
 
 ## Season stories
 
@@ -381,3 +388,14 @@ Jolpica API directly.
 ## Search appearance and legal pages
 
 The shared page template now supplies canonical URLs, page descriptions, Open Graph metadata, favicon links and basic WebSite structured data. The app also exposes `/robots.txt` and `/sitemap.xml`. Legal information is available at `/privacy` and `/disclaimer`, with a short independence notice in the global footer. Review the privacy wording whenever analytics, advertising, accounts or additional third-party services are introduced.
+
+## Upcoming current-season race pages
+
+The live season schedule is stored locally in `data/live/seasons/<year>/schedule.json`, including rounds that have not yet taken place. Race URLs now use that schedule when a round has no local `results.json` file:
+
+- scheduled future rounds render `templates/upcoming_race.html`;
+- a recently completed round whose classification has not reached the cache yet shows a short "results are on their way" state;
+- once the hourly live updater stores the round results, the same URL automatically renders the normal race archive page;
+- rounds absent from the schedule still return a genuine 404.
+
+No empty result files are created for future rounds. The schedule remains the source of truth for planned events, while `races/<round>/results.json` continues to mean that a completed classification is available.

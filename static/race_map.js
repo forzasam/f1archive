@@ -385,30 +385,219 @@ createMapMarkers();
 renderTimeline();
 
 
+
 // ---------------------------------------------------------------------
-// Shared lap-by-lap playback for the authored Albert Park map.
+// Editorial race-story playback.
 // ---------------------------------------------------------------------
 const authoredPlayButton = document.getElementById("timeline-play");
 const authoredPreviousButton = document.getElementById("timeline-previous");
 const authoredNextButton = document.getElementById("timeline-next");
 const authoredCurrentLap = document.getElementById("timeline-current-lap");
+const authoredPhaseLabel = document.getElementById("timeline-phase-label");
 const authoredSpeed = document.getElementById("timeline-speed");
+const storyOverlay = document.getElementById("story-event-overlay");
+const storyLap = document.getElementById("story-event-lap");
+const storyCategory = document.getElementById("story-event-category");
+const storyTitle = document.getElementById("story-event-title");
+const storyBody = document.getElementById("story-event-body");
+const storyFrameCaption = document.getElementById("story-frame-caption");
+const storyContinue = document.getElementById("story-continue");
 
-const authoredEvents = [...mapData.events].sort(
-    (a, b) => Number(a.lap) - Number(b.lap)
-);
+const DRIVER_COLOURS = [
+    "#ff3b30", "#5ac8fa", "#ffcc00", "#34c759", "#af52de",
+    "#ff9500", "#64d2ff", "#ff6482", "#30d158", "#bf5af2"
+];
 
-let authoredLap = 1;
+const authoredEvents = [...mapData.events].sort((a, b) => {
+    const lapDifference = Number(a.lap || 0) - Number(b.lap || 0);
+    return lapDifference || String(a.id).localeCompare(String(b.id));
+});
+
+const storySequence = [];
+if (mapData.pre_race) {
+    storySequence.push({
+        ...mapData.pre_race,
+        id: mapData.pre_race.id || "pre-race",
+        phase: "pre-race",
+        lap: 0,
+        type_label: mapData.pre_race.type_label || "Pre-race"
+    });
+}
+storySequence.push(...authoredEvents);
+
+let authoredLap = 0;
 let authoredPlaying = false;
 let authoredTimer = null;
 let authoredCursor = -1;
+let storyPausedAtEvent = false;
+let activeFrameTimers = [];
+let storyMarkerLayer = null;
+
+function safeText(value) {
+    return value == null ? "" : String(value);
+}
+
+function driverColour(driver, marker, index) {
+    if (marker?.colour) return marker.colour;
+    const driverColours = mapData.driver_colours || {};
+    if (driver && driverColours[driver]) return driverColours[driver];
+    let hash = 0;
+    for (const character of safeText(driver)) {
+        hash = ((hash << 5) - hash) + character.charCodeAt(0);
+        hash |= 0;
+    }
+    return DRIVER_COLOURS[Math.abs(hash || index) % DRIVER_COLOURS.length];
+}
+
+function ensureStoryMarkerLayer() {
+    if (storyMarkerLayer?.isConnected) return storyMarkerLayer;
+    storyMarkerLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    storyMarkerLayer.id = "story-markers";
+    storyMarkerLayer.setAttribute("aria-hidden", "true");
+    svg.appendChild(storyMarkerLayer);
+    return storyMarkerLayer;
+}
+
+function clearFrameTimers() {
+    activeFrameTimers.forEach((timer) => window.clearTimeout(timer));
+    activeFrameTimers = [];
+}
+
+function clearStoryMarkers() {
+    clearFrameTimers();
+    ensureStoryMarkerLayer().replaceChildren();
+}
+
+function markerBasePosition(marker, event) {
+    if (Number.isFinite(Number(marker.x)) && Number.isFinite(Number(marker.y))) {
+        return [Number(marker.x), Number(marker.y)];
+    }
+    const segmentId = marker.segment_id || event.segment_id;
+    const base = markerPositionForSegment(segmentId) || [512, 288];
+    return [
+        base[0] + Number(marker.dx || 0),
+        base[1] + Number(marker.dy || 0)
+    ];
+}
+
+function fallbackMarkers(event) {
+    const drivers = [event.attacker, event.defender].filter(Boolean);
+    if (!drivers.length) {
+        return [{ driver: event.title, segment_id: event.segment_id }];
+    }
+    return drivers.map((driver, index) => ({
+        driver,
+        segment_id: event.segment_id,
+        dx: index * 24 - ((drivers.length - 1) * 12),
+        dy: index % 2 ? -12 : 10
+    }));
+}
+
+function eventFrames(event) {
+    if (Array.isArray(event.frames) && event.frames.length) return event.frames;
+    if (Array.isArray(event.markers) && event.markers.length) {
+        return [{ markers: event.markers, caption: event.frame_caption }];
+    }
+    return [{ markers: fallbackMarkers(event) }];
+}
+
+function renderStoryFrame(event, frame) {
+    const layer = ensureStoryMarkerLayer();
+    layer.replaceChildren();
+    const markers = Array.isArray(frame.markers) ? frame.markers : [];
+
+    markers.forEach((marker, index) => {
+        const [x, y] = markerBasePosition(marker, event);
+        const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        group.classList.add("story-driver-marker", "map-marker-pulse");
+        group.style.setProperty("--driver-colour", driverColour(marker.driver, marker, index));
+        group.setAttribute("transform", `translate(${x} ${y})`);
+
+        const halo = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        halo.setAttribute("r", "15");
+        halo.classList.add("story-driver-halo");
+
+        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        dot.setAttribute("r", "9");
+        dot.classList.add("story-driver-dot");
+
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", "14");
+        label.setAttribute("y", "4");
+        label.classList.add("story-driver-label");
+        label.textContent = marker.label || marker.code || safeText(marker.driver).split(" ").pop();
+
+        group.append(halo, dot, label);
+        layer.appendChild(group);
+    });
+
+    const caption = frame.caption || "";
+    storyFrameCaption.textContent = caption;
+    storyFrameCaption.hidden = !caption;
+}
+
+function playStoryFrames(event) {
+    clearFrameTimers();
+    const frames = eventFrames(event);
+    const speed = Number(authoredSpeed.value || 1);
+    let elapsed = 0;
+
+    frames.forEach((frame, index) => {
+        const timer = window.setTimeout(() => {
+            renderStoryFrame(event, frame);
+        }, elapsed);
+        activeFrameTimers.push(timer);
+        const duration = Number(frame.duration_ms || 1400) / speed;
+        if (index < frames.length - 1) elapsed += Math.max(duration, 350);
+    });
+}
+
+function showStoryCard(event) {
+    storyLap.textContent = event.phase === "pre-race"
+        ? "Pre-race"
+        : `Lap ${event.lap}`;
+    storyCategory.textContent = event.type_label || event.type || "Race story";
+    storyTitle.textContent = event.title || "The race begins";
+    storyBody.textContent = event.body || event.description || "";
+    storyFrameCaption.hidden = true;
+    storyOverlay.hidden = false;
+    window.requestAnimationFrame(() => storyOverlay.classList.add("visible"));
+    document.querySelectorAll(".event-marker").forEach((marker) => {
+        marker.classList.add("story-hidden");
+    });
+    playStoryFrames(event);
+}
+
+function hideStoryCard({ clearMarkers = true } = {}) {
+    storyOverlay.classList.remove("visible");
+    const timer = window.setTimeout(() => {
+        storyOverlay.hidden = true;
+    }, 220);
+    activeFrameTimers.push(timer);
+    if (clearMarkers) clearStoryMarkers();
+    document.querySelectorAll(".event-marker").forEach((marker) => {
+        marker.classList.remove("story-hidden");
+    });
+}
 
 function authoredUpdatePlayButton() {
     authoredPlayButton.classList.toggle("playing", authoredPlaying);
-    authoredPlayButton.querySelector(".play-icon").textContent =
-        authoredPlaying ? "❚❚" : "▶";
-    authoredPlayButton.querySelector(".play-label").textContent =
-        authoredPlaying ? "Pause timeline" : "Play timeline";
+    const icon = authoredPlayButton.querySelector(".play-icon");
+    const label = authoredPlayButton.querySelector(".play-label");
+
+    if (storyPausedAtEvent) {
+        icon.textContent = "▶";
+        label.textContent = "Continue story";
+    } else if (authoredPlaying) {
+        icon.textContent = "❚❚";
+        label.textContent = "Pause timeline";
+    } else if (authoredLap === 0 && authoredCursor < 0) {
+        icon.textContent = "▶";
+        label.textContent = "Begin story";
+    } else {
+        icon.textContent = "▶";
+        label.textContent = "Resume timeline";
+    }
 }
 
 function authoredPause() {
@@ -421,108 +610,109 @@ function authoredPause() {
 }
 
 function authoredMovePlayhead() {
-    let playhead = document.querySelector(
-        "#timeline-rail .timeline-playhead"
-    );
-
+    let playhead = document.querySelector("#timeline-rail .timeline-playhead");
     if (!playhead) {
         playhead = document.createElement("span");
         playhead.className = "timeline-playhead";
-        document.getElementById("timeline-rail").appendChild(playhead);
+        timelineRail.appendChild(playhead);
     }
-
-    playhead.style.left =
-        `${((authoredLap - 1) / Math.max(totalLaps - 1, 1)) * 100}%`;
+    const displayLap = Math.max(authoredLap, 1);
+    playhead.style.left = `${((displayLap - 1) / Math.max(totalLaps - 1, 1)) * 100}%`;
     authoredCurrentLap.textContent = authoredLap;
+    authoredPhaseLabel.textContent = authoredLap === 0 ? "Race phase" : "Current lap";
+    if (authoredLap === 0) authoredCurrentLap.textContent = "Pre-race";
+}
+
+function pauseForStoryEvent(event, cursor) {
+    authoredCursor = cursor;
+    authoredLap = Number(event.lap || 0);
+    storyPausedAtEvent = true;
+    authoredPlaying = false;
+    if (event.phase !== "pre-race" && event.segment_id) selectEvent(event.id);
+    showStoryCard(event);
+    authoredMovePlayhead();
+    authoredUpdatePlayButton();
+}
+
+function nextStoryIndexAfter(lap, cursor) {
+    for (let index = cursor + 1; index < storySequence.length; index += 1) {
+        if (Number(storySequence[index].lap || 0) <= lap) return index;
+        break;
+    }
+    return -1;
 }
 
 function authoredAdvance() {
     if (!authoredPlaying) return;
 
+    const eventIndex = nextStoryIndexAfter(authoredLap, authoredCursor);
+    if (eventIndex >= 0) {
+        pauseForStoryEvent(storySequence[eventIndex], eventIndex);
+        return;
+    }
+
     if (authoredLap >= totalLaps) {
         authoredPause();
+        authoredPlayButton.querySelector(".play-label").textContent = "Replay story";
         return;
     }
 
     authoredLap += 1;
-    const event = authoredEvents.find(
-        (item) => Number(item.lap) === authoredLap
-    );
-
-    if (event) {
-        authoredCursor = authoredEvents.findIndex(
-            (candidate) => candidate.id === event.id
-        );
-        selectEvent(event.id);
-
-        const mapMarker = document.querySelector(
-            `.event-marker[data-event-id="${event.id}"]`
-        );
-        mapMarker?.classList.add("map-marker-pulse");
-        window.setTimeout(
-            () => mapMarker?.classList.remove("map-marker-pulse"),
-            1200
-        );
-    }
-
     authoredMovePlayhead();
 
     const speed = Number(authoredSpeed.value || 1);
-    authoredTimer = window.setTimeout(
-        authoredAdvance,
-        (event ? 1150 : 210) / speed
-    );
+    authoredTimer = window.setTimeout(authoredAdvance, 260 / speed);
 }
 
 function authoredStart() {
+    if (storyPausedAtEvent) {
+        storyPausedAtEvent = false;
+        hideStoryCard();
+    }
+
     if (authoredLap >= totalLaps) {
-        authoredLap = 1;
+        authoredLap = 0;
         authoredCursor = -1;
         resetTimeline();
     }
 
     authoredPlaying = true;
     authoredUpdatePlayButton();
-    authoredTimer = window.setTimeout(authoredAdvance, 100);
+    authoredTimer = window.setTimeout(authoredAdvance, 120);
 }
 
 function authoredStep(direction) {
     authoredPause();
+    hideStoryCard();
+    storyPausedAtEvent = false;
 
+    if (!storySequence.length) return;
     if (direction > 0) {
-        authoredCursor = Math.min(
-            authoredCursor + 1,
-            authoredEvents.length - 1
-        );
+        authoredCursor = Math.min(authoredCursor + 1, storySequence.length - 1);
     } else {
-        authoredCursor = authoredCursor <= 0
-            ? 0
-            : authoredCursor - 1;
+        authoredCursor = authoredCursor <= 0 ? 0 : authoredCursor - 1;
     }
 
-    const event = authoredEvents[authoredCursor];
-    authoredLap = Number(event.lap);
-    selectEvent(event.id);
-    authoredMovePlayhead();
+    const event = storySequence[authoredCursor];
+    pauseForStoryEvent(event, authoredCursor);
 }
 
 authoredPlayButton.addEventListener("click", () => {
-    if (authoredPlaying) {
-        authoredPause();
-    } else {
-        authoredStart();
-    }
+    if (authoredPlaying) authoredPause();
+    else authoredStart();
 });
 
-authoredPreviousButton.addEventListener(
-    "click",
-    () => authoredStep(-1)
-);
+storyContinue.addEventListener("click", authoredStart);
+authoredPreviousButton.addEventListener("click", () => authoredStep(-1));
+authoredNextButton.addEventListener("click", () => authoredStep(1));
 
-authoredNextButton.addEventListener(
-    "click",
-    () => authoredStep(1)
-);
+document.addEventListener("keydown", (event) => {
+    if (event.key === " " && document.activeElement?.tagName !== "SELECT") {
+        event.preventDefault();
+        if (authoredPlaying) authoredPause();
+        else authoredStart();
+    }
+});
 
 authoredMovePlayhead();
 authoredUpdatePlayButton();

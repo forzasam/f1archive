@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timezone
 from hashlib import sha1
 import re
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from flask import abort
 
@@ -88,6 +89,63 @@ def format_result_time(
     normalised_time = str(time_value or "").strip()
     return normalised_time or normalised_status or "—"
 
+
+
+
+def _scheduled_race_datetime(row: dict[str, Any]) -> datetime | None:
+    """Return a scheduled race start as an aware UTC datetime when possible."""
+    date_value = str(row.get("date", "")).strip()
+    time_value = str(row.get("time", "")).strip()
+    if not date_value:
+        return None
+
+    try:
+        if time_value:
+            parsed = datetime.fromisoformat(
+                f"{date_value}T{time_value.replace('Z', '+00:00')}"
+            )
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return parsed.astimezone(timezone.utc)
+        return datetime.strptime(date_value, "%Y-%m-%d").replace(
+            tzinfo=timezone.utc
+        )
+    except ValueError:
+        return None
+
+
+def _format_scheduled_race(row: dict[str, Any]) -> dict[str, Any]:
+    """Build display values for a scheduled race using British local time."""
+    scheduled_utc = _scheduled_race_datetime(row)
+    has_start_time = bool(str(row.get("time", "")).strip())
+
+    if scheduled_utc is not None:
+        local = scheduled_utc.astimezone(ZoneInfo("Europe/London"))
+        date_text = f"{local.day} {local.strftime('%B %Y')}"
+        if has_start_time:
+            display = f"{date_text} at {local.strftime('%H:%M %Z')}"
+        else:
+            display = date_text
+        iso_value = scheduled_utc.isoformat()
+    else:
+        display = format_date(str(row.get("date", "")))
+        iso_value = str(row.get("date", ""))
+
+    return {
+        "scheduled_start": scheduled_utc,
+        "scheduled_display": display,
+        "scheduled_iso": iso_value,
+        "has_start_time": has_start_time,
+    }
+
+
+def _find_scheduled_race(season: int, round_number: int) -> dict[str, Any] | None:
+    schedule = get_json(f"{season}.json?limit=100")
+    races = schedule.get("MRData", {}).get("RaceTable", {}).get("Races", [])
+    for race in races:
+        if safe_int(race.get("round")) == round_number:
+            return race
+    return None
 
 def format_date(value: str) -> str:
     # Portable across Windows, macOS and Linux.
@@ -330,26 +388,35 @@ def get_season_page(season: int) -> dict[str, Any]:
     payload = get_json(f"{season}.json?limit=100")
     rows = payload["MRData"]["RaceTable"].get("Races", [])
 
-    races = []
-    for row in rows:
-        circuit = row["Circuit"]
-        location = circuit["Location"]
-        races.append(
-            {
-                "round": safe_int(row["round"]),
-                "name": row["raceName"],
-                "formatted_date": format_date(row["date"]),
-                "circuit": circuit["circuitName"],
-                "locality": location["locality"],
-                "country": location["country"],
-            }
-        )
-
     live_metadata = (
         get_live_archive_metadata(season)
         if season == live_current_season()
         else None
     )
+    completed_rounds = {
+        safe_int(value)
+        for value in (live_metadata or {}).get("completed_rounds", [])
+    }
+
+    races = []
+    for row in rows:
+        circuit = row["Circuit"]
+        location = circuit["Location"]
+        round_number = safe_int(row["round"])
+        races.append(
+            {
+                "round": round_number,
+                "name": row["raceName"],
+                "formatted_date": format_date(row["date"]),
+                "circuit": circuit["circuitName"],
+                "locality": location["locality"],
+                "country": location["country"],
+                "is_upcoming": (
+                    season == live_current_season()
+                    and round_number not in completed_rounds
+                ),
+            }
+        )
 
     return {
         "season": season,
@@ -450,9 +517,37 @@ def get_race_championship_progression(
 
 def get_race_page(season: int, round_number: int) -> dict[str, Any]:
     payload = get_json(f"{season}/{round_number}/results.json?limit=100")
-    races = payload["MRData"]["RaceTable"].get("Races", [])
+    races = payload.get("MRData", {}).get("RaceTable", {}).get("Races", [])
     if not races:
-        abort(404)
+        scheduled = _find_scheduled_race(season, round_number)
+        if scheduled is None or season != live_current_season():
+            abort(404)
+
+        circuit = scheduled["Circuit"]
+        location = circuit["Location"]
+        timing = _format_scheduled_race(scheduled)
+        now = datetime.now(timezone.utc)
+        is_future = (
+            timing["scheduled_start"] is None
+            or timing["scheduled_start"] > now
+        )
+        return {
+            "season": season,
+            "round": round_number,
+            "name": scheduled["raceName"],
+            "formatted_date": format_date(scheduled["date"]),
+            "circuit": circuit["circuitName"],
+            "circuit_id": circuit.get("circuitId", ""),
+            "locality": location["locality"],
+            "country": location["country"],
+            "is_upcoming": True,
+            "is_future": is_future,
+            "scheduled_display": timing["scheduled_display"],
+            "scheduled_iso": timing["scheduled_iso"],
+            "live_archive": _format_live_archive_status(
+                get_live_archive_metadata(season)
+            ),
+        }
 
     row = races[0]
     circuit = row["Circuit"]
