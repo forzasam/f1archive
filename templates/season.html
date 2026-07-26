@@ -183,76 +183,53 @@
 </section>
 
 {% if position_progression %}
-<section class="championship-progression-section" aria-labelledby="position-progression-title">
-    <div class="section-heading progression-heading">
+<section class="championship-race-section" aria-labelledby="championship-race-title">
+    <div class="section-heading championship-race-heading">
         <div>
             <p class="eyebrow">Season story</p>
-            <h2 id="position-progression-title">Championship progression</h2>
+            <h2 id="championship-race-title">The championship race</h2>
         </div>
-        <div class="progression-heading-actions">
-            <span>Position after each round</span>
-            <button
-                class="progression-collapse"
-                type="button"
-                aria-expanded="true"
-                aria-controls="position-progression-panel"
-                data-progression-collapse
-            >
-                Minimise
-            </button>
-        </div>
+        <span>Points and live top three after every round</span>
     </div>
 
-    <div
-        class="progression-panel"
-        id="position-progression-panel"
-        data-position-progression
-    >
-        <div class="progression-copy">
-            <p>
-                Follow how the Drivers' Championship order changed throughout
-                {{ season }}. First place is shown at the top; DNP marks a
-                Grand Prix the driver did not participate in.
-            </p>
-            <div class="progression-copy-actions">
-                {% if position_progression.is_complete %}
-                    <button class="progression-replay" type="button" data-progression-replay>
-                        Relive the championship
-                    </button>
-                {% endif %}
-                <button class="progression-reset" type="button" data-progression-reset>
-                    Show all drivers
-                </button>
+    <div class="championship-race-panel" data-championship-race>
+        <div class="championship-race-toolbar">
+            <div>
+                <span class="championship-race-round" data-current-round-counter></span>
+                <strong data-current-round-name></strong>
+            </div>
+            <div class="championship-race-actions">
+                <button class="championship-race-reset" type="button" data-race-reset>Latest standings</button>
+                <button class="championship-race-play" type="button" data-race-play>Replay season</button>
             </div>
         </div>
 
-        <div class="progression-chart-wrap">
-            <svg
-                class="progression-chart"
-                role="img"
-                aria-labelledby="position-progression-title progression-description"
-                data-progression-chart
-            ></svg>
-            <p id="progression-description" class="visually-hidden">
-                Line graph showing each selected driver's championship position
-                after every race in the {{ season }} season, with DNP markers for
-                Grands Prix they did not participate in.
-            </p>
-            <div class="progression-tooltip" data-progression-tooltip hidden></div>
+        <div class="championship-race-progress" data-race-progress aria-hidden="true"><span></span></div>
+
+        <div class="points-chart-shell">
+            <div class="points-chart-copy">
+                <p class="eyebrow">Cumulative points</p>
+                <p>The scale follows the season leader, with a minimum ceiling of 50 points. Gold rings mark wins, red crosses mark DNFs, and black markers with a white cross mark disqualifications. Hover to isolate, click to pin, or Shift-click to compare teammates.</p>
+            </div>
+            <svg class="points-chart" role="img" aria-label="Cumulative championship points by round" data-points-chart></svg>
+            <div class="points-tooltip" data-points-tooltip hidden></div>
         </div>
 
-        <div class="progression-legend" aria-label="Choose drivers to display" data-progression-legend></div>
+        <div class="live-podium-shell">
+            <div class="live-podium-heading">
+                <div>
+                    <p class="eyebrow">Live championship</p>
+                    <h3>Top three</h3>
+                </div>
+                <span>Updates with the graph</span>
+            </div>
+            <div class="live-podium" data-live-podium></div>
+        </div>
 
-        <noscript>
-            <p class="standings-unavailable">
-                Enable JavaScript to view the championship progression graph.
-            </p>
-        </noscript>
+        <noscript><p class="standings-unavailable">Enable JavaScript to view the animated championship race.</p></noscript>
     </div>
 
-    <script type="application/json" id="position-progression-data">
-        {{ position_progression|tojson }}
-    </script>
+    <script type="application/json" id="position-progression-data">{{ position_progression|tojson }}</script>
 </section>
 {% endif %}
 
@@ -291,7 +268,7 @@
 
 {% block scripts %}
     {% if position_progression %}
-        <script src="{{ url_for('static', filename='championship_progression.js') }}" defer></script>
+        <script src="{{ url_for('static', filename='championship_race.js') }}" defer></script>
     {% endif %}
     {% if season_story and season_story.has_more %}
         <script src="{{ url_for('static', filename='season_story.js') }}" defer></script>

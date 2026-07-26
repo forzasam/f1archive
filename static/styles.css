@@ -4001,3 +4001,402 @@ body.story-modal-open {
         grid-template-columns:1fr 1fr;
     }
 }
+
+/* Unified points chart and live championship podium */
+.championship-race-section { margin: 64px 0; }
+.championship-race-heading { align-items: end; }
+.championship-race-panel { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 42%), var(--panel); box-shadow: 0 24px 70px rgba(0,0,0,.18); }
+.championship-race-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 24px 18px; }
+.championship-race-toolbar > div:first-child { display: grid; gap: 4px; }
+.championship-race-toolbar strong { font-size: 1.15rem; }
+.championship-race-round { color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.championship-race-actions { display: flex; gap: 9px; }
+.championship-race-actions button { min-height: 39px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); cursor: pointer; }
+.championship-race-play { border-color: rgba(255,59,48,.48) !important; background: rgba(255,59,48,.09) !important; font-weight: 800; }
+.championship-race-play.is-playing { background: var(--accent) !important; }
+.championship-race-progress { height: 3px; background: rgba(255,255,255,.05); }
+.championship-race-progress span { display: block; width: var(--race-progress, 100%); height: 100%; background: linear-gradient(90deg, var(--accent), #ff807a); box-shadow: 0 0 15px rgba(255,59,48,.45); transition: width 120ms linear; }
+.points-chart-shell { position: relative; padding: 22px 18px 8px; border-top: 1px solid rgba(255,255,255,.04); }
+.points-chart-copy { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding: 0 8px 6px; }
+.points-chart-copy p:last-child { margin: 0; color: var(--muted); font-size: .76rem; }
+.points-chart { display: block; width: 100%; min-width: 760px; }
+.points-grid line { stroke: rgba(255,255,255,.075); stroke-width: 1; }
+.points-grid text, .points-round-label { fill: var(--muted); font-size: 11px; }
+.points-completed-wash { fill: url(#points-grid-fade); }
+.points-round-axis { stroke: rgba(255,255,255,.035); }
+.points-round-axis.is-future, .points-round-label.is-future { opacity: .18; }
+.points-driver-line { fill: none; stroke-width: 3.3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; filter: drop-shadow(0 2px 4px rgba(0,0,0,.24)); }
+.points-driver-point { stroke: var(--panel); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.points-driver-label { font-size: 11px; font-weight: 900; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; }
+.points-playhead { stroke: rgba(255,255,255,.72); stroke-width: 2; stroke-dasharray: 4 5; filter: drop-shadow(0 0 5px rgba(255,255,255,.3)); }
+.points-tooltip { position: absolute; z-index: 8; display: grid; gap: 3px; min-width: 185px; padding: 10px 12px; border: 1px solid #3a3f49; border-radius: 10px; background: rgba(10,11,14,.97); box-shadow: 0 14px 35px rgba(0,0,0,.38); pointer-events: none; }
+.points-tooltip[hidden] { display: none; }
+.points-tooltip strong { font-size: .84rem; }
+.points-tooltip span { color: var(--muted); font-size: .72rem; }
+.live-podium-shell { padding: 24px; border-top: 1px solid var(--line); background: rgba(7,8,11,.22); }
+.live-podium-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 16px; }
+.live-podium-heading h3 { margin: 5px 0 0; font-size: 1.45rem; }
+.live-podium-heading > span { color: var(--muted); font-size: .76rem; }
+.live-podium { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.live-podium-card { position: relative; display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 13px; min-height: 92px; overflow: hidden; padding: 17px 18px; border: 1px solid var(--line); border-radius: 15px; background: linear-gradient(110deg, color-mix(in srgb, var(--driver-colour) 10%, transparent), transparent 55%), var(--panel-soft); animation: podium-card-in 280ms ease both; }
+.live-podium-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--driver-colour); }
+.live-podium-card--1 { transform: translateY(-5px); border-color: rgba(246,196,83,.34); }
+.live-podium-position { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid color-mix(in srgb, var(--driver-colour) 48%, var(--line)); border-radius: 10px; color: var(--text); font-size: .76rem; font-weight: 900; }
+.live-podium-identity { min-width: 0; display: grid; gap: 4px; }
+.live-podium-identity strong, .live-podium-identity small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.live-podium-identity small, .live-podium-score small { color: var(--muted); font-size: .68rem; }
+.live-podium-score { display: grid; justify-items: end; gap: 2px; }
+.live-podium-score strong { font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.live-podium-movement { position: absolute; right: 10px; bottom: 7px; color: color-mix(in srgb, var(--driver-colour) 72%, white); font-size: .58rem; font-weight: 900; letter-spacing: .08em; opacity: .62; }
+@keyframes podium-card-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; } }
+@media (max-width: 860px) { .points-chart-shell { overflow-x: auto; } .live-podium { grid-template-columns: 1fr; } .live-podium-card--1 { transform: none; } }
+@media (max-width: 600px) { .championship-race-toolbar, .points-chart-copy, .live-podium-heading { align-items: flex-start; flex-direction: column; } .championship-race-actions { width: 100%; } .championship-race-actions button { flex: 1; } .live-podium-shell { padding: 18px; } }
+@media (prefers-reduced-motion: reduce) { .live-podium-card { animation: none; } }
+
+/* Championship race interaction and result-state refinements */
+.points-driver-line,
+.points-driver-point,
+.points-driver-label,
+.live-podium-card {
+    cursor: pointer;
+    transition:
+        opacity 180ms ease,
+        stroke-width 180ms ease,
+        filter 180ms ease,
+        transform 180ms ease;
+}
+
+.points-driver-line.is-focused {
+    stroke-width: 5.2;
+    opacity: 1;
+    filter: drop-shadow(0 0 5px currentColor);
+}
+
+.points-driver-line.is-faded,
+.points-driver-point.is-faded,
+.points-driver-label.is-faded,
+.points-result-ring.is-faded,
+.points-dnf-mark.is-faded,
+.live-podium-card.is-faded {
+    opacity: .13;
+}
+
+.points-driver-point.is-focused {
+    opacity: 1;
+    filter: none;
+}
+
+.points-driver-point:focus,
+.points-driver-point:focus-visible {
+    outline: none;
+}
+
+.points-driver-label.is-focused,
+.live-podium-card.is-focused {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,.24));
+}
+
+.points-driver-point.is-win {
+    stroke: #f6c453;
+    stroke-width: 3;
+}
+
+.points-result-ring {
+    fill: none;
+    pointer-events: none;
+    vector-effect: non-scaling-stroke;
+}
+
+.points-result-ring--win {
+    stroke: #f6c453;
+    stroke-width: 2.2;
+    filter: drop-shadow(0 0 4px rgba(246,196,83,.48));
+}
+
+.points-driver-point.is-dnf {
+    stroke: #fc8181;
+    stroke-width: 2.6;
+}
+
+.points-dnf-mark {
+    pointer-events: none;
+}
+
+.points-dnf-mark line {
+    stroke: #fc8181;
+    stroke-width: 2;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.points-tooltip-hint {
+    margin-top: 3px;
+    color: rgba(255,255,255,.48) !important;
+    font-size: .65rem !important;
+}
+
+.live-podium-card {
+    animation-duration: 210ms;
+}
+
+.live-podium-card.is-focused {
+    border-color: color-mix(in srgb, var(--driver-colour) 72%, white);
+    transform: translateY(-2px);
+}
+
+.live-podium-card--1.is-focused {
+    transform: translateY(-7px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .points-driver-line,
+    .points-driver-point,
+    .points-driver-label,
+    .live-podium-card {
+        transition: none;
+    }
+}
+
+/* Championship race v3: selected results, event pulses and fluid podium changes */
+.points-result-label {
+    font-size: 9.5px;
+    font-weight: 950;
+    letter-spacing: .02em;
+    paint-order: stroke;
+    stroke: var(--panel);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.points-result-label.is-podium-1 { fill: #f6c453; }
+.points-result-label.is-podium-2 { fill: #c7ccd4; }
+.points-result-label.is-podium-3 { fill: #cd7f32; }
+.points-result-label.is-finish { fill: var(--text); }
+.points-result-label.is-dnf,
+.points-result-label.is-dsq,
+.points-result-label.is-dns,
+.points-result-label.is-dnq,
+.points-result-label.is-wd,
+.points-result-label.is-nc { fill: #fc8181; }
+
+.points-result-ring.is-result-pulse-win {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: championship-win-ring 820ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.points-driver-point.is-result-pulse-win {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: championship-win-dot 680ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.points-driver-point.is-result-pulse-dnf,
+.points-dnf-mark.is-result-pulse-dnf {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: championship-dnf-hit 720ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+@keyframes championship-win-ring {
+    0% { opacity: 0; transform: scale(.45); }
+    38% { opacity: 1; transform: scale(1.45); }
+    70% { opacity: .9; transform: scale(.94); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes championship-win-dot {
+    0%, 100% { transform: scale(1); }
+    42% { transform: scale(1.65); filter: drop-shadow(0 0 9px rgba(246,196,83,.9)); }
+}
+
+@keyframes championship-dnf-hit {
+    0% { opacity: 0; transform: scale(1.8) rotate(-12deg); }
+    38% { opacity: 1; transform: scale(.82) rotate(5deg); }
+    68% { transform: scale(1.16) rotate(-2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.live-podium-card {
+    top: 0;
+    animation: none;
+    will-change: transform, opacity;
+}
+
+.live-podium-card--1 {
+    top: -5px;
+    transform: none;
+}
+
+.live-podium-card.is-entering {
+    animation: podium-card-enter-fluid 460ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.live-podium-card.is-leaving {
+    position: absolute;
+    pointer-events: none;
+    animation: podium-card-leave-fluid 260ms ease both;
+}
+
+.live-podium-position,
+.live-podium-score strong,
+.live-podium-identity strong {
+    transition: color 260ms ease, transform 340ms cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes podium-card-enter-fluid {
+    from { opacity: 0; transform: translateY(12px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes podium-card-leave-fluid {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: translateY(8px) scale(.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .points-result-ring.is-result-pulse-win,
+    .points-driver-point.is-result-pulse-win,
+    .points-driver-point.is-result-pulse-dnf,
+    .points-dnf-mark.is-result-pulse-dnf,
+    .live-podium-card.is-entering,
+    .live-podium-card.is-leaving {
+        animation-duration: 1ms;
+    }
+}
+
+/* Championship race v4: disqualification markers and leader-change emphasis */
+.points-driver-point.is-dsq {
+    stroke: #f4f5f7;
+    stroke-width: 2.3;
+    filter: drop-shadow(0 0 3px rgba(0,0,0,.9));
+}
+
+.points-result-ring--dsq {
+    fill: none;
+    stroke-width: 2.2;
+    filter: drop-shadow(0 0 4px rgba(0,0,0,.78));
+}
+
+.points-dsq-mark {
+    pointer-events: none;
+}
+
+.points-dsq-mark line {
+    stroke: #ffffff;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.points-result-ring--dsq.is-faded,
+.points-dsq-mark.is-faded {
+    opacity: .13;
+}
+
+.points-driver-point.is-result-pulse-dsq,
+.points-result-ring--dsq.is-result-pulse-dsq,
+.points-dsq-mark.is-result-pulse-dsq {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.points-driver-point.is-result-pulse-dsq {
+    animation: championship-dsq-ink 900ms cubic-bezier(.2,.75,.2,1) both;
+}
+
+.points-result-ring--dsq.is-result-pulse-dsq {
+    animation: championship-dsq-ring 900ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.points-dsq-mark.is-result-pulse-dsq {
+    animation: championship-dsq-cross 900ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes championship-dsq-ink {
+    0% {
+        fill: var(--driver-colour, #fff);
+        opacity: .2;
+        transform: scale(.65);
+    }
+    28% {
+        fill: var(--driver-colour, #fff);
+        opacity: 1;
+        transform: scale(1.45);
+        filter: drop-shadow(0 0 8px rgba(255,255,255,.42));
+    }
+    58% {
+        fill: #050608;
+        transform: scale(.92);
+        filter: drop-shadow(0 0 8px rgba(0,0,0,.9));
+    }
+    100% {
+        fill: #050608;
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes championship-dsq-ring {
+    0% { opacity: 0; transform: scale(.35); }
+    36% { opacity: 1; transform: scale(1.55); }
+    72% { transform: scale(.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes championship-dsq-cross {
+    0%, 42% { opacity: 0; transform: scale(.35) rotate(-18deg); }
+    68% { opacity: 1; transform: scale(1.25) rotate(5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.points-result-label.is-dsq {
+    fill: #f5f5f5;
+    stroke: #050608;
+    stroke-width: 5px;
+}
+
+.live-podium-card.is-new-leader {
+    animation: championship-new-leader 980ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes championship-new-leader {
+    0% {
+        border-color: rgba(246,196,83,.2);
+        box-shadow: 0 0 0 rgba(246,196,83,0);
+    }
+    38% {
+        border-color: rgba(246,196,83,.9);
+        box-shadow: 0 0 0 4px rgba(246,196,83,.12), 0 0 28px rgba(246,196,83,.28);
+        transform: translateY(-8px) scale(1.018);
+    }
+    100% {
+        border-color: rgba(246,196,83,.34);
+        box-shadow: 0 0 0 rgba(246,196,83,0);
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .points-driver-point.is-result-pulse-dsq,
+    .points-result-ring--dsq.is-result-pulse-dsq,
+    .points-dsq-mark.is-result-pulse-dsq,
+    .live-podium-card.is-new-leader {
+        animation-duration: 1ms;
+    }
+}
+
+
+/* Championship chart interaction stability */
+.points-chart,
+.points-chart * {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.points-chart [data-driver-id]:focus,
+.points-chart [data-driver-id]:focus-visible {
+    outline: none;
+}
