@@ -2778,6 +2778,34 @@ footer {
     transform: translateX(3px);
 }
 
+.season-story-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: 11px;
+}
+
+.season-story-footer .season-story-read-more {
+    margin-top: 0;
+}
+
+.season-story-author {
+    flex: 0 0 auto;
+    margin: 0;
+    color: var(--muted);
+    font-size: .76rem;
+    line-height: 1.4;
+    text-align: right;
+}
+
+.season-story-author strong {
+    color: var(--text);
+    font-weight: 750;
+}
+
 .story-modal[hidden] { display: none; }
 
 .story-modal {
@@ -2875,6 +2903,16 @@ body.story-modal-open {
 
     .season-story-card {
         padding: 22px 22px 20px;
+    }
+
+    .season-story-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .season-story-author {
+        text-align: left;
     }
 
     .story-modal {
@@ -4399,4 +4437,58 @@ body.story-modal-open {
 .points-chart [data-driver-id]:focus,
 .points-chart [data-driver-id]:focus-visible {
     outline: none;
+}
+
+/* Season story author placement */
+.season-story-card {
+    position: relative;
+}
+
+.season-story-author-card {
+    position: absolute;
+    z-index: 2;
+    top: 26px;
+    right: 28px;
+    max-width: 190px;
+}
+
+.season-story-card > .eyebrow,
+.season-story-card > h2 {
+    max-width: calc(100% - 210px);
+}
+
+.story-modal-actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.season-story-author-modal {
+    max-width: 220px;
+}
+
+@media (max-width: 700px) {
+    .season-story-author-card {
+        position: static;
+        max-width: none;
+        margin: 0 0 10px;
+        text-align: left;
+    }
+
+    .season-story-card > .eyebrow,
+    .season-story-card > h2 {
+        max-width: none;
+    }
+
+    .story-modal-actions {
+        align-items: flex-end;
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .season-story-author-modal {
+        max-width: 170px;
+        text-align: right;
+    }
 }

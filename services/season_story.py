@@ -31,9 +31,12 @@ def get_season_story(season: int) -> dict[str, Any] | None:
     if not paragraphs:
         return None
 
+    author = str(payload.get("author", "")).strip()
+
     return {
         "title": str(payload.get("title", "The season story")).strip() or "The season story",
         "kicker": str(payload.get("kicker", "Season story")).strip() or "Season story",
+        "author": author or None,
         "paragraphs": paragraphs,
         "preview_paragraphs": paragraphs[:2],
         "has_more": len(paragraphs) > 2,
