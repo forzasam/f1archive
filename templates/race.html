@@ -7,8 +7,8 @@
     ← {{ race.season }} season
 </a>
 
-<section class="race-hero">
-    <div>
+<section class="race-hero{% if race.race_story %} race-hero-with-story{% endif %}">
+    <div class="race-hero-copy">
         <p class="eyebrow">
             Round {{ race.round }} · {{ race.formatted_date }}
         </p>
@@ -28,8 +28,52 @@
             </p>
         {% endif %}
     </div>
-    <span class="round-badge">R{{ race.round }}</span>
+
+    {% if race.race_story %}
+        <article class="season-story-card race-story-card" aria-labelledby="race-story-title">
+            {% if race.race_story.author %}
+                <p class="season-story-author season-story-author-card">Written by <strong>{{ race.race_story.author }}</strong></p>
+            {% endif %}
+            <p class="eyebrow">{{ race.race_story.kicker }}</p>
+            <h2 id="race-story-title">{{ race.race_story.title }}</h2>
+            <div class="season-story-preview">
+                {% for paragraph in race.race_story.preview_paragraphs %}
+                    <p>{{ paragraph | safe }}</p>
+                {% endfor %}
+            </div>
+            {% if race.race_story.has_more %}
+                <button class="season-story-read-more" type="button" data-story-open>
+                    Read the full story <span aria-hidden="true">→</span>
+                </button>
+            {% endif %}
+        </article>
+    {% endif %}
 </section>
+
+{% if race.race_story and race.race_story.has_more %}
+    <div class="story-modal" data-story-modal hidden>
+        <button class="story-modal-backdrop" type="button" aria-label="Close race story" data-story-close></button>
+        <article class="story-modal-panel" role="dialog" aria-modal="true" aria-labelledby="race-story-modal-title">
+            <div class="story-modal-heading">
+                <div>
+                    <p class="eyebrow">{{ race.formatted_date }} · {{ race.race_story.kicker }}</p>
+                    <h2 id="race-story-modal-title">{{ race.race_story.title }}</h2>
+                </div>
+                <div class="story-modal-actions">
+                    {% if race.race_story.author %}
+                        <p class="season-story-author season-story-author-modal">Written by <strong>{{ race.race_story.author }}</strong></p>
+                    {% endif %}
+                    <button class="story-modal-close" type="button" aria-label="Close race story" data-story-close>×</button>
+                </div>
+            </div>
+            <div class="story-modal-copy">
+                {% for paragraph in race.race_story.paragraphs %}
+                    <p>{{ paragraph | safe }}</p>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+{% endif %}
 
 <section class="stat-grid">
     <article class="stat-card">
@@ -341,6 +385,9 @@
 {% endblock %}
 
 {% block scripts %}
+    {% if race.race_story and race.race_story.has_more %}
+        <script src="{{ url_for('static', filename='season_story.js') }}" defer></script>
+    {% endif %}
     {% if race_map %}
         <script src="{{ url_for('static', filename='race_map.js') }}"></script>
     {% endif %}

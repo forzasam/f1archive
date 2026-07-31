@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Become a Contributor · F1 Archive{% endblock %}
+{% block meta_description %}Contribute season stories, race flashpoints and historical context to F1 Archive, with every published contribution credited to its author.{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('home.index') }}">← All seasons</a>
+
+<section class="editorial-hero contribute-hero">
+    <p class="eyebrow">Become a contributor</p>
+    <h1>Help tell the stories behind Formula One history.</h1>
+    <p class="editorial-lede">
+        F1 Archive is built around the moments, rivalries and wider narratives
+        that made each season matter. Knowledgeable contributors can help
+        research, write and expand that history directly within the site.
+    </p>
+</section>
+
+<div class="editorial-layout contribute-layout">
+    <article class="editorial-body">
+        <section>
+            <h2>What you can contribute</h2>
+            <p>
+                Contributions are incorporated into the existing archive rather
+                than published as separate guest posts. Depending on your interests,
+                this may include:
+            </p>
+            <ul class="contribute-list">
+                <li><strong>Season stories</strong> — the genuine narratives and different lenses through which a season can be understood.</li>
+                <li><strong>Race flashpoints</strong> — the Grands Prix that changed, advanced or defined a particular story.</li>
+                <li><strong>Race context</strong> — short explanations of why a race mattered to that specific storyline.</li>
+                <li><strong>Other historical features</strong> — significant drivers, teams, technical changes or moments that deserve a place in the archive.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Your work will be credited</h2>
+            <p>
+                Every published contribution is credited to its author on the
+                website. Your name will appear alongside the season stories and
+                editorial work you help create.
+            </p>
+            <p>
+                A dedicated authors section is also planned for the future. This
+                will bring your contributions together in one place and may allow
+                you to link to relevant articles, websites or other work published
+                outside F1 Archive.
+            </p>
+        </section>
+
+        <section>
+            <h2>Editorial requirements</h2>
+            <p>
+                The archive is built around <strong>historical accuracy</strong>.
+                Stories must represent genuine narratives from the season, supported
+                by the events that unfolded at the time. If a storyline was not a
+                meaningful part of the season, it should not appear in the archive.
+            </p>
+            <p>
+                Contributors should be knowledgeable about the seasons and races
+                they choose to document, and willing to research or verify details
+                where necessary. Strong opinions and an emotive writing style are
+                welcome, but the underlying narrative must remain grounded in fact.
+            </p>
+            <p>
+                Stories can, and often should, benefit from hindsight. A retrospective
+                of 2007 can naturally discuss Lewis Hamilton in the context of the
+                career he later built, even though that legacy was unknown during his
+                rookie season. Hindsight should add context and perspective; it must
+                not be used to invent narratives that did not exist.
+            </p>
+        </section>
+
+        <section class="contribute-contact" id="get-involved">
+            <p class="eyebrow">Get involved</p>
+            <h2>Interested in contributing?</h2>
+            <p>
+                Introduce yourself, tell us which seasons or eras you know best, and
+                outline the kind of work you would like to contribute.
+            </p>
+            <div class="contribute-actions">
+                <a class="button contribute-button" href="mailto:contribute@f1archive.net">Email contribute@f1archive.net</a>
+                <a class="button secondary contribute-button" href="https://discord.gg/qQAAy8hEKg" target="_blank" rel="noopener noreferrer">Join the Discord</a>
+            </div>
+        </section>
+    </article>
+
+    <aside class="editorial-aside">
+        <div class="editorial-note">
+            <p class="eyebrow">Who we are looking for</p>
+            <strong>People who know the seasons they want to document.</strong>
+            <p>
+                Previous writing experience is useful, but not required. Historical
+                understanding, care and a willingness to research matter most.
+            </p>
+            <a class="text-link" href="#get-involved">Start a conversation →</a>
+        </div>
+    </aside>
+</div>
+{% endblock %}

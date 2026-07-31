@@ -13,6 +13,7 @@ from models.archive import ConstructorOption, DriverOption
 from services.jolpica import get_json
 from services.archive_index import get_archive_index
 from services.season_story import get_season_story
+from services.race_story import get_race_story, has_race_story
 from services.circuit_service import get_current_circuit_geometry
 from services.live_archive import (
     current_season as live_current_season,
@@ -493,6 +494,7 @@ def get_season_page(season: int) -> dict[str, Any]:
         circuit = row["Circuit"]
         location = circuit["Location"]
         round_number = safe_int(row["round"])
+        race_story = get_race_story(season, round_number)
         races.append(
             {
                 "round": round_number,
@@ -505,6 +507,8 @@ def get_season_page(season: int) -> dict[str, Any]:
                     season == live_current_season()
                     and round_number not in completed_rounds
                 ),
+                "has_race_story": race_story is not None,
+                "race_story_title": race_story.get("title", "") if race_story else "",
             }
         )
 
@@ -637,6 +641,7 @@ def get_race_page(season: int, round_number: int) -> dict[str, Any]:
             "live_archive": _format_live_archive_status(
                 get_live_archive_metadata(season)
             ),
+            "race_story": get_race_story(season, round_number),
         }
 
     row = races[0]
@@ -747,6 +752,7 @@ def get_race_page(season: int, round_number: int) -> dict[str, Any]:
             if season == live_current_season()
             else None
         ),
+        "race_story": get_race_story(season, round_number),
         "championship": get_race_championship_progression(
             season,
             round_number,

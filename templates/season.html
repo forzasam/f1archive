@@ -261,6 +261,15 @@
                         {{ race.circuit }} · {{ race.locality }}, {{ race.country }}
                     </small>
                 </span>
+                <span class="race-story-marker{% if race.has_race_story %} has-story{% endif %}"
+                      {% if race.has_race_story %}aria-label="Race in context: {{ race.race_story_title }}"{% else %}aria-hidden="true"{% endif %}>
+                    <span class="race-story-diamond" aria-hidden="true"></span>
+                    {% if race.has_race_story %}
+                        <span class="race-story-tooltip" role="tooltip">
+                            {{ race.race_story_title }}
+                        </span>
+                    {% endif %}
+                </span>
                 <span class="race-date">
                     {{ race.formatted_date }}
                     {% if race.is_upcoming %}
