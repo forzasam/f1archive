@@ -25,7 +25,7 @@
     {% if season_story %}
         <article class="season-story-card" aria-labelledby="season-story-title">
             {% if season_story.author %}
-                <p class="season-story-author season-story-author-card">Written by <strong>{{ season_story.author }}</strong></p>
+                <p class="season-story-author season-story-author-card">Written by <strong><a href="{{ url_for('pages.author_detail', slug=season_story.author_slug) }}">{{ season_story.author }}</a></strong></p>
             {% endif %}
             <p class="eyebrow">{{ season_story.kicker }}</p>
             <h2 id="season-story-title">{{ season_story.title }}</h2>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="story-modal-actions">
                     {% if season_story.author %}
-                        <p class="season-story-author season-story-author-modal">Written by <strong>{{ season_story.author }}</strong></p>
+                        <p class="season-story-author season-story-author-modal">Written by <strong><a href="{{ url_for('pages.author_detail', slug=season_story.author_slug) }}">{{ season_story.author }}</a></strong></p>
                     {% endif %}
                     <button class="story-modal-close" type="button" aria-label="Close season story" data-story-close>×</button>
                 </div>

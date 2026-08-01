@@ -18,7 +18,7 @@ Each file follows the season-story schema:
 {
   "kicker": "The race in context",
   "title": "Story title",
-  "author": "Author name",
+  "slug": "author_profile_slug",
   "paragraphs": [
     "First paragraph.",
     "Second paragraph.",
@@ -30,3 +30,5 @@ Each file follows the season-story schema:
 A missing file, invalid JSON, or an empty `paragraphs` array is treated as no
 story. The race page and championship calendar will continue to render in their
 standard layouts.
+
+The `slug` must exactly match both the author profile filename and its `slug` field.

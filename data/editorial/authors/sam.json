@@ -1,0 +1,22 @@
+{
+  "slug": "sam",
+  "name": "Sam",
+  "description": "Creator of the site you're using!",
+  "social_links": [
+    {
+      "label": "F1archive.net X account",
+      "url": "https://x.com/f1archivenet"
+    }
+  ],
+  "featured_stories": [
+    {
+      "type": "season",
+      "season": 2025
+    },
+    {
+      "type": "race",
+      "season": 2021,
+      "round": 1
+    }
+  ]
+}

@@ -60,7 +60,7 @@
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
     <meta name="theme-color" content="#0b0c0e">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css', v='authors-2') }}">
 
     <style>
         .footer-challenge-link {
@@ -115,9 +115,10 @@
 
         <nav class="site-nav" aria-label="Primary navigation">
             <a href="{{ url_for('home.index') }}" {% if request.endpoint == 'home.index' or request.blueprint in ('seasons', 'races') %}aria-current="page"{% endif %}>Seasons</a>
+            <a href="{{ url_for('pages.authors') }}" {% if request.endpoint in ('pages.authors', 'pages.author_detail') %}aria-current="page"{% endif %}>Authors</a>
+            <a href="{{ url_for('pages.contact') }}" {% if request.endpoint == 'pages.contact' %}aria-current="page"{% endif %}>Contact</a>
             <a href="{{ url_for('pages.contribute') }}" {% if request.endpoint == 'pages.contribute' %}aria-current="page"{% endif %}>Contribute</a>
             <a href="{{ url_for('pages.about') }}" {% if request.endpoint == 'pages.about' %}aria-current="page"{% endif %}>About</a>
-            <a href="{{ url_for('pages.contact') }}" {% if request.endpoint == 'pages.contact' %}aria-current="page"{% endif %}>Contact</a>
         </nav>
     </header>
 
@@ -150,6 +151,7 @@
                     </svg>
                     <span>Discord</span>
                 </a>
+                <a href="{{ url_for('pages.authors') }}">Authors</a>
                 <a href="{{ url_for('pages.contribute') }}">Contribute</a>
                 <a href="{{ url_for('pages.about') }}">About</a>
                 <a href="{{ url_for('pages.contact') }}">Contact</a>

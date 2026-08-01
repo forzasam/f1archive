@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}{{ author.name }} · F1 Archive{% endblock %}
+{% block meta_description %}Read season stories and race context written by {{ author.name }} for F1 Archive.{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('pages.authors') }}">← All authors</a>
+
+<section class="author-profile-hero">
+    <div class="author-profile-copy">
+        <p class="eyebrow">F1 Archive contributor</p>
+        <h1>{{ author.name }}</h1>
+        {% if author.description %}
+            <p class="editorial-lede">{{ author.description }}</p>
+        {% endif %}
+        {% if author.social_links %}
+            <div class="author-social-links" aria-label="{{ author.name }} links">
+                {% for link in author.social_links %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="author-profile-totals" aria-label="Publication totals">
+    <div>
+        <strong>{{ author.article_count }}</strong>
+        <span>Total articles</span>
+    </div>
+    <div>
+        <strong>{{ author.season_article_count }}</strong>
+        <span>Season stories</span>
+    </div>
+    <div>
+        <strong>{{ author.race_article_count }}</strong>
+        <span>Race stories</span>
+    </div>
+</section>
+
+{% if author.featured_stories %}
+    <section class="author-section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Selected by the author</p>
+                <h2>Featured stories</h2>
+            </div>
+        </div>
+        <div class="featured-story-grid">
+            {% for story in author.featured_stories %}
+                <a class="featured-story-card" href="{{ story.url }}">
+                    <span>{{ 'Season story' if story.type == 'season' else 'Race story' }}</span>
+                    <strong>{{ story.title }}</strong>
+                    <small>{{ story.label }}</small>
+                    <span class="featured-story-arrow" aria-hidden="true">→</span>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+
+<section class="author-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Published work</p>
+            <h2>Stories by {{ author.name }}</h2>
+        </div>
+        <span>{{ author.article_count }} {{ 'story' if author.article_count == 1 else 'stories' }}</span>
+    </div>
+
+    {% if stories %}
+        <div class="author-publication-list">
+            {% for story in stories %}
+                <a class="author-publication-row" href="{{ story.url }}">
+                    <span class="author-publication-type">{{ 'Season story' if story.type == 'season' else 'Race story' }}</span>
+                    <span class="author-publication-copy">
+                        <strong>{{ story.title }}</strong>
+                        <small>{{ story.label }}</small>
+                    </span>
+                    <span class="author-publication-arrow" aria-hidden="true">→</span>
+                </a>
+            {% endfor %}
+        </div>
+
+        {% if total_pages > 1 %}
+            <nav class="author-pagination" aria-label="Published stories pages">
+                {% if page > 1 %}
+                    <a class="author-pagination-link" href="{{ url_for('pages.author_detail', slug=author.slug, page=page - 1) }}">← Previous</a>
+                {% else %}
+                    <span class="author-pagination-link is-disabled">← Previous</span>
+                {% endif %}
+
+                <span class="author-pagination-status">Page {{ page }} of {{ total_pages }}</span>
+
+                {% if page < total_pages %}
+                    <a class="author-pagination-link" href="{{ url_for('pages.author_detail', slug=author.slug, page=page + 1) }}">Next →</a>
+                {% else %}
+                    <span class="author-pagination-link is-disabled">Next →</span>
+                {% endif %}
+            </nav>
+        {% endif %}
+    {% else %}
+        <p class="author-description-muted">No published stories are currently linked to this profile.</p>
+    {% endif %}
+</section>
+{% endblock %}

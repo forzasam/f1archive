@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from services.author_utils import get_author_identity
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SEASON_STORY_ROOT = PROJECT_ROOT / "data" / "editorial" / "seasons"
@@ -31,12 +33,13 @@ def get_season_story(season: int) -> dict[str, Any] | None:
     if not paragraphs:
         return None
 
-    author = str(payload.get("author", "")).strip()
+    author_identity = get_author_identity(payload.get("slug", ""))
 
     return {
         "title": str(payload.get("title", "The season story")).strip() or "The season story",
         "kicker": str(payload.get("kicker", "Season story")).strip() or "Season story",
-        "author": author or None,
+        "author": author_identity["name"] if author_identity else None,
+        "author_slug": author_identity["slug"] if author_identity else None,
         "paragraphs": paragraphs,
         "preview_paragraphs": paragraphs[:2],
         "has_more": len(paragraphs) > 2,
