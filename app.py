@@ -25,6 +25,34 @@ def create_app() -> Flask:
 
     start_live_archive_scheduler(app)
 
+    @app.after_request
+    def add_security_headers(response):
+        """Add baseline browser security headers to every response."""
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Permissions-Policy"] = (
+            "camera=(), microphone=(), geolocation=(), payment=()"
+        )
+
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "base-uri 'self'; "
+            "object-src 'none'; "
+            "frame-ancestors 'none'; "
+            "img-src 'self' data: https:; "
+            "font-src 'self' data:; "
+            "style-src 'self' 'unsafe-inline'; "
+            "script-src 'self' 'unsafe-inline' "
+            "https://www.googletagmanager.com "
+            "https://www.google-analytics.com; "
+            "connect-src 'self' "
+            "https://www.google-analytics.com "
+            "https://region1.google-analytics.com;"
+        )
+
+        return response
+
     @app.route("/favicon.ico")
     def favicon():
         return send_from_directory(
@@ -66,7 +94,7 @@ def create_app() -> Flask:
             heading="Safety Car",
             message="Formula 1 data is temporarily unavailable. Please try again shortly.",
         ), 503
-
+    
     return app
 
 
