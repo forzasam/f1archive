@@ -1,0 +1,9 @@
+<section class="race-map-section interactive-circuit-section">
+  <div class="race-map-intro"><div><p class="eyebrow">Interactive circuit map</p><h2>{{ race.circuit }}</h2><p>Hover over a named section to preview it, or click to keep it highlighted.</p></div><span class="geometry-status">Annotated layout</span></div>
+  <div class="race-map-layout">
+    <div class="circuit-stage"><div id="segment-tooltip" class="segment-tooltip" hidden></div>{% include race.circuit_geometry.svg_template %}<p class="map-attribution">{{ race.circuit_geometry.attribution }}</p></div>
+    <aside class="segment-panel"><p class="eyebrow">Track section</p><h3 id="selected-segment-name">Explore the circuit</h3><p id="selected-segment-kind" class="segment-kind">Hover to preview a named section, or click to keep it selected.</p><div class="segment-empty">Race moments and driver markers will be layered onto this map next.</div></aside>
+  </div>
+  <script id="circuit-map-data" type="application/json">{{ race.circuit_geometry | tojson }}</script>
+</section>
+<script src="{{ url_for('static', filename='circuit_interaction.js') }}" defer></script>

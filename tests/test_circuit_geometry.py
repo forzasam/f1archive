@@ -13,3 +13,12 @@ def test_australia_uses_a_local_authored_package():
 def test_other_circuits_are_not_yet_authored():
     assert get_current_circuit_geometry("monaco") is None
     assert get_current_circuit_geometry("unknown_circuit") is None
+
+
+def test_yas_marina_2021_layout_is_season_scoped():
+    geometry = get_current_circuit_geometry("yas_marina", season=2021)
+    assert geometry is not None
+    assert geometry["layout"] == "2021-present"
+    assert len(geometry["segments"]) == 18
+    assert geometry["source_path"]["start_fraction"] == 0.370967
+    assert get_current_circuit_geometry("yas_marina", season=2020) is None

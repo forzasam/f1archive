@@ -29,7 +29,7 @@ def _slug_for_circuit_id(circuit_id: str) -> str | None:
     return None
 
 
-def get_current_circuit_geometry(circuit_id: str) -> dict | None:
+def get_current_circuit_geometry(circuit_id: str, season: int | None = None) -> dict | None:
     """Return metadata only for a locally authored circuit package."""
     slug = _slug_for_circuit_id(circuit_id)
     # Australia predates the JSON package registry in this project snapshot.
@@ -50,6 +50,11 @@ def get_current_circuit_geometry(circuit_id: str) -> dict | None:
     package_path = CIRCUIT_DIRECTORY / f"{slug}.json"
     with package_path.open("r", encoding="utf-8") as file:
         package = json.load(file)
+
+    valid_from = package.get("valid_from")
+    valid_to = package.get("valid_to")
+    if season is not None and ((valid_from is not None and season < valid_from) or (valid_to is not None and season > valid_to)):
+        return None
 
     return {
         **package,

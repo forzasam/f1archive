@@ -5403,3 +5403,70 @@ body.story-modal-open {
 .corner-number-labels text { fill: var(--text); font-size: 14px; font-weight: 900; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; }
 .start-finish-marker line { stroke: #fff; stroke-width: 5; stroke-dasharray: 5 4; }
 .start-finish-marker text { fill: var(--text); font-size: 11px; font-weight: 900; letter-spacing: .08em; paint-order: stroke; stroke: var(--panel); stroke-width: 3px; }
+
+
+/* Track-editor-authored circuit packages */
+.authored-circuit-map { padding: 24px; }
+.authored-circuit-map #canonical-track-path { vector-effect: non-scaling-stroke; }
+
+/* Keep the authored segments visually invisible at rest. The wider transparent
+   path is only an interaction target; the visible highlight matches the track. */
+.authored-circuit-map .segment-highlight {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    pointer-events: none;
+    transition: stroke .14s ease, opacity .14s ease;
+}
+.authored-circuit-map .segment-hit-target {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 18;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    pointer-events: stroke;
+    cursor: pointer;
+    outline: none;
+}
+.authored-circuit-map .segment-hotspot.hovered .segment-highlight {
+    stroke: rgba(255, 123, 116, .82);
+}
+.authored-circuit-map .segment-hotspot.active .segment-highlight,
+.authored-circuit-map .segment-hotspot:focus-within .segment-highlight {
+    stroke: #ff7b74;
+}
+
+/* Corner annotations are labels, not physical markers on the racing surface. */
+.authored-circuit-map .authored-corner-label {
+    fill: #f2f3f5;
+    stroke: #0b0c0f;
+    stroke-width: 3px;
+    paint-order: stroke;
+    font-size: 11px;
+    font-weight: 800;
+    pointer-events: none;
+}
+
+/* Start/finish remains a point marker because it is the lap origin. */
+.authored-sf-marker circle {
+    fill: #ff3b30;
+    stroke: #f2f3f5;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+}
+.authored-sf-marker text {
+    fill: #f2f3f5;
+    stroke: #0b0c0f;
+    stroke-width: 3px;
+    paint-order: stroke;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .04em;
+}
+
+/* The HTML hidden state must always override tooltip presentation rules. */
+.track-segment-tooltip[hidden] { display: none !important; }

@@ -1,104 +1,329 @@
 {
+  "schema_version": 1,
+  "id": "yas_marina",
+  "name": "Yas Marina",
+  "layout": "2021-present",
+  "direction": "counterclockwise",
+  "source_svg": "yas-marina-2.svg",
+  "source_path": {
+    "index": 0,
+    "start_fraction": 0.370967
+  },
+  "corners": [
+    {
+      "id": "w001qs1",
+      "number": 1,
+      "name": null,
+      "position": 0.067838,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "wbqsp7m",
+      "number": 2,
+      "name": null,
+      "position": 0.118957,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "x2lv4zk",
+      "number": 3,
+      "name": null,
+      "position": 0.156688,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "tm7nvhq",
+      "number": 4,
+      "name": null,
+      "position": 0.190082,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "szm96yu",
+      "number": 5,
+      "name": null,
+      "position": 0.266793,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "sapqiit",
+      "number": 6,
+      "name": null,
+      "position": 0.49034,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "is3b5lx",
+      "number": 7,
+      "name": null,
+      "position": 0.503652,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "dwl77xr",
+      "number": 8,
+      "name": null,
+      "position": 0.537186,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "bvt8sdr",
+      "number": 9,
+      "name": null,
+      "position": 0.698497,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "f3t191v",
+      "number": 10,
+      "name": null,
+      "position": 0.767634,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "s3zyvqt",
+      "number": 11,
+      "name": null,
+      "position": 0.792682,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "5i70s0f",
+      "number": 12,
+      "name": null,
+      "position": 0.817053,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "zkpps9f",
+      "number": 13,
+      "name": null,
+      "position": 0.838519,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "fx1955n",
+      "number": 14,
+      "name": null,
+      "position": 0.861945,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "tbvuo3r",
+      "number": 15,
+      "name": null,
+      "position": 0.919212,
+      "label_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "0hwsohx",
+      "number": 16,
+      "name": null,
+      "position": 0.960755,
+      "label_offset": [
+        0,
+        0
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "id": "9xfb8fn",
+      "name": "Pit Straight",
+      "start": 0.967137,
+      "end": 0.057191,
+      "kind": "straight"
+    },
+    {
+      "id": "1dow9pq",
+      "name": "Turn 1",
+      "start": 0.05859,
+      "end": 0.079508,
+      "kind": "corner"
+    },
+    {
+      "id": "wnzmdop",
+      "name": "Turn 2",
+      "start": 0.109311,
+      "end": 0.133881,
+      "kind": "corner"
+    },
+    {
+      "id": "e6de4hx",
+      "name": "Turn 3",
+      "start": 0.141276,
+      "end": 0.174195,
+      "kind": "corner"
+    },
+    {
+      "id": "i41aib5",
+      "name": "Turn 4",
+      "start": 0.179324,
+      "end": 0.208694,
+      "kind": "corner"
+    },
+    {
+      "id": "ly8g104",
+      "name": "Turn 5",
+      "start": 0.256987,
+      "end": 0.276152,
+      "kind": "corner"
+    },
+    {
+      "id": "s03jexg",
+      "name": "Turn 6",
+      "start": 0.482211,
+      "end": 0.495819,
+      "kind": "corner"
+    },
+    {
+      "id": "0ke5ckz",
+      "name": "Turn 7",
+      "start": 0.498256,
+      "end": 0.511088,
+      "kind": "corner"
+    },
+    {
+      "id": "yn5il75",
+      "name": "Turn 8",
+      "start": 0.526417,
+      "end": 0.555993,
+      "kind": "corner"
+    },
+    {
+      "id": "8r76sac",
+      "name": "Turn 9",
+      "start": 0.678195,
+      "end": 0.722724,
+      "kind": "corner"
+    },
+    {
+      "id": "bn3codr",
+      "name": "Back Straight",
+      "start": 0.278038,
+      "end": 0.479533,
+      "kind": "straight"
+    },
+    {
+      "id": "bmly85a",
+      "name": "Turn 10",
+      "start": 0.755984,
+      "end": 0.778518,
+      "kind": "corner"
+    },
+    {
+      "id": "n9tydm4",
+      "name": "Turn 11",
+      "start": 0.783713,
+      "end": 0.801751,
+      "kind": "corner"
+    },
+    {
+      "id": "h6dr2o3",
+      "name": "Turn 12",
+      "start": 0.80688,
+      "end": 0.825031,
+      "kind": "corner"
+    },
+    {
+      "id": "k12nx0r",
+      "name": "Turn 13",
+      "start": 0.829858,
+      "end": 0.848122,
+      "kind": "corner"
+    },
+    {
+      "id": "at4adn5",
+      "name": "Turn 14",
+      "start": 0.855977,
+      "end": 0.873649,
+      "kind": "corner"
+    },
+    {
+      "id": "9f9kq73",
+      "name": "Turn 15",
+      "start": 0.91007,
+      "end": 0.92914,
+      "kind": "corner"
+    },
+    {
+      "id": "1xoqowa",
+      "name": "Turn 16",
+      "start": 0.953482,
+      "end": 0.96721,
+      "kind": "corner"
+    }
+  ],
+  "sectors": [
+    {
+      "number": 1,
+      "start": 0,
+      "end": 0.225677
+    },
+    {
+      "number": 2,
+      "start": 0.225677,
+      "end": 0.663721
+    },
+    {
+      "number": 3,
+      "start": 0.663721,
+      "end": 1
+    }
+  ],
+  "pit_lane": {
+    "entry": 0.949926,
+    "exit": 0.150371
+  },
   "circuit_ids": [
     "yas_marina"
   ],
   "display_name": "Yas Marina Circuit",
-  "attribution": "2021 Yas Marina layout redrawn for F1 Archive using a CC0 Wikimedia Commons circuit map as reference.",
-  "segments": [
-    {
-      "id": "pit-straight",
-      "name": "Pit Straight",
-      "kind": "straight"
-    },
-    {
-      "id": "turn-1",
-      "name": "Turn 1",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-2",
-      "name": "Turn 2",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-3",
-      "name": "Turn 3",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-4",
-      "name": "Turn 4",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-5",
-      "name": "Turn 5",
-      "kind": "corner"
-    },
-    {
-      "id": "back-straight",
-      "name": "Back Straight",
-      "kind": "straight"
-    },
-    {
-      "id": "turn-6",
-      "name": "Turn 6",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-7",
-      "name": "Turn 7",
-      "kind": "corner"
-    },
-    {
-      "id": "second-straight",
-      "name": "Second Straight",
-      "kind": "straight"
-    },
-    {
-      "id": "turn-8",
-      "name": "Turn 8",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-9",
-      "name": "Turn 9",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-10",
-      "name": "Turn 10",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-11",
-      "name": "Turn 11",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-12",
-      "name": "Turn 12",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-13",
-      "name": "Turn 13",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-14",
-      "name": "Turn 14",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-15",
-      "name": "Turn 15",
-      "kind": "corner"
-    },
-    {
-      "id": "turn-16",
-      "name": "Turn 16",
-      "kind": "corner"
-    }
-  ]
+  "valid_from": 2021,
+  "attribution": "Circuit SVG \u00a9 Jules Roy and contributors, licensed CC BY 4.0."
 }

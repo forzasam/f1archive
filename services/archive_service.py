@@ -734,7 +734,7 @@ def get_race_page(season: int, round_number: int) -> dict[str, Any]:
         "circuit": circuit["circuitName"],
         "circuit_id": circuit.get("circuitId", ""),
         "circuit_geometry": get_current_circuit_geometry(
-            circuit.get("circuitId", "")
+            circuit.get("circuitId", ""), season=season
         ),
         "locality": circuit["Location"]["locality"],
         "country": circuit["Location"]["country"],
