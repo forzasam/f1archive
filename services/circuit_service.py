@@ -32,14 +32,30 @@ def _slug_for_circuit_id(circuit_id: str) -> str | None:
 def get_current_circuit_geometry(circuit_id: str) -> dict | None:
     """Return metadata only for a locally authored circuit package."""
     slug = _slug_for_circuit_id(circuit_id)
+    # Australia predates the JSON package registry in this project snapshot.
+    # Keep its established mapping intact while newer circuits are data-driven.
+    if not slug and circuit_id == "albert_park":
+        return {
+            "layout_id": "australia",
+            "display_name": "Albert Park Circuit",
+            "svg_template": "circuits/australia.svg",
+            "source_name": "Local authored circuit package",
+            "interactive": True,
+            "segments_authored": True,
+        }
     if not slug:
         return None
 
+    import json
+    package_path = CIRCUIT_DIRECTORY / f"{slug}.json"
+    with package_path.open("r", encoding="utf-8") as file:
+        package = json.load(file)
+
     return {
+        **package,
         "layout_id": slug,
-        "display_name": slug.replace("-", " ").title(),
+        "display_name": package.get("display_name", slug.replace("_", " ").title()),
         "svg_template": f"circuits/{slug}.svg",
-        "source_name": "Local authored circuit package",
         "interactive": True,
         "segments_authored": True,
     }

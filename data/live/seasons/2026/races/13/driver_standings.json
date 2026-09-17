@@ -2,23 +2,23 @@
   "MRData": {
     "xmlns": "",
     "series": "f1",
-    "url": "https://api.jolpi.ca/ergast/f1/2026/14/driverstandings.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2026/13/driverstandings.json",
     "limit": "100",
     "offset": "0",
     "total": "23",
     "StandingsTable": {
       "season": "2026",
-      "round": "14",
+      "round": "13",
       "StandingsLists": [
         {
           "season": "2026",
-          "round": "14",
+          "round": "13",
           "DriverStandings": [
             {
               "position": "1",
               "positionText": "1",
-              "points": "292",
-              "wins": "8",
+              "points": "267",
+              "wins": "7",
               "Driver": {
                 "driverId": "antonelli",
                 "permanentNumber": "12",
@@ -41,7 +41,7 @@
             {
               "position": "2",
               "positionText": "2",
-              "points": "211",
+              "points": "201",
               "wins": "2",
               "Driver": {
                 "driverId": "russell",
@@ -89,7 +89,7 @@
             {
               "position": "4",
               "positionText": "4",
-              "points": "186",
+              "points": "171",
               "wins": "2",
               "Driver": {
                 "driverId": "norris",
@@ -113,7 +113,7 @@
             {
               "position": "5",
               "positionText": "5",
-              "points": "167",
+              "points": "155",
               "wins": "1",
               "Driver": {
                 "driverId": "leclerc",
@@ -137,7 +137,7 @@
             {
               "position": "6",
               "positionText": "6",
-              "points": "145",
+              "points": "127",
               "wins": "0",
               "Driver": {
                 "driverId": "max_verstappen",
@@ -161,7 +161,7 @@
             {
               "position": "7",
               "positionText": "7",
-              "points": "120",
+              "points": "116",
               "wins": "0",
               "Driver": {
                 "driverId": "piastri",
@@ -209,7 +209,7 @@
             {
               "position": "9",
               "positionText": "9",
-              "points": "59",
+              "points": "51",
               "wins": "0",
               "Driver": {
                 "driverId": "lawson",
@@ -263,7 +263,7 @@
             {
               "position": "11",
               "positionText": "11",
-              "points": "31",
+              "points": "29",
               "wins": "0",
               "Driver": {
                 "driverId": "arvid_lindblad",
@@ -287,7 +287,7 @@
             {
               "position": "12",
               "positionText": "12",
-              "points": "27",
+              "points": "21",
               "wins": "0",
               "Driver": {
                 "driverId": "colapinto",
@@ -359,7 +359,7 @@
             {
               "position": "15",
               "positionText": "15",
-              "points": "7",
+              "points": "6",
               "wins": "0",
               "Driver": {
                 "driverId": "hulkenberg",

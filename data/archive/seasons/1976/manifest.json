@@ -4,8 +4,8 @@
   "source": "Jolpica-F1",
   "source_base_url": "https://api.jolpi.ca/ergast/f1",
   "licence": "CC BY-NC-SA 4.0",
-  "started_at": "2026-07-24T16:58:42+00:00",
-  "completed_at": "2026-07-24T16:59:24+00:00",
+  "started_at": "2026-09-17T02:38:23+00:00",
+  "completed_at": "2026-09-17T02:38:35+00:00",
   "race_count": 16,
   "rounds": [
     1,

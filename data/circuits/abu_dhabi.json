@@ -1,0 +1,104 @@
+{
+  "circuit_ids": [
+    "yas_marina"
+  ],
+  "display_name": "Yas Marina Circuit",
+  "attribution": "2021 Yas Marina layout redrawn for F1 Archive using a CC0 Wikimedia Commons circuit map as reference.",
+  "segments": [
+    {
+      "id": "pit-straight",
+      "name": "Pit Straight",
+      "kind": "straight"
+    },
+    {
+      "id": "turn-1",
+      "name": "Turn 1",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-2",
+      "name": "Turn 2",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-3",
+      "name": "Turn 3",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-4",
+      "name": "Turn 4",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-5",
+      "name": "Turn 5",
+      "kind": "corner"
+    },
+    {
+      "id": "back-straight",
+      "name": "Back Straight",
+      "kind": "straight"
+    },
+    {
+      "id": "turn-6",
+      "name": "Turn 6",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-7",
+      "name": "Turn 7",
+      "kind": "corner"
+    },
+    {
+      "id": "second-straight",
+      "name": "Second Straight",
+      "kind": "straight"
+    },
+    {
+      "id": "turn-8",
+      "name": "Turn 8",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-9",
+      "name": "Turn 9",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-10",
+      "name": "Turn 10",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-11",
+      "name": "Turn 11",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-12",
+      "name": "Turn 12",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-13",
+      "name": "Turn 13",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-14",
+      "name": "Turn 14",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-15",
+      "name": "Turn 15",
+      "kind": "corner"
+    },
+    {
+      "id": "turn-16",
+      "name": "Turn 16",
+      "kind": "corner"
+    }
+  ]
+}

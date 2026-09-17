@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-24T17:58:45+00:00",
+  "generated_at": "2026-09-17T02:39:02+00:00",
   "source": "Locally archived Jolpica-F1 snapshots",
   "seasons": [
     2025,
@@ -46159,7 +46159,7 @@
       "1976": {
         "position": "2",
         "position_text": "2",
-        "points": "64",
+        "points": "68",
         "wins": "5",
         "constructors": [
           "Ferrari"
@@ -46168,7 +46168,7 @@
       "1977": {
         "position": "1",
         "position_text": "1",
-        "points": "70",
+        "points": "72",
         "wins": "3",
         "constructors": [
           "Ferrari"
@@ -46331,7 +46331,7 @@
       "1977": {
         "position": "4",
         "position_text": "4",
-        "points": "41",
+        "points": "42",
         "wins": "1",
         "constructors": [
           "Ferrari"
@@ -46660,7 +46660,7 @@
       "1976": {
         "position": "3",
         "position_text": "3",
-        "points": "48",
+        "points": "49",
         "wins": "1",
         "constructors": [
           "Tyrrell"
@@ -46766,7 +46766,7 @@
       "1976": {
         "position": "1",
         "position_text": "1",
-        "points": "66",
+        "points": "69",
         "wins": "6",
         "constructors": [
           "McLaren"
