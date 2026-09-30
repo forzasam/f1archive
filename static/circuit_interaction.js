@@ -187,4 +187,147 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (event.key === "Escape" && selectedPath === path) select(path);
     });
   });
+
+  // Optional race-story layer. Circuit geometry remains the source of truth;
+  // this layer only references normalized positions and authored segment IDs.
+  const storyNode = document.getElementById("race-story-map-data");
+  if (storyNode && canonical) {
+    const story = JSON.parse(storyNode.textContent);
+    const events = [...(story.events || [])].sort((a, b) => Number(a.order) - Number(b.order));
+    const modeButtons = [...section.querySelectorAll(".circuit-mode")];
+    const explorePanel = section.querySelector("#explore-panel-content");
+    const storyPanel = section.querySelector("#story-panel-content");
+    const markerLayer = section.querySelector("#race-story-markers");
+    const rail = section.querySelector("#story-step-rail");
+    const eventLabel = section.querySelector("#story-event-label");
+    const eventLap = section.querySelector("#story-event-lap");
+    const eventTitle = section.querySelector("#story-event-title");
+    const eventDescription = section.querySelector("#story-event-description");
+    const progressText = section.querySelector("#story-progress-text");
+    const prevButton = section.querySelector("#story-prev");
+    const nextButton = section.querySelector("#story-next");
+    let storyIndex = -1;
+    let storyMode = false;
+
+    function clearStoryHighlight() {
+      stage.classList.remove("story-whole-circuit");
+      stage.querySelectorAll(".segment-hotspot.story-active").forEach(group => group.classList.remove("story-active"));
+    }
+
+    function clearExploreSelection() {
+      if (selectedPath) {
+        setGroupState(selectedPath, "active", false);
+        selectedPath.setAttribute("aria-pressed", "false");
+        selectedPath = null;
+      }
+      paths.forEach(path => setGroupState(path, "hovered", false));
+      hideTooltip();
+      resetPanel();
+    }
+
+    function eventLapText(event) {
+      return `Lap ${event.lap}`;
+    }
+
+    function renderStoryEvent(index) {
+      if (!events.length) return;
+      storyIndex = Math.max(0, Math.min(index, events.length - 1));
+      const event = events[storyIndex];
+      clearStoryHighlight();
+
+      if (event.scope === "whole_circuit") stage.classList.add("story-whole-circuit");
+      (event.segments || []).forEach(id => {
+        const group = stage.querySelector(`.segment-hotspot[data-segment="${CSS.escape(id)}"]`);
+        if (group) group.classList.add("story-active");
+      });
+
+      eventLabel.textContent = event.label || "Race story";
+      eventLap.textContent = eventLapText(event);
+      eventTitle.textContent = event.title;
+      eventDescription.textContent = event.description;
+      progressText.textContent = `${storyIndex + 1} / ${events.length}`;
+      prevButton.disabled = storyIndex === 0;
+      nextButton.textContent = storyIndex === events.length - 1 ? "Finish story" : "Next moment →";
+
+      markerLayer.querySelectorAll(".race-story-marker").forEach((marker, i) => {
+        marker.classList.toggle("active", i === storyIndex);
+        marker.classList.toggle("visited", i < storyIndex);
+      });
+      rail.querySelectorAll(".story-step").forEach((step, i) => step.classList.toggle("active", i === storyIndex));
+    }
+
+    function positionStoryMarkers() {
+      const stageBox = stage.getBoundingClientRect();
+      events.forEach((event, index) => {
+        const marker = markerLayer.querySelector(`[data-story-index="${index}"]`);
+        if (!marker) return;
+        const point = pointAtLap(Number(event.position || 0));
+        const svgPoint = svg.createSVGPoint();
+        svgPoint.x = point.x; svgPoint.y = point.y;
+        const screenPoint = svgPoint.matrixTransform(svg.getScreenCTM());
+        marker.style.left = `${screenPoint.x - stageBox.left}px`;
+        marker.style.top = `${screenPoint.y - stageBox.top}px`;
+      });
+    }
+
+    events.forEach((event, index) => {
+      const marker = document.createElement("button");
+      marker.type = "button";
+      marker.className = "circuit-story-marker";
+      marker.dataset.storyIndex = String(index);
+      marker.textContent = String(event.order || index + 1);
+      marker.title = `${eventLapText(event)} — ${event.title}`;
+      marker.setAttribute("aria-label", marker.title);
+      marker.addEventListener("click", () => renderStoryEvent(index));
+      markerLayer.appendChild(marker);
+
+      const step = document.createElement("button");
+      step.type = "button";
+      step.className = "story-step";
+      step.innerHTML = `<span>${eventLapText(event)}</span><strong>${event.label || event.title}</strong>`;
+      step.addEventListener("click", () => renderStoryEvent(index));
+      rail.appendChild(step);
+    });
+
+    function setMode(mode) {
+      storyMode = mode === "story";
+      section.classList.toggle("story-mode", storyMode);
+      modeButtons.forEach(button => {
+        const active = button.dataset.mapMode === mode;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      explorePanel.hidden = storyMode;
+      storyPanel.hidden = !storyMode;
+      markerLayer.hidden = !storyMode;
+      rail.hidden = !storyMode;
+
+      if (storyMode) {
+        clearExploreSelection();
+        if (storyIndex < 0) {
+          eventLabel.textContent = story.context || "Race story";
+          eventLap.textContent = "";
+          eventTitle.textContent = story.title;
+          eventDescription.textContent = story.context || "Select Begin story to follow the featured moments.";
+          progressText.textContent = `0 / ${events.length}`;
+          prevButton.disabled = true;
+          nextButton.textContent = "Begin story →";
+        } else renderStoryEvent(storyIndex);
+        requestAnimationFrame(positionStoryMarkers);
+      } else {
+        clearStoryHighlight();
+        resetPanel();
+      }
+    }
+
+    modeButtons.forEach(button => button.addEventListener("click", () => setMode(button.dataset.mapMode)));
+    prevButton.addEventListener("click", () => { if (storyIndex > 0) renderStoryEvent(storyIndex - 1); });
+    nextButton.addEventListener("click", () => {
+      if (storyIndex < 0) renderStoryEvent(0);
+      else if (storyIndex < events.length - 1) renderStoryEvent(storyIndex + 1);
+      else setMode("explore");
+    });
+    window.addEventListener("resize", () => { if (storyMode) positionStoryMarkers(); });
+  }
+
 });

@@ -1,0 +1,14 @@
+{% if sequence_nav and (sequence_nav.previous or sequence_nav.next) %}
+<nav class="season-sequence-nav" aria-label="Season chronology">
+    {% if sequence_nav.previous %}
+    <a class="season-sequence-link previous" href="{{ sequence_nav.previous.url }}">
+        <span>← Previous</span><strong>{{ sequence_nav.previous.label }}</strong><small>{{ sequence_nav.previous.eyebrow }}</small>
+    </a>
+    {% else %}<span></span>{% endif %}
+    {% if sequence_nav.next %}
+    <a class="season-sequence-link next" href="{{ sequence_nav.next.url }}">
+        <span>Next →</span><strong>{{ sequence_nav.next.label }}</strong><small>{{ sequence_nav.next.eyebrow }}</small>
+    </a>
+    {% endif %}
+</nav>
+{% endif %}

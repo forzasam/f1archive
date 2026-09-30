@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ story.title }} · {{ season }} · F1 Archive{% endblock %}
+{% block meta_description %}{{ story.title }} for the {{ season }} Formula One season.{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('seasons.season_page', season=season) }}">← {{ season }} season</a>
+
+<section class="bookend-hero">
+    <p class="eyebrow">{{ season }} season · {{ story.kicker }}</p>
+    <h1>{{ story.title }}</h1>
+    {% if story.author %}<p class="season-story-author">Written by <strong><a href="{{ url_for('pages.author_detail', slug=story.author_slug) }}">{{ story.author }}</a></strong></p>{% endif %}
+</section>
+
+<article class="bookend-copy">
+    {% for paragraph in story.paragraphs %}<p>{{ paragraph | safe }}</p>{% endfor %}
+</article>
+
+{% include "_season_sequence_nav.html" %}
+{% endblock %}

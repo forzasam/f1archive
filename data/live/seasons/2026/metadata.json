@@ -3,8 +3,8 @@
   "season": 2026,
   "source": "Jolpica-F1",
   "source_base_url": "https://api.jolpi.ca/ergast/f1",
-  "last_attempt": "2026-09-17T19:27:42+00:00",
-  "last_successful_update": "2026-09-17T19:27:44+00:00",
+  "last_attempt": "2026-09-30T13:09:07+00:00",
+  "last_successful_update": "2026-09-30T13:09:09+00:00",
   "status": "healthy",
   "consecutive_failures": 0,
   "last_error": null,
@@ -22,9 +22,10 @@
     11,
     12,
     13,
-    14
+    14,
+    15
   ],
-  "completed_round_count": 14,
+  "completed_round_count": 15,
   "scheduled_round_count": 23,
-  "latest_completed_round": 14
+  "latest_completed_round": 15
 }

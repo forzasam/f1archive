@@ -1,413 +1,243 @@
 # F1 Archive
 
-A modular Flask project for exploring Formula 1 seasons, races and results.
+**An interactive archive for exploring the history and stories of Formula 1.**
 
-## Open in PyCharm
+F1 Archive is an independent web application built to make Formula 1 history easier to explore. It combines historical race and championship data with curated editorial storytelling and interactive visualisations, aiming to bridge the gap between a statistical database and a traditional written history of the sport.
 
-1. Extract the ZIP.
-2. In PyCharm choose **File → Open**.
-3. Select the `f1_archive_v2` folder.
-4. Create a Python virtual environment when prompted.
-5. Install `requirements.txt`.
-6. Run `app.py`.
+Rather than treating races and seasons as isolated tables of results, F1 Archive places them in context: how a championship developed, what was at stake entering a race, where decisive moments happened on the circuit, and how those moments affected the wider season.
 
-## Terminal setup
+The project is built and maintained as a personal software-development project using Python, Flask and JavaScript.
+
+> **Live site:** [f1archive.net](https://f1archive.net)
+
+---
+
+## What F1 Archive does
+
+The archive is organised around Formula 1 seasons and races, with historical data presented alongside original editorial content and interactive features.
+
+### Season archive
+
+Season pages provide an overview of each championship, including:
+
+- Drivers' and Constructors' Championship standings
+- race calendars and results
+- points, wins and championship statistics
+- driver and constructor filtering
+- curated **Season Stories** explaining the wider championship narrative
+- optional **Setting the Stakes** introductions and **Aftermath** retrospectives surrounding the race-by-race story
+
+The aim is for a visitor to be able to follow a championship chronologically rather than simply looking up individual results.
+
+### Race pages
+
+Individual Grands Prix combine classification data with the wider championship context.
+
+Features include:
+
+- complete race classifications
+- non-finisher and retirement information
+- championship standings before and after the race
+- championship position and points changes
+- chronological navigation between races in a season
+- editorial race context and stories
+- circuit visualisations where authored data is available
+
+### Interactive circuits
+
+F1 Archive uses SVG circuit geometry combined with structured circuit metadata to create interactive track maps.
+
+Circuit definitions can contain:
+
+- individual corners
+- named track sections
+- straights and complexes
+- start/finish position
+- racing direction
+- sector boundaries
+- pit entry and exit locations
+
+Circuit geometry is kept separate from race-specific editorial data, allowing the same circuit definition to be reused across multiple Grands Prix and seasons.
+
+### Race Stories
+
+Race Stories are designed to explain important events spatially as well as chronologically.
+
+Events can be associated with particular sections of a circuit and connected to an interactive race timeline, allowing the reader to see both **when** something happened and **where** it happened.
+
+The longer-term goal is to develop these into animated race replays for important moments such as overtakes, incidents, pit-stop sequences and championship-deciding events.
+
+### Archive Challenge
+
+F1 Archive also includes **Archive Challenge: Who drove this season?**, an identification game generated entirely from the historical archive.
+
+It includes:
+
+- endless and daily modes
+- progressively harder questions
+- a points-based hint system
+- server-side answer verification
+- questions spanning both modern and historic Formula 1
+
+---
+
+## Editorial storytelling
+
+Statistics provide the foundation of the archive, but the project is intended to tell the stories behind them.
+
+Editorial content exists at several levels:
+
+**Season Stories** provide the overarching narrative of a championship.
+
+**Setting the Stakes** introduces the drivers, teams and circumstances before the opening round.
+
+**Race Stories** focus on significant individual Grands Prix and the events that shaped them.
+
+**Aftermath** provides space to reflect on a championship after its conclusion.
+
+Together, these are intended to make it possible to experience a season from beginning to end as a connected story.
+
+---
+
+## Authoring tools
+
+A significant part of the project is the development of custom tools for producing interactive content without hard-coding individual races.
+
+### Track Editor
+
+The Track Editor converts existing SVG circuit geometry into reusable semantic circuit definitions.
+
+It allows circuit features such as corners, segments, sectors, direction and pit-lane locations to be visually authored and exported as structured JSON.
+
+### Event Sequencer
+
+The Event Sequencer is being developed as the authoring environment for animated Race Stories.
+
+It combines a circuit SVG and its semantic circuit definition with:
+
+- scenes
+- camera positioning
+- story-specific actors/drivers
+- chained actor movements
+- animation timing
+- scene descriptions
+- full-story playback
+
+The resulting JSON can describe a race sequence independently of the renderer used on the website.
+
+This separation between **geometry**, **circuit semantics**, **race data** and **editorial animation** is intended to make the system reusable across the archive.
+
+---
+
+## Data architecture
+
+F1 Archive uses a file-backed archive rather than relying on external API calls during normal page rendering.
+
+Historical seasons are stored locally, while the current championship uses a persistent live archive that is periodically refreshed.
+
+A simplified view of the project is:
+
+```text
+Historical / live race data
+            │
+            ▼
+     Local archive layer
+            │
+      ┌─────┴─────┐
+      ▼           ▼
+ Statistics    Editorial data
+      │           │
+      └─────┬─────┘
+            ▼
+      Flask services
+            │
+            ▼
+     Jinja templates
+            │
+            ▼
+ Interactive archive
+```
+
+This architecture reduces dependence on external services during requests and allows historical data, editorial content and interactive features to evolve independently.
+
+---
+
+## Technology
+
+F1 Archive is primarily built with:
+
+- **Python**
+- **Flask**
+- **Jinja**
+- **JavaScript**
+- **HTML / CSS**
+- **SVG**
+- **JSON**
+
+The project also includes automated data auditing and validation tools used to check the consistency of historical championship and race data.
+
+---
+
+## Project structure
+
+```text
+app.py              Flask application
+routes/              Application routes
+services/            Archive and application logic
+templates/           Jinja templates
+static/              CSS, JavaScript and frontend assets
+data/
+├── archive/         Historical Formula 1 data
+├── live/            Current-season archive
+├── circuits/        Circuit definitions
+└── editorial/       Season and race storytelling
+scripts/             Data maintenance and auditing tools
+tests/               Automated tests
+```
+
+---
+
+## Roadmap
+
+F1 Archive is under active development. Major planned areas include:
+
+- expanding editorial coverage across landmark Formula 1 seasons
+- completing interactive circuit definitions for historical layouts
+- richer race timelines and event visualisation
+- animated Race Stories using the Event Sequencer
+- driver-focused historical stories
+- improved navigation between related seasons, races and stories
+- continued expansion and auditing of the historical dataset
+
+The long-term objective is to make F1 Archive a place where Formula 1 history can be **explored as both data and narrative**.
+
+---
+
+## Running locally
+
+For development:
 
 ```bash
 python -m venv .venv
-```
-
-Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-macOS / Linux:
-
-```bash
 source .venv/bin/activate
-```
-
-Then:
-
-```bash
 pip install -r requirements.txt
 python app.py
 ```
 
-Open `http://127.0.0.1:5000`.
+The application is then available at `http://127.0.0.1:5000`.
 
-## Structure
+---
 
-```text
-app.py                     Application factory and startup
-config.py                  Project settings
-routes/                    Flask URL routes
-services/                  API and archive logic
-models/                    Data structures
-templates/                 Jinja HTML templates
-static/                    CSS and future JavaScript/assets
-data/circuits/             Future circuit SVG and corner data
-data/editorial/            Future curated race events
-database/                  Reserved for the later local database
-```
+## Data, attribution and independence
 
-## Homepage filters
+F1 Archive is an independent project and is not affiliated with Formula 1, the FIA, Formula One Management or any Formula 1 team.
 
-The homepage supports:
+Third-party datasets and circuit geometry are used in accordance with their respective licences and attribution requirements. See the live site's disclaimer and relevant in-app attribution for further information.
 
-```text
-/?driver=alonso
-/?constructor=ferrari
-/?driver=alonso&constructor=ferrari
-```
+---
 
-Selecting both filters performs a combined driver–constructor query. The
-results therefore represent seasons in which the selected driver actually
-raced for the selected constructor, rather than seasons where both happened
-to participate independently.
+## Status
 
-## Current routes
+F1 Archive is actively developed. Historical data coverage is substantially broader than the current editorial and interactive coverage, so some seasons currently function primarily as statistical archive pages while others contain richer stories and interactive features.
 
-- `/`
-- `/season/<year>`
-- `/season/<year>/race/<round>`
-
-## Linked filters
-
-Selecting a driver restricts the team autocomplete to constructors that driver represented. Selecting a team restricts the driver autocomplete to drivers who raced for that constructor. The relationship lists are loaded on demand through `/api/filter-options`.
-
-
-## Season championship overview
-
-Each season page now displays:
-
-- the leading three drivers and constructors
-- expandable full standings
-- points and wins
-- team-colour accents, with curated colours for major teams and stable fallback
-  colours for historic constructors
-
-When the homepage is filtered by a driver, every season card also shows that
-driver's final championship position, points, wins and constructor(s).
-
-
-## Experimental Australia 2026 race map
-
-The 2026 Australian Grand Prix race page now contains an interactive Albert
-Park prototype. Hovering identifies named track sections; clicking a section
-shows its curated featured events. The initial dataset is intentionally not a
-complete overtake census. It contains source-verified showcase events used to
-test the map, interaction model and editorial schema.
-
-
-## Albert Park geometry revision
-
-The previous generic schematic has been replaced with a manually traced,
-segmented SVG based on Formula 1's official 2026 Melbourne circuit diagram.
-The geometry follows the recognisable 14-corner Albert Park layout and each
-semantic race section is its own SVG path. It is a faithful display trace,
-not an FIA-provided CAD file or survey-grade centreline.
-
-
-## Race classification correction
-
-Finisher totals and the non-finisher sidebar now use Jolpica's
-`positionText` classification marker rather than inferring completion from
-the result status. Numeric classifications count as finishers even when the
-driver is one or more laps down. Retirement, withdrawal, disqualification
-and exclusion markers remain outside the classified finishers.
-
-
-## Race-page championship progression
-
-Race pages now include the Drivers' Championship immediately before and after
-the selected Grand Prix. The pre-race snapshot comes from the preceding
-round's standings and the post-race snapshot comes from the selected round.
-The top five are visible by default and the complete classifications can be
-expanded. Position movement and points earned during the round are shown in
-the post-race panel. Season openers display a pre-season state rather than an
-arbitrary ordering of drivers tied on zero points.
-
-
-## Current-calendar circuit geometry
-
-All venues on the 2026 Formula 1 calendar now have circuit geometry on their
-race pages. Australia retains its locally authored segmented interactive map.
-Other venues display the correct detailed SVG layout with a notice that named
-segments and event data have not yet been authored.
-
-The layouts are sourced from Jules Roy's `f1-circuits-svg` project under
-CC BY 4.0. Source and licence attribution are displayed beneath every map.
-The integration currently maps the 2026 calendar and the two original
-cancelled 2026 venues. Historical layout selection is the next extension:
-the upstream archive already contains layout evolutions dating back to 1950.
-
-
-## Experimental Australia race timeline
-
-The interactive Australia 2026 map now includes a linked 58-lap timeline.
-Every featured event appears as a coloured dot at its race lap and as a
-chronological event card. Selecting a dot, card or map marker highlights the
-corresponding circuit segment and opens the same event in the map detail
-panel. Selecting a circuit segment filters the chronological list to events
-at that location. The timeline can also be filtered by overtakes, incidents
-and retirements.
-
-
-## v14: completed 2026 race maps
-
-Rounds 1–10 now have curated interactive timelines. Australia retains its
-bespoke inline trace. China through Belgium use the licensed circuit SVG as
-the exact visual geometry, with editorial segments applied by path-length
-ranges. Timeline dots, event cards, segment chips and map markers are linked.
-
-Some lap/location assignments are labelled approximate where the official
-race report identifies the event but not an exact lap or corner.
-
-
-## v15: unified premium map interaction
-
-All completed 2026 race maps now follow the authored Australia interaction
-model. Hovering a circuit segment fades the rest of the circuit, highlights
-the selected section, reveals the segment name both on the map and in a
-tooltip, and keeps the sidebar and timeline linked.
-
-Every map now also includes timeline playback. The playhead advances through
-the race lap by lap, pauses briefly at featured events, selects the matching
-event card, highlights the circuit segment, and pulses the corresponding map
-marker. Previous-event, next-event and 1x/2x/4x playback controls are shared
-across all ten completed rounds.
-
-
-## v16: clean single-path circuit interaction
-
-Rounds 2–10 no longer use stacked transparent segment paths. Those paths
-overlapped and caused the final segment to capture every hover. Each map now
-uses one wide hit path and determines the nearest point on the circuit from
-the pointer coordinates before mapping that position to the correct named
-segment.
-
-The external SVG is also reduced to its exact circuit geometry and redrawn
-with the same clean track, shadow, highlight and event-marker visual language
-as the authored Australia map. Source labels, duplicate paths and decorative
-SVG elements are not shown.
-
-Timeline playback no longer calls scrollIntoView. The page remains fixed on
-the circuit while the selected segment, sidebar, timeline dot and event marker
-continue to update.
-
-
-## v17: one map implementation only
-
-The separate imported-SVG map implementation has been deleted. Every completed
-2026 race now renders through `_race_map.html`, `race_map.js`, and the same
-`.track-underlay`, `.track-segments`, `.event-marker`, tooltip, sidebar and
-timeline classes used by Australia.
-
-Rounds 2–10 fetch only their source circuit path on the server, place it
-directly inside the page's inline SVG, and render one semantic SVG path per
-editorial segment. There is no `<object>`, no secondary map JavaScript file,
-no nearest-coordinate hover engine and no overlapping whole-track hit layer.
-
-Australia retains its manually traced path pieces. The other tracks use the
-same path-per-segment interaction architecture with exact source geometry.
-
-
-## v18: complete corner maps and automatic canvas fitting
-
-Rounds 2–10 now define every numbered corner individually rather than grouping
-large parts of a lap into a handful of broad editorial zones. Each circuit has
-an explicit ordered turn-label dataset matching its official corner count:
-Shanghai 16, Suzuka 18, Miami 19, Montreal 14, Monaco 19, Barcelona 14,
-Spielberg 10, Silverstone 18 and Spa 19.
-
-Turn numbers are no longer inferred from segment names. They are positioned
-from each circuit's dedicated label data, while events are mapped onto the
-specific corner or straight where they occurred.
-
-Generated maps now calculate the rendered track bounding box in the browser
-and replace the source SVG viewBox with a tightly padded one. This removes the
-large unused margins that made the tracks appear substantially smaller than
-Australia.
-
-
-## v19: repository-authored detailed maps
-
-Rounds 2–10 now preserve the complete detailed white-outline SVG from
-julesr0y/f1-circuits-svg rather than extracting and redrawing only its longest
-path. The repository's own track thickness, start/finish line and racing
-direction graphic remain visible.
-
-The interaction layer detects the source start/finish stroke and uses that as
-0% of the editorial lap. Shanghai and Suzuka reverse the source path ordering
-to match their racing direction. Inaccurate automatically generated corner
-numbers have been removed: the detailed source is used for geometry and
-official directional annotation rather than presenting inferred labels as
-authoritative.
-
-Australia remains the manually authored gold-standard map. Its pit entry
-wording has been corrected from Turn 12 to Turn 13.
-
-
-## v20: Australian visual styling for repository geometry
-
-The repository SVG is no longer displayed with its own presentation styles.
-Only its principal circuit geometry is used. Every non-Australia circuit is
-redrawn with the exact visual hierarchy used by the Australia map: a black
-31px underlay, a pale 15px circuit stroke, and an 18px salmon active segment.
-
-A clean start/finish line, label and direction arrow are drawn as archive
-elements rather than inheriting source SVG styles. This prevents the giant red
-filled-track rendering and keeps event markers, hover states and line weights
-consistent across every race page.
-
-
-## v21: genuine Australia-style segmented paths
-
-The dasharray-based repository implementation has been removed. It had placed
-a complete copy of the circuit under every editorial segment, which is why a
-selected segment could render as a glowing full circuit.
-
-The source centreline is now sampled into genuinely separate SVG path data for
-each segment. This matches the structural approach used by Australia: one dark
-underlay and one standalone visible path per named section.
-
-Every generated circuit is transformed into Australia's fixed 1024 × 576
-canvas and fitted into the same 916 × 492 drawing area. The original Australia
-CSS is used without a second visual theme; line widths are counter-scaled to
-retain the exact 31-unit underlay, 15-unit circuit and 18-unit active-section
-appearance after normalization.
-
-
-## v23: F1 diagrams are references only
-
-The v22 approach that displayed Formula 1's circuit diagrams directly has
-been removed in full. The project again renders its own inline SVG circuit
-maps, using the archive's original dark underlay, pale circuit stroke,
-salmon interaction state, event markers and synchronized timeline.
-
-Formula 1 circuit diagrams are not embedded, linked as visible images or
-presented as archive artwork. They are to be used only during authoring to
-verify factual geometry: corner numbering, start/finish location, racing
-direction, pit entry, sector boundaries, DRS detection points and speed
-trap placement.
-
-Australia remains the visual reference implementation. Its pit-entry
-annotation is corrected to Turn 13.
-
-## Persistent live archive
-
-The current season is served from a disk-backed live archive rather than from
-Jolpica during every page request. Historical seasons continue to use
-`data/archive/seasons/<year>`.
-
-By default, current-season files are written to:
-
-```text
-data/live/seasons/<current-year>/
-```
-
-In production, set `LIVE_ARCHIVE_ROOT` to the mount path of the web service's
-persistent disk. A typical configuration is:
-
-```text
-LIVE_ARCHIVE_ROOT=/var/data/f1-live
-LIVE_ARCHIVE_TTL_SECONDS=3600
-LIVE_ARCHIVE_CHECK_INTERVAL_SECONDS=300
-LIVE_ARCHIVE_BACKGROUND_REFRESH=true
-```
-
-The web process checks every five minutes and refreshes once the successful
-snapshot is at least one hour old. The first request after a cold start also
-performs the same stale check, so the site does not rely solely on the
-background thread. A disk lock prevents duplicate refreshes across Gunicorn
-workers.
-
-Render cron jobs cannot access a web service's persistent disk, so do not use a
-separate Render Cron Job for this file-backed cache. The standalone command is
-still useful locally or from a shell attached to the same filesystem:
-
-```bash
-python scripts/update_live_archive.py
-```
-
-The live season directory mirrors the historical archive shape:
-
-```text
-seasons/2026/
-├── schedule.json
-├── driver_standings.json
-├── constructor_standings.json
-├── metadata.json
-└── races/
-    └── 01/
-        ├── results.json
-        └── driver_standings.json
-```
-
-`metadata.json` records the last attempt, last successful update, completed
-rounds, the latest completed round reported by Jolpica, consecutive failures
-and the most recent error. Writes are atomic and protected by a refresh lock.
-A failed refresh does not overwrite the previous working snapshot.
-
-The refresher reconciles the local cache against
-`current/last/results.json`, then downloads any completed rounds missing from
-local storage through their individual round endpoints. The latest round is
-refreshed on every successful cycle, and the season standings are requested
-for that exact round. This avoids treating a temporarily lagging season-wide
-aggregate response as a complete and healthy snapshot.
-
-## Season stories
-
-Season-page editorial copy lives in `data/editorial/seasons/<year>.json`.
-Each file uses this structure:
-
-```json
-{
-  "kicker": "The season in context",
-  "title": "A short, distinctive headline",
-  "paragraphs": [
-    "First paragraph.",
-    "Second paragraph.",
-    "Further paragraphs appear in the expanded story panel."
-  ]
-}
-```
-
-The first two paragraphs form the compact season-page preview. If the file has
-more than two paragraphs, the page automatically adds a **Read the full story**
-button and opens the complete text in a scrollable overlay.
-
-Homepage driver, constructor and season filtering is generated from the local
-historical and live archive snapshots. Those interactions no longer call the
-Jolpica API directly.
-
-
-## Search appearance and legal pages
-
-The shared page template now supplies canonical URLs, page descriptions, Open Graph metadata, favicon links and basic WebSite structured data. The app also exposes `/robots.txt` and `/sitemap.xml`. Legal information is available at `/privacy` and `/disclaimer`, with a short independence notice in the global footer. Review the privacy wording whenever analytics, advertising, accounts or additional third-party services are introduced.
-
-## Upcoming current-season race pages
-
-The live season schedule is stored locally in `data/live/seasons/<year>/schedule.json`, including rounds that have not yet taken place. Race URLs now use that schedule when a round has no local `results.json` file:
-
-- scheduled future rounds render `templates/upcoming_race.html`;
-- a recently completed round whose classification has not reached the cache yet shows a short "results are on their way" state;
-- once the hourly live updater stores the round results, the same URL automatically renders the normal race archive page;
-- rounds absent from the schedule still return a genuine 404.
-
-No empty result files are created for future rounds. The schedule remains the source of truth for planned events, while `races/<round>/results.json` continues to mean that a completed classification is available.
-
-## Archive Challenge: Who drove this season?
-
-The footer links to `/archive-challenge`, a locally powered identification game built from the committed season archive.
-
-- **Endless mode** selects progressively harder campaigns as the streak grows.
-- **Daily mode** gives every visitor the same deterministic challenge for the calendar day.
-- A correct driver-and-season answer is worth up to four points; every revealed hint removes one available point.
-- Modern seasons from 2000 onward form the full pool. Earlier seasons are limited to race winners and top-three championship finishers.
-- Challenge answers are verified server-side with signed question tokens. No external API request is needed during play.
-
-The challenge pool is cached in-process and rebuilt when the application restarts. If the committed archive changes while the process remains running, call `build_challenge_pool.cache_clear()` before rebuilding it.
+The repository reflects ongoing development toward the full archive experience.

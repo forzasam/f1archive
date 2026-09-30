@@ -13,6 +13,7 @@ from models.archive import ConstructorOption, DriverOption
 from services.jolpica import get_json
 from services.archive_index import get_archive_index
 from services.season_story import get_season_story
+from services.season_bookends import get_season_bookend
 from services.race_story import get_race_story, has_race_story
 from services.circuit_service import get_current_circuit_geometry
 from services.live_archive import (
@@ -519,6 +520,8 @@ def get_season_page(season: int) -> dict[str, Any]:
         "constructor_standings": get_season_constructor_standings(season),
         "position_progression": get_driver_championship_position_progression(season),
         "season_story": get_season_story(season),
+        "setting_the_stakes": get_season_bookend(season, "setting_the_stakes"),
+        "aftermath": get_season_bookend(season, "aftermath"),
         "live_archive": _format_live_archive_status(live_metadata),
     }
 

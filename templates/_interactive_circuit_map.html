@@ -1,9 +1,58 @@
 <section class="race-map-section interactive-circuit-section">
-  <div class="race-map-intro"><div><p class="eyebrow">Interactive circuit map</p><h2>{{ race.circuit }}</h2><p>Hover over a named section to preview it, or click to keep it highlighted.</p></div><span class="geometry-status">Annotated layout</span></div>
-  <div class="race-map-layout">
-    <div class="circuit-stage"><div id="segment-tooltip" class="segment-tooltip" hidden></div>{% include race.circuit_geometry.svg_template %}<p class="map-attribution">{{ race.circuit_geometry.attribution }}</p></div>
-    <aside class="segment-panel"><p class="eyebrow">Track section</p><h3 id="selected-segment-name">Explore the circuit</h3><p id="selected-segment-kind" class="segment-kind">Hover to preview a named section, or click to keep it selected.</p><div class="segment-empty">Race moments and driver markers will be layered onto this map next.</div></aside>
+  <div class="race-map-intro">
+    <div>
+      <p class="eyebrow">Interactive circuit map</p>
+      <h2>{{ race.circuit }}</h2>
+      <p>Explore the circuit normally, or switch to an available race story to follow its defining moments around the track.</p>
+    </div>
+    <span class="geometry-status">Annotated layout</span>
   </div>
+
+  {% if race_story_map %}
+  <div class="circuit-mode-switch" role="group" aria-label="Circuit map mode">
+    <button class="circuit-mode active" type="button" data-map-mode="explore" aria-pressed="true">Explore circuit</button>
+    <button class="circuit-mode" type="button" data-map-mode="story" aria-pressed="false">
+      <span>Race story</span><strong>{{ race_story_map.subtitle }}</strong>
+    </button>
+  </div>
+  {% endif %}
+
+  <div class="race-map-layout">
+    <div class="circuit-stage">
+      <div id="segment-tooltip" class="segment-tooltip" hidden></div>
+      {% include race.circuit_geometry.svg_template %}
+      <div id="race-story-markers" class="race-story-marker-layer" hidden aria-label="Race story moments"></div>
+      <p class="map-attribution">{{ race.circuit_geometry.attribution }}</p>
+    </div>
+
+    <aside class="segment-panel" id="circuit-side-panel">
+      <div id="explore-panel-content">
+        <p class="eyebrow">Track section</p>
+        <h3 id="selected-segment-name">Explore the circuit</h3>
+        <p id="selected-segment-kind" class="segment-kind">Hover to preview a named section, or click to keep it selected.</p>
+        <div class="segment-empty">Select a race story above to layer a race narrative onto this same circuit.</div>
+      </div>
+
+      {% if race_story_map %}
+      <div id="story-panel-content" class="story-panel-content" hidden>
+        <p class="eyebrow" id="story-event-label">Race story</p>
+        <div class="story-progress"><span id="story-progress-text">1 / {{ race_story_map.events|length }}</span><span id="story-event-lap"></span></div>
+        <h3 id="story-event-title">{{ race_story_map.title }}</h3>
+        <p id="story-event-description" class="story-event-description">{{ race_story_map.context }}</p>
+        <div class="story-navigation">
+          <button id="story-prev" type="button" class="story-nav-button">← Previous</button>
+          <button id="story-next" type="button" class="story-nav-button story-nav-primary">Begin story →</button>
+        </div>
+      </div>
+      {% endif %}
+    </aside>
+  </div>
+
+  {% if race_story_map %}
+  <div id="story-step-rail" class="story-step-rail" hidden aria-label="Race story timeline"></div>
+  {% endif %}
+
   <script id="circuit-map-data" type="application/json">{{ race.circuit_geometry | tojson }}</script>
+  {% if race_story_map %}<script id="race-story-map-data" type="application/json">{{ race_story_map | tojson }}</script>{% endif %}
 </section>
 <script src="{{ url_for('static', filename='circuit_interaction.js') }}" defer></script>

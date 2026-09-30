@@ -288,9 +288,7 @@
     </div>
 </section>
 
-{% if race_map %}
-    {% include "_race_map.html" %}
-{% elif race.circuit_geometry and race.circuit_geometry.interactive %}
+{% if race.circuit_geometry and race.circuit_geometry.interactive %}
     {% include "_interactive_circuit_map.html" %}
 {% elif race.circuit_geometry %}
     {% include "_static_circuit_map.html" %}
@@ -384,6 +382,7 @@
         </section>
     </aside>
 </div>
+{% include "_season_sequence_nav.html" %}
 {% endblock %}
 
 {% block scripts %}

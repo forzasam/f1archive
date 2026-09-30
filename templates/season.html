@@ -251,6 +251,13 @@
     </div>
 
     <div class="race-list">
+        {% if setting_the_stakes %}
+            <a class="race-row season-bookend-row" href="{{ url_for('seasons.season_bookend_page', season=season, kind='setting_the_stakes') }}">
+                <span class="round-number bookend-symbol">◆</span>
+                <span class="race-main"><strong>{{ setting_the_stakes.title }}</strong><small>{{ setting_the_stakes.kicker }} · {{ season }} season introduction</small></span>
+                <span class="race-date">Pre-season</span><span class="arrow">→</span>
+            </a>
+        {% endif %}
         {% for race in races %}
             <a class="race-row"
                href="{{ url_for('races.race_page', season=season, round_number=race.round) }}">
@@ -279,6 +286,13 @@
                 <span class="arrow">→</span>
             </a>
         {% endfor %}
+        {% if aftermath %}
+            <a class="race-row season-bookend-row" href="{{ url_for('seasons.season_bookend_page', season=season, kind='aftermath') }}">
+                <span class="round-number bookend-symbol">◆</span>
+                <span class="race-main"><strong>{{ aftermath.title }}</strong><small>{{ aftermath.kicker }} · {{ season }} season conclusion</small></span>
+                <span class="race-date">Post-season</span><span class="arrow">→</span>
+            </a>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

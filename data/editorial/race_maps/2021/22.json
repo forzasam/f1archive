@@ -1,0 +1,89 @@
+{
+  "id": "abu_dhabi_2021_title_decider",
+  "title": "The title decider",
+  "subtitle": "Abu Dhabi 2021",
+  "context": "The final chapter of Verstappen v Hamilton",
+  "events": [
+    {
+      "id": "start",
+      "order": 1,
+      "lap": 1,
+      "label": "The launch",
+      "title": "Hamilton takes the lead off the line",
+      "description": "Hamilton gets the better launch and passes Verstappen on the pit straight, taking control of the race immediately.",
+      "segments": ["9xfb8fn"],
+      "position": 0.018
+    },
+    {
+      "id": "lap1_t6",
+      "order": 2,
+      "lap": 1,
+      "label": "First flashpoint",
+      "title": "Verstappen attacks at Turns 6 and 7",
+      "description": "Verstappen dives inside at Turn 6. Hamilton runs wide through the escape area and retains the lead, leaving the title rivals in the same order.",
+      "segments": ["s03jexg", "0ke5ckz"],
+      "position": 0.497
+    },
+    {
+      "id": "first_stops",
+      "order": 3,
+      "lap": "13–21",
+      "label": "The first stops",
+      "title": "Pérez brings Verstappen back into play",
+      "description": "Verstappen pits on lap 13 and Hamilton responds a lap later. Pérez stays out in the lead and holds Hamilton up, allowing Verstappen to close an 11-second pre-stop deficit to just 1.3 seconds by lap 21.",
+      "segments": ["bn3codr"],
+      "position": 0.382
+    },
+    {
+      "id": "clear_air",
+      "order": 4,
+      "lap": "22–34",
+      "label": "Clear air",
+      "title": "Hamilton rebuilds his advantage",
+      "description": "With Pérez out of the way and both title contenders in clear air, Hamilton steadily stretches the gap again.",
+      "segments": [],
+      "position": 0.03,
+      "scope": "whole_circuit"
+    },
+    {
+      "id": "vsc",
+      "order": 5,
+      "lap": 35,
+      "label": "Virtual Safety Car",
+      "title": "A cheap stop gives Verstappen fresher tyres",
+      "description": "Giovinazzi retires and triggers a Virtual Safety Car. Verstappen pits for fresh hard tyres while Hamilton stays out. The gap falls from roughly 17 seconds to 11, but Verstappen is still not closing quickly enough to catch him on track.",
+      "segments": ["1xoqowa", "9xfb8fn"],
+      "position": 0.955
+    },
+    {
+      "id": "latifi",
+      "order": 6,
+      "lap": 53,
+      "label": "Safety Car",
+      "title": "Latifi crashes at Turn 14",
+      "description": "Latifi crashes at Turn 14 and the Safety Car is deployed. Verstappen can pit for soft tyres; Hamilton, with Verstappen immediately behind him on the road, cannot make the same stop without surrendering track position.",
+      "segments": ["at4adn5"],
+      "position": 0.862
+    },
+    {
+      "id": "unlapping",
+      "order": 7,
+      "lap": 57,
+      "label": "One lap to go",
+      "title": "The five cars between the leaders are released",
+      "description": "The five lapped cars positioned between Hamilton and Verstappen are instructed to pass the Safety Car and unlap themselves, putting the two title rivals together for the restart.",
+      "segments": ["9xfb8fn"],
+      "position": 0.985
+    },
+    {
+      "id": "final_lap",
+      "order": 8,
+      "lap": 58,
+      "label": "Final lap",
+      "title": "Verstappen passes Hamilton at Turn 5",
+      "description": "On fresh soft tyres, Verstappen attacks Hamilton into Turn 5, takes the lead and holds it to the flag to win the race and the World Championship.",
+      "segments": ["ly8g104"],
+      "position": 0.267
+    }
+  ]
+}
